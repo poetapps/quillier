@@ -85,4 +85,4 @@ Unfinished features stay hidden until you turn on **Settings → Alpha features*
 - `src/lib/project.js`: the `.quill` format, word counts, import parsing
 - `src/lib/export.js`: Markdown/HTML export
 - `src/components/`: the UI (TipTap editor with Markdown in/out)
-- `site/`: the quillier.com landing page (plain HTML, deployed to GitHub Pages)
+- `site/`: the quillier.com landing page (plain HTML, deployed by Vercel on every push to main)

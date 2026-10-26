@@ -2,7 +2,7 @@
 
 Everything ships through GitHub Releases on `poetapps/quillier`:
 
-- **The website** (`site/`, published by `.github/workflows/site.yml`) links its download buttons to `releases/latest/download/<file>`, so they always serve the newest published release. The file names never change: `Quillier-mac.dmg`, `Quillier-Setup.exe`, `Quillier-linux.AppImage`.
+- **The website** (`site/`, hosted on Vercel) links its download buttons to `releases/latest/download/<file>`, so they always serve the newest published release. The file names never change: `Quillier-mac.dmg`, `Quillier-Setup.exe`, `Quillier-linux.AppImage`.
 - **The app** checks the same releases (`electron/updater.js`, using electron-updater and the `latest*.yml` files each build uploads). It checks quietly about 20 seconds after launch and every 12 hours after that, plus whenever someone clicks **Check for Updates…** (app menu on macOS, Help menu elsewhere) or **Check now** in Settings → Updates. It never shows a pop-up.
 
 ## One-time setup
@@ -15,11 +15,7 @@ Everything ships through GitHub Releases on `poetapps/quillier`:
 
    If you use a different name, update `repository` and `build.publish` in `package.json`, and the `poetapps/quillier` links in `site/index.html`.
 
-2. Turn on the website: on GitHub, go to **Settings → Pages → Source** and pick **GitHub Actions**. Then set **Custom domain** to `quillier.com`. At your domain registrar, add:
-   - `A` records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - a `CNAME` record for `www` pointing to `poetapps.github.io`
-
-   Tick **Enforce HTTPS** once GitHub has issued the certificate (it can take a few minutes up to an hour).
+2. The website is the `quillier` project on Vercel (team poetapps' projects), connected to this repo with **Root Directory** `site` and no build step. Every push to `main` deploys it; other branches get preview URLs. `quillier.com` is registered through Vercel and uses its nameservers, and `www.quillier.com` redirects to it.
 
 ## Cutting a release
 
