@@ -59,31 +59,44 @@
         {
           "target": "dmg",
           "arch": [
-            "universal"
+            "arm64",
+            "x64"
           ]
         },
         {
           "target": "zip",
           "arch": [
-            "universal"
+            "arm64",
+            "x64"
           ]
         }
       ],
-      "artifactName": "Quillier-mac.${ext}",
-      "x64ArchFiles": "**/node_modules/{@node-llama-cpp,@reflink}/**"
+      "artifactName": "Quillier-mac-${arch}.${ext}",
+      "electronLanguages": [
+        "en",
+        "en_GB"
+      ]
     },
     "win": {
       "target": [
         "nsis"
       ],
-      "artifactName": "Quillier-Setup.${ext}"
+      "artifactName": "Quillier-Setup.${ext}",
+      "electronLanguages": [
+        "en-US",
+        "en-GB"
+      ]
     },
     "linux": {
       "target": [
         "AppImage"
       ],
       "artifactName": "Quillier-linux.${ext}",
-      "category": "Office"
+      "category": "Office",
+      "electronLanguages": [
+        "en-US",
+        "en-GB"
+      ]
     },
     "publish": [
       {

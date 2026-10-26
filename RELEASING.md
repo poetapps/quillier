@@ -2,7 +2,7 @@
 
 Everything ships through GitHub Releases on `poetapps/quillier`:
 
-- **The website** (`site/`, hosted on Vercel) links its download buttons to `releases/latest/download/<file>`, so they always serve the newest published release. The file names never change: `Quillier-mac.dmg`, `Quillier-Setup.exe`, `Quillier-linux.AppImage`.
+- **The website** (`site/`, hosted on Vercel) links its download buttons to `releases/latest/download/<file>`, so they always serve the newest published release. The file names never change: `Quillier-mac-arm64.dmg` (Apple Silicon), `Quillier-mac-x64.dmg` (Intel), `Quillier-Setup.exe`, `Quillier-linux.AppImage`. Mac apps are built per chip rather than universal, which roughly halves the download; the updater picks the right one for each Mac.
 - **The app** checks the same releases (`electron/updater.js`, using electron-updater and the `latest*.yml` files each build uploads). It checks quietly about 20 seconds after launch and every 12 hours after that, plus whenever someone clicks **Check for Updates…** (app menu on macOS, Help menu elsewhere) or **Check now** in Settings → Updates. It never shows a pop-up.
 
 ## One-time setup

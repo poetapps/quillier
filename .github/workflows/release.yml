@@ -33,8 +33,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      # The Mac build is universal, but npm only installs the local model runtime for the runner's own
-      # chip. Add the Intel one too, or Intel Macs can't use the optional smart features.
+      # The runner builds both the Apple Silicon and the Intel app, but npm only installs the local model
+      # runtime for the runner's own chip. Add the Intel one too, or Intel Macs can't use smart features.
       - if: runner.os == 'macOS'
         run: |
           V=$(node -p "require('./node_modules/node-llama-cpp/package.json').version")

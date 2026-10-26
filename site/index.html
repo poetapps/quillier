@@ -605,9 +605,10 @@
           in it, and stays out of your way.
         </p>
         <div class="download" id="download">
-          <a class="button" data-primary href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac.dmg">Download for Mac</a>
+          <a class="button" data-primary href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac-arm64.dmg">Download for Mac</a>
           <p class="others">
             Also for
+            <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac-x64.dmg">Intel Macs</a>,
             <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-Setup.exe">Windows</a> and
             <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-linux.AppImage">Linux</a>.
             <span data-version></span>
@@ -787,9 +788,10 @@
             <a href="https://github.com/poetapps/quillier">on GitHub</a>, where you can read it, report a bug or suggest an idea.
           </p>
           <div class="download">
-            <a class="button" data-primary href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac.dmg">Download for Mac</a>
+            <a class="button" data-primary href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac-arm64.dmg">Download for Mac</a>
             <p class="others">
               Also for
+              <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac-x64.dmg">Intel Macs</a>,
               <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-Setup.exe">Windows</a> and
               <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-linux.AppImage">Linux</a>.
               <span data-version></span>
@@ -818,26 +820,41 @@
 
     <script>
       const REPO = 'poetapps/quillier';
+      // name: on the big button ("Download for …"); also: in the line under it ("Also for …").
       const BUILDS = {
-        mac: { name: 'Mac', file: 'Quillier-mac.dmg' },
-        win: { name: 'Windows', file: 'Quillier-Setup.exe' },
-        linux: { name: 'Linux', file: 'Quillier-linux.AppImage' },
+        mac: { name: 'Mac', also: 'Apple Silicon Macs', file: 'Quillier-mac-arm64.dmg' },
+        macIntel: { name: 'Intel Mac', also: 'Intel Macs', file: 'Quillier-mac-x64.dmg' },
+        win: { name: 'Windows', also: 'Windows', file: 'Quillier-Setup.exe' },
+        linux: { name: 'Linux', also: 'Linux', file: 'Quillier-linux.AppImage' },
       };
       const fileUrl = (os) => `https://github.com/${REPO}/releases/latest/download/${BUILDS[os].file}`;
-      const link = (os) => `<a href="${fileUrl(os)}">${BUILDS[os].name}</a>`;
+      const link = (os) => `<a href="${fileUrl(os)}">${BUILDS[os].also}</a>`;
+      const list = (items) => `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
+
+      const showFor = (os) => {
+        const others = Object.keys(BUILDS).filter((k) => k !== os);
+        for (const el of document.querySelectorAll('.download')) {
+          const button = el.querySelector('[data-primary]');
+          button.href = fileUrl(os);
+          button.textContent = `Download for ${BUILDS[os].name}`;
+          const version = el.querySelector('[data-version]');
+          el.querySelector('.others').innerHTML = `Also for ${list(others.map(link))}. `;
+          el.querySelector('.others').append(version);
+          for (const d of el.querySelectorAll('.first-run')) d.hidden = d.dataset.for !== os;
+        }
+      };
 
       // Put the visitor's own system on the big button. Phones and anything unknown get the Mac build.
+      // Macs get Apple Silicon unless the browser says Intel: only Chromium browsers can tell (Safari and
+      // Firefox call every Mac Intel), and Intel Macs always have their own link under the button.
       const ua = navigator.userAgent;
       const os = /Windows/.test(ua) ? 'win' : /Linux|X11|CrOS/.test(ua) && !/Android/.test(ua) ? 'linux' : 'mac';
-      const [a, b] = Object.keys(BUILDS).filter((k) => k !== os);
-      for (const el of document.querySelectorAll('.download')) {
-        const button = el.querySelector('[data-primary]');
-        button.href = fileUrl(os);
-        button.textContent = `Download for ${BUILDS[os].name}`;
-        const version = el.querySelector('[data-version]');
-        el.querySelector('.others').innerHTML = `Also for ${link(a)} and ${link(b)}. `;
-        el.querySelector('.others').append(version);
-        for (const d of el.querySelectorAll('.first-run')) d.hidden = d.dataset.for !== os;
+      showFor(os);
+      if (os === 'mac' && navigator.userAgentData?.getHighEntropyValues) {
+        navigator.userAgentData
+          .getHighEntropyValues(['architecture'])
+          .then(({ architecture }) => architecture === 'x86' && showFor('macIntel'))
+          .catch(() => {});
       }
 
       // Show the current version. If nothing has been published yet, send buttons to the releases page.
