@@ -41,14 +41,30 @@ jobs:
           npm pack @node-llama-cpp/mac-x64@$V --silent
           mkdir -p node_modules/@node-llama-cpp/mac-x64
           tar -xzf node-llama-cpp-mac-x64-$V.tgz -C node_modules/@node-llama-cpp/mac-x64 --strip-components=1
+      # Put the Developer ID certificate in a keychain of its own for electron-builder (CSC_KEYCHAIN).
+      # Not CSC_LINK: electron-builder then passes the .p12 password where the keychain password
+      # belongs, which newer macOS rejects. Without the secrets the Mac build is simply unsigned.
+      - if: runner.os == 'macOS'
+        env:
+          MAC_CERT_P12_BASE64: ${{ secrets.MAC_CERT_P12_BASE64 }}
+          MAC_CERT_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+        run: |
+          [ -n "$MAC_CERT_P12_BASE64" ] || exit 0
+          KC="$RUNNER_TEMP/signing.keychain-db"
+          KC_PASS=$(openssl rand -hex 24)
+          echo "$MAC_CERT_P12_BASE64" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KC_PASS" "$KC"
+          security set-keychain-settings -lut 21600 "$KC"
+          security unlock-keychain -p "$KC_PASS" "$KC"
+          security import "$RUNNER_TEMP/cert.p12" -k "$KC" -P "$MAC_CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productbuild
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KC_PASS" "$KC" > /dev/null
+          rm "$RUNNER_TEMP/cert.p12"
+          echo "CSC_KEYCHAIN=$KC" >> "$GITHUB_ENV"
       - run: npm run build
       - run: npx electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Mac signing and notarization. Unused until these repo secrets exist and the
-          # `identity` / `hardenedRuntime` lines are removed from package.json (see RELEASING.md).
-          CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+          # Notarization (Mac only). Skipped when these secrets are missing.
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

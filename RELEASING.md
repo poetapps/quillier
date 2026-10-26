@@ -26,7 +26,7 @@ git push --follow-tags
 
 The **Release** workflow builds macOS, Windows and Linux in parallel (about 10 minutes) and uploads everything to a **draft** release. Open it on GitHub, write the notes, and click **Publish**. Until you publish, nobody sees it: not the website and not the app.
 
-To try a build locally without publishing, run `npm run dist`. The output goes to `release/`.
+To try a build locally without publishing, run `npm run dist`. The output goes to `release/`. On a Mac without the Developer ID certificate in its keychain, run `npm run dist -- -c.mac.identity=-` instead: an Apple Silicon build that isn't signed at all won't open.
 
 ## How updates behave
 
@@ -42,20 +42,18 @@ Anyone can turn off **Check automatically** in Settings. After that, it only che
 
 ## Signing
 
-### macOS (do this before the first public release)
+### macOS
 
-The website assumes Mac builds are signed: it has no "how to open an unsigned app" note for Mac. Unsigned builds would get a Gatekeeper warning on first open and couldn't update themselves. Signing needs the Apple Developer Program, $99/year.
+The website assumes Mac builds are signed: it has no "how to open an unsigned app" note for Mac. Unsigned builds would get a Gatekeeper warning on first open and couldn't update themselves.
 
-1. In your Apple Developer account, create a **Developer ID Application** certificate and export it from Keychain Access as a `.p12`.
-2. Add these repository secrets (**Settings → Secrets and variables → Actions**):
-   - `MAC_CERT_P12_BASE64`: the output of `base64 -i certificate.p12`
-   - `MAC_CERT_PASSWORD`: the `.p12` password
-   - `APPLE_ID`: your Apple ID email
-   - `APPLE_APP_SPECIFIC_PASSWORD`: create one at appleid.apple.com
-   - `APPLE_TEAM_ID`: from the Membership page of your developer account
-3. In `package.json` under `build.mac`, delete `"identity": "-"` and `"hardenedRuntime": false`. (They make local builds ad-hoc signed so they run at all; leave them until you have the certificate.)
+Releases are signed with a **Developer ID Application** certificate (G2 Sub-CA, team `2SBDX72C95`, expires 2027-11-25) and notarized by Apple. Its private key, certificate and a setup script live in `~/.quillier-signing/` on the Mac that created them; back that folder up somewhere safe, since the key can't be downloaded again.
 
-From then on every release is signed and notarized. Sign the very first public release, so nobody ends up on a version that can't update itself.
+The Release workflow reads these repository secrets, which `~/.quillier-signing/set-github-secrets.sh` uploads:
+
+- `MAC_CERT_P12_BASE64`, `MAC_CERT_PASSWORD`: the certificate and key as a `.p12`, and its password
+- `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID`: for notarization (make the app-specific password at account.apple.com → Sign-In and Security)
+
+Without them, Mac builds come out unsigned. When the certificate expires, create a new one the same way (a CSR from the key, uploaded at developer.apple.com → Certificates) and run the script again.
 
 ### Windows (optional)
 

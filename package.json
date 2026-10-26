@@ -70,8 +70,6 @@
         }
       ],
       "artifactName": "Quillier-mac.${ext}",
-      "identity": "-",
-      "hardenedRuntime": false,
       "x64ArchFiles": "**/node_modules/{@node-llama-cpp,@reflink}/**"
     },
     "win": {
