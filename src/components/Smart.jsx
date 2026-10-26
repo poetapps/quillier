@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Sparkles, X, Check, Download } from 'lucide-react';
-import { useStore, setPrefs, openModal } from '../store.js';
+import { useStore, setPrefs, openModal, smartActive } from '../store.js';
 import { downloadModel, cancelDownload, removeModel } from '../smart.js';
 import { Toggle } from './ui.jsx';
 
@@ -17,11 +17,13 @@ function progressText(p) {
   return `Reading ${p.book}: ${p.done} of ${p.total} checks`;
 }
 
-// The dashboard's note about the optional smart features. Never shown again once dismissed.
+// The dashboard's note about the optional smart features. Only with alpha features on, and never
+// shown again once dismissed.
 export function SmartHint() {
   const prefs = useStore((s) => s.prefs);
   const progress = useStore((s) => s.smart.progress);
-  if (prefs.smartEnabled) {
+  if (!prefs.alphaFeatures) return null;
+  if (smartActive(prefs)) {
     if (!progress) return null;
     return (
       <div className="smart-progress">

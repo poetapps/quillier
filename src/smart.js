@@ -1,14 +1,14 @@
 // Optional smart features: a small local model reads the open book in the background.
 //
-// Nothing here is needed for the app to work, and nothing runs unless the writer downloaded a model
-// and turned smart features on. Answers are remembered per book (in the app's own folder, never in
-// the project file), so each passage is only read once.
+// Nothing here is needed for the app to work, and nothing runs unless the writer turned on alpha
+// features, downloaded a model and turned smart features on. Answers are remembered per book (in
+// the app's own folder, never in the project file), so each passage is only read once.
 //
 //  - names:     is "May" here the character, or the month? (ambiguous uses only)
 //  - presence:  is this character in the scene, or only mentioned?
 //  - relation:  what are two characters who keep turning up together to each other?
 
-import { getState, setState, subscribe } from './store.js';
+import { getState, setState, subscribe, smartActive } from './store.js';
 import {
   buildContext,
   analyze,
@@ -38,7 +38,7 @@ const setSmart = (patch) => setState((s) => ({ smart: { ...s.smart, ...patch } }
 
 export function activeModel() {
   const { prefs, smart } = getState();
-  if (!prefs?.smartEnabled || !smart.status) return null;
+  if (!smartActive(prefs) || !smart.status) return null;
   const installed = (smart.status.models || []).filter((m) => m.installed);
   return (installed.find((m) => m.id === prefs.smartModel) || installed[installed.length - 1])?.id || null;
 }
@@ -214,7 +214,7 @@ export async function initSmart() {
   let last = {};
   subscribe(() => {
     const s = getState();
-    const now = { project: s.project, series: s.series, on: s.prefs?.smartEnabled, model: s.prefs?.smartModel };
+    const now = { project: s.project, series: s.series, on: smartActive(s.prefs), model: s.prefs?.smartModel };
     if (now.project === last.project && now.series === last.series && now.on === last.on && now.model === last.model) return;
     const turnedOff = last.on && !now.on;
     last = now;

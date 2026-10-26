@@ -180,9 +180,13 @@ function SettingsModal({ modal }) {
         </button>
       </Row>
 
-      <SmartSettings scrollTo={modal.section === 'smart'} />
-
       <UpdatesSection scrollTo={modal.section === 'updates'} />
+
+      <div className="panel-label">Alpha</div>
+      <Row label="Alpha features" hint="Shows features that aren’t finished yet. They may change, or go away.">
+        <Toggle checked={!!prefs.alphaFeatures} onChange={(alphaFeatures) => setPrefs({ alphaFeatures })} />
+      </Row>
+      {prefs.alphaFeatures && <SmartSettings scrollTo={modal.section === 'smart'} />}
     </Modal>
   );
 }

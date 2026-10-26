@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, Plus, X, MoreHorizontal, Trash2, Repeat, ExternalLink } from 'lucide-react';
-import { useStore, setBible, openMenu, openProjectAt } from '../store.js';
+import { useStore, setBible, openMenu, openProjectAt, smartActive } from '../store.js';
 import {
   addEntry,
   updateEntry,
@@ -291,8 +291,8 @@ function EntryDetail({ e, ctx, analysis, view, scope }) {
           {!reviewAll && (
             <p className="be-hint">
               {checks.length === 0
-                ? `${plural(mine.length, 'use')} sorted ${prefs.smartEnabled ? 'by smart features' : 'by a few simple rules'}${checked ? `, ${checked} by you` : ''}. Nothing needs a look.`
-                : prefs.smartEnabled
+                ? `${plural(mine.length, 'use')} sorted ${smartActive(prefs) ? 'by smart features' : 'by a few simple rules'}${checked ? `, ${checked} by you` : ''}. Nothing needs a look.`
+                : smartActive(prefs)
                   ? `“${checks[0].word}” is also an everyday word. Smart features weren’t sure about these.`
                   : `“${checks[0].word}” is also an everyday word, so these weren’t counted. Say which ones mean ${shortName(e)}.`}
             </p>

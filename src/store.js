@@ -247,6 +247,9 @@ export function setPrefs(patch) {
   return api.setPrefs(patch);
 }
 
+// Smart features are an alpha feature: they only count when alpha features are on too.
+export const smartActive = (prefs) => !!prefs?.alphaFeatures && !!prefs?.smartEnabled;
+
 export function toggleTheme() {
   setPrefs({ theme: state.isDark ? 'light' : 'dark' });
 }

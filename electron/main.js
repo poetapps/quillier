@@ -58,6 +58,7 @@ const DEFAULT_PREFS = {
   smartTypography: true,
   symbolHints: true,
   nameHints: true,
+  alphaFeatures: false,
   smartEnabled: false,
   smartModel: null,
   smartHintDismissed: false,

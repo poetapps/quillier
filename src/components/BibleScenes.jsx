@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, MapPin, Plus, Pencil } from 'lucide-react';
-import { useStore, openMenu, openDoc } from '../store.js';
+import { useStore, openMenu, openDoc, smartActive } from '../store.js';
 import { setSceneMeta } from '../bibleActions.js';
 import { sceneCast, presenceKey } from '../lib/bible.js';
 import { fmt, plural, shortName } from './bibleUi.jsx';
@@ -132,7 +132,7 @@ function SceneRow({ ctx, view, book, ch, sc, presence, smartOn }) {
 export default function BibleScenes({ ctx, analysis, view }) {
   const [open, setOpen] = useState({});
   const presence = useStore((s) => s.smart.presence);
-  const smartOn = useStore((s) => !!s.prefs.smartEnabled);
+  const smartOn = useStore((s) => smartActive(s.prefs));
 
   return (
     <div className="bs">

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { X } from 'lucide-react';
-import { useStore, setBible } from '../store.js';
+import { useStore, setBible, smartActive } from '../store.js';
 import { dismissNote } from '../bibleActions.js';
 import { heatLevel, pairs, suggestionsFrom, chapterColumns, relLabel, pairKey, needsCheck } from '../lib/bible.js';
 import { RELATION_LABELS } from '../lib/smartTasks.js';
@@ -126,7 +126,7 @@ function HeatRow({ e, view, analysis }) {
 
 export default function BibleDashboard({ ctx, analysis, view, scope }) {
   const dismissedList = useStore((s) => s.project.bible.dismissed);
-  const smartOn = useStore((s) => !!s.prefs.smartEnabled);
+  const smartOn = useStore((s) => smartActive(s.prefs));
   const guesses = useStore((s) => s.smart.relations);
   const chars = view.entries.filter((e) => e.type === 'character');
   const places = view.entries.filter((e) => e.type === 'place');

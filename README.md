@@ -37,16 +37,6 @@ Shipping a new version, the website, and auto-updates are covered in [RELEASING.
 - **Trash**: deleted chapters, sections, and drafts go here so you can restore them.
 - **Themes**: light, dark, or follow the system. **Pure black** (Settings) makes dark mode true `#000` everywhere except the text, for OLED screens.
 
-## Smart features (optional)
-
-Off unless you turn them on, and never needed. In **Settings → Smart features** you can download a small language model (Qwen 3.5 in 0.8B, 2B or 4B sizes, Apache 2.0, from Hugging Face) that runs entirely on your computer. With it on, Quillier reads the open book in the background when you pause and:
-
-- tells a character's name from an everyday word (“May” the character or the month); sure answers count, unsure ones are left for you to check,
-- sees who's actually in a scene and who's only mentioned (they fade in the scene list),
-- suggests what a relationship is when two characters keep turning up together.
-
-Settings shows how often each model size got these right on a set of test passages. Your writing never leaves your computer; the download is the only time the internet is used. Answers are remembered in the app's own folder, not in your project file.
-
 ## The project file
 
 Each book is a single `.quill` file. It's plain JSON, and every page's text inside it is Markdown. You pick where it lives when you create it, and it **autosaves as you type**:
@@ -65,6 +55,10 @@ Double-clicking a `.quill` file opens it in the packaged app. Projects from when
 - **Manuscript**: standard submission format as a PDF. 8.5×11, 1" margins, 12pt Courier Prime, double-spaced, ½" indents. The title page has your contact details top-left, a rounded word count top-right, and the title and byline centered. Every page after it carries a "Surname / TITLE / page" header, each chapter starts a third of the way down a new page, scene breaks print as `#`, and the book ends with END. Author and contact details are saved with the project.
 - **EPUB ebook**: EPUB 3 (with EPUB 2 navigation for older readers). It validates cleanly with W3C epubcheck. Use your own cover image, or let it generate a simple typographic one.
 - **PDF** (book-style), **HTML**, one **Markdown** file, or a folder of per-chapter `.md` files. **Import** takes `.md`/`.txt` files. A single file is split into chapters at each `# Heading`.
+
+## Alpha features
+
+Unfinished features stay hidden until you turn on **Settings → Alpha features**, and may change or go away. Right now there's one: an optional local language model (a one-time download, run entirely on your computer) that helps the story bible tell “May” the character from the month, see who's really in a scene, and suggest relationships.
 
 ## Shortcuts
 
