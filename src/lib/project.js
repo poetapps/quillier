@@ -22,6 +22,7 @@ const nowIso = () => new Date().toISOString();
 export function newDoc(kind, title, content = '') {
   const doc = { id: uid(), title, content, notes: '', inlineNotes: [], createdAt: nowIso(), updatedAt: nowIso() };
   if (kind === 'chapter') doc.status = 'idea';
+  if (kind === 'folder') Object.assign(doc, { type: 'folder', open: true });
   return doc;
 }
 
@@ -144,7 +145,7 @@ export function normalizeProject(data) {
   drafts = drafts.map((dr) => ({
     id: dr.id || uid(),
     name: dr.name || 'Draft',
-    chapters: (dr.chapters || []).map((c) => fixDoc(c, 'chapter')),
+    chapters: normalizeTree((dr.chapters || []).map((c) => fixDoc(c, isFolder(c) ? 'folder' : 'chapter'))),
   }));
   const activeDraftId = drafts.some((d) => d.id === data.activeDraftId) ? data.activeDraftId : drafts[0].id;
   // Unknown keys are kept, so a file written by a newer version keeps its data when an older one saves it.
@@ -156,7 +157,7 @@ export function normalizeProject(data) {
     createdAt: data.createdAt || nowIso(),
     updatedAt: data.updatedAt || nowIso(),
     notes: { title: 'Notes', content: '', notes: '', inlineNotes: [], ...(data.notes || {}), id: 'notes' },
-    outline: (data.outline || []).map((s) => fixDoc(s, 'section')),
+    outline: normalizeTree((data.outline || []).map((s) => fixDoc(s, isFolder(s) ? 'folder' : 'section'))),
     drafts,
     activeDraftId,
     trash: Array.isArray(data.trash) ? data.trash : [],
@@ -170,16 +171,125 @@ export function normalizeProject(data) {
 
 export const activeDraft = (p) => p.drafts.find((d) => d.id === p.activeDraftId) || p.drafts[0];
 
+// ---------- folders ----------
+// The Outline and each draft's chapter list are flat arrays in reading order. Folders sit in the same
+// arrays (type: 'folder') and every item names its folder in `parent`, with a folder's contents right
+// after it. Keeping chapters in one flat list means numbering, export and the story bible only have to
+// skip folders. (An older Quillier shows a folder as an empty chapter, and keeps it intact when it saves.)
+
+export const isFolder = (d) => d?.type === 'folder';
+export const chaptersOf = (draft) => draft.chapters.filter((c) => !isFolder(c));
+
+// Put every folder's contents right after it, otherwise keeping the order. Anything whose folder is
+// missing, or that sits inside itself, moves to the top level. Returns the same array if nothing moved.
+export function normalizeTree(list) {
+  const byId = new Map(list.map((d) => [d.id, d]));
+  const parentOf = (d) => (d?.parent && isFolder(byId.get(d.parent)) ? d.parent : null);
+  const loops = (d) => {
+    const seen = new Set([d.id]);
+    for (let id = parentOf(d); id; id = parentOf(byId.get(id))) {
+      if (seen.has(id)) return true;
+      seen.add(id);
+    }
+    return false;
+  };
+  const kids = new Map();
+  for (const d of list) {
+    const parent = loops(d) ? null : parentOf(d);
+    if (!kids.has(parent)) kids.set(parent, []);
+    kids.get(parent).push(parent === (d.parent || null) ? d : { ...d, parent });
+  }
+  const out = [];
+  const walk = (id) => {
+    for (const d of kids.get(id) || []) {
+      out.push(d);
+      if (isFolder(d)) walk(d.id);
+    }
+  };
+  walk(null);
+  return out.length === list.length && out.every((d, i) => d === list[i]) ? list : out;
+}
+
+// [start, end): where item `id` and everything inside it sit in the list.
+export function subtreeRange(list, id) {
+  const start = list.findIndex((d) => d.id === id);
+  if (start < 0) return null;
+  const inside = new Set([id]);
+  let end = start + 1;
+  while (end < list.length && inside.has(list[end].parent)) inside.add(list[end++].id);
+  return [start, end];
+}
+
+export const depthMap = (list) => {
+  const depth = {};
+  for (const d of list) depth[d.id] = d.parent && d.parent in depth ? depth[d.parent] + 1 : 0;
+  return depth;
+};
+
+// Move item `id`, with its contents, into folder `parent` (null for the top level), before `beforeId`
+// (null for the end of that folder).
+export function moveInTree(list, id, parent, beforeId) {
+  const range = subtreeRange(list, id);
+  if (!range) return list;
+  const block = list.slice(range[0], range[1]);
+  if (parent && block.some((d) => d.id === parent)) return list;
+  const rest = [...list.slice(0, range[0]), ...list.slice(range[1])];
+  let at = beforeId ? rest.findIndex((d) => d.id === beforeId) : -1;
+  if (at < 0) at = parent ? subtreeRange(rest, parent)[1] : rest.length;
+  block[0] = { ...block[0], parent };
+  return normalizeTree([...rest.slice(0, at), ...block, ...rest.slice(at)]);
+}
+
+// One step up or down among its neighbors, stepping out of the folder at either end.
+export function nudgeInTree(list, id, dir) {
+  const item = list.find((d) => d.id === id);
+  if (!item) return list;
+  const parent = item.parent || null;
+  const siblings = list.filter((d) => (d.parent || null) === parent);
+  const i = siblings.indexOf(item);
+  const holder = parent && list.find((d) => d.id === parent);
+  if (dir < 0) {
+    if (i > 0) return moveInTree(list, id, parent, siblings[i - 1].id);
+    return holder ? moveInTree(list, id, holder.parent || null, holder.id) : list;
+  }
+  if (i < siblings.length - 1) return moveInTree(list, id, parent, siblings[i + 2]?.id || null);
+  if (!holder) return list;
+  const outer = list.filter((d) => (d.parent || null) === (holder.parent || null));
+  return moveInTree(list, id, holder.parent || null, outer[outer.indexOf(holder) + 1]?.id || null);
+}
+
+// Copies of these items with fresh ids, folders still holding their own contents.
+export function copyTree(items, extra = {}) {
+  const ids = new Map(items.map((d) => [d.id, uid()]));
+  return items.map((d) => ({ ...d, ...extra, id: ids.get(d.id), parent: ids.get(d.parent) || d.parent || null }));
+}
+
 export function findDoc(p, id) {
   if (!p || !id) return null;
-  if (id === p.notes.id) return { doc: p.notes, kind: 'notes', index: 0 };
+  if (id === p.notes.id) return { doc: p.notes, kind: 'notes', area: null, index: 0 };
   const si = p.outline.findIndex((s) => s.id === id);
-  if (si >= 0) return { doc: p.outline[si], kind: 'section', index: si };
+  if (si >= 0) return { doc: p.outline[si], kind: isFolder(p.outline[si]) ? 'folder' : 'section', area: 'outline', index: si };
   const chapters = activeDraft(p).chapters;
   const ci = chapters.findIndex((c) => c.id === id);
-  if (ci >= 0) return { doc: chapters[ci], kind: 'chapter', index: ci };
+  if (ci >= 0) return { doc: chapters[ci], kind: isFolder(chapters[ci]) ? 'folder' : 'chapter', area: 'manuscript', index: ci };
   return null;
 }
+
+// Chapter numbers skip folders: the third chapter is "Chapter 3" wherever it is filed.
+export function chapterNumber(p, id) {
+  return chaptersOf(activeDraft(p)).findIndex((c) => c.id === id) + 1;
+}
+
+// Folders marked as book parts, numbered in reading order: { [folderId]: n }.
+export function partNumbers(draft) {
+  const out = {};
+  let n = 0;
+  for (const d of draft.chapters) if (isFolder(d) && d.part) out[d.id] = ++n;
+  return out;
+}
+
+const NUMBER_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty'];
+export const partLabel = (n) => `Part ${NUMBER_WORDS[n] || n}`;
 
 // Return a new project with doc `id` replaced by fn(doc). Unchanged branches keep their identity.
 export function mapDoc(p, id, fn) {
@@ -197,13 +307,6 @@ export function mapDoc(p, id, fn) {
 
 export function mapActiveChapters(p, fn) {
   return { ...p, drafts: p.drafts.map((d) => (d.id === p.activeDraftId ? { ...d, chapters: fn(d.chapters) } : d)) };
-}
-
-export function moveItem(list, from, to) {
-  const next = list.slice();
-  const [item] = next.splice(from, 1);
-  next.splice(to > from ? to - 1 : to, 0, item);
-  return next;
 }
 
 // ---------- counting ----------
@@ -239,7 +342,7 @@ export function sceneCount(md) {
   return splitScenes(md).filter(Boolean).length;
 }
 
-export const manuscriptWords = (p) => activeDraft(p).chapters.reduce((n, c) => n + countWords(c.content), 0);
+export const manuscriptWords = (p) => chaptersOf(activeDraft(p)).reduce((n, c) => n + countWords(c.content), 0);
 
 export function todayKey(d = new Date()) {
   const pad = (n) => String(n).padStart(2, '0');

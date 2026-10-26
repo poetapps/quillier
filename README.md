@@ -27,14 +27,18 @@ Shipping a new version, the website, and auto-updates are covered in [RELEASING.
   - A **This book / Whole series** switch shows one book or the whole series.
 - **Name suggestions**: after a capital and two letters, a name from the story bible finishes itself in grey. **Tab** takes it, anything else keeps typing; when two names fit, a short list shows (↑/↓, Tab). Can be turned off in Settings.
 - **Notes**: one free-form page for the whole project (characters, places, research).
-- **Outline**: planning sections. Add with `+` on hover or ⌥⌘N.
-- **Manuscript**: your chapters, numbered in order. Drag to reorder, double-click to rename, right-click for more.
+- **Starting a book**: New project first asks how to start: blank, or from one of five story structures (Three-Act, Save the Cat!, The Hero’s Journey, Seven-Point, Story Circle). A structure fills the Outline with a folder per act and a page per beat, each holding a short explanation of what should happen there, meant to be written over. Optionally the acts get matching folders in the manuscript, and every beat gets an empty chapter.
+- **Outline**: planning sections, in folders as deep as you like (say, Part One → Act I → beats). Add with `+` on hover or ⌥⌘N; right-click a folder to add a structure inside it.
+  - **Show in manuscript**: a toggle on an outline folder's page (or its right-click menu) gives the manuscript a matching folder, plus one for every folder inside it. The two share a name; the manuscript folder keeps its own notes, and its notes panel shows what the outline says about it. Turning it off removes the manuscript folder only if nothing's been written in it, and turning it back on links the same one again.
+- **Manuscript**: your chapters, numbered in order (folders don't affect the numbers). Drag to reorder or into a folder (drop on the middle of a folder row), double-click to rename, right-click for more. Folders collapse, and **Remove folder, keep contents** ungroups one.
+  - **Book parts**: folders are only for organizing unless you turn on **Book part**. A part starts with its own “Part One” page in every export and nests its chapters in the EPUB contents.
+  - **Linking chapters to beats**: the outline button under a chapter's title picks the beats it covers (as many as you like). Their outline text shows at the top of the chapter's notes panel, and each beat's page shows which chapters cover it.
   - **Drafts**: the "Draft 1" menu lets you branch the whole manuscript into a new draft and switch between them.
   - **Scenes**: type `***` on its own line and press Enter (or ⌘↵) to add a scene break.
 - **Smart typing**: quotes curl, `--` becomes an em dash, `...` becomes an ellipsis. For anything else (`1/2`, `(c)`, `->`, `+/-`, `!=`, `<<`), a small popover offers the symbol. **Tab** takes it, **Space** keeps what you typed. Both can be turned off in Settings.
 - **Notes panel** (right side, ⇧⌘\\): side notes for whatever page you're on, plus a **Details** tab with word counts, who and what from the story bible is in this chapter, a scene list, and your writing history.
-- **Notes on text**: select a passage and press ⌥⌘M (or the note button in the formatting bar). The passage gets a faint dotted underline, and the note shows under "On the page" in the notes panel. Hover a noted passage, or click into it, and the note pops up just below the line; click the note to edit it. The pop-up never shows while text is selected, so it can't get in the formatting bar's way. In the panel, click the quoted text to jump back to the passage, or press Esc while typing a note. If you delete the passage, its note stays and is marked as detached. Notes are stored next to the chapter, never inside its Markdown, so exports stay clean.
-- **Trash**: deleted chapters, sections, and drafts go here so you can restore them.
+- **Notes on text**: select a passage and press ⌥⌘M (or the note button in the formatting bar). The passage gets a faint dotted underline, and the note shows under "On the page" in the notes panel. Hover a noted passage, or click into it, and the note pops up just below the line; click the note to edit it. The pop-up never shows while text is selected, so it can't get in the formatting bar's way. In the panel, click the quoted text to jump back to the passage, or press Esc while typing a note. If you delete the passage, its note stays and is marked as detached. Notes are stored next to the chapter, never inside its Markdown, so exports stay clean. By default the panel lists only the notes on text you can see, following you as you scroll; **Show all** lists every note on the page.
+- **Trash**: deleted chapters, sections, folders (with everything in them), and drafts go here so you can restore them.
 - **Themes**: light, dark, or follow the system. **Pure black** (Settings) makes dark mode true `#000` everywhere except the text, for OLED screens.
 
 ## The project file
@@ -82,7 +86,9 @@ Unfinished features stay hidden until you turn on **Settings → Alpha features*
 - `electron/preload.js`: the small `window.api` bridge
 - `electron/updater.js`: update checks against GitHub Releases (quiet, no pop-ups)
 - `src/store.js`: app state, autosave, every action
-- `src/lib/project.js`: the `.quill` format, word counts, import parsing
-- `src/lib/export.js`: Markdown/HTML export
+- `src/lib/project.js`: the `.quill` format, folders, word counts, import parsing
+- `src/lib/structure.js`: how the outline and the manuscript link up, and starting from a structure
+- `src/lib/templates.js`: the five story structures and their guidance text
+- `src/lib/export.js`: Markdown/HTML/manuscript/EPUB export
 - `src/components/`: the UI (TipTap editor with Markdown in/out)
 - `site/`: the quillier.com landing page (plain HTML, deployed by Vercel on every push to main)

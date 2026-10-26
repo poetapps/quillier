@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { FileText, Folder, Globe, FileDown, FileType2, BookOpen, Layers, Check, ArrowRight } from 'lucide-react';
+import { FileText, Folder, Globe, FileDown, FileType2, BookOpen, Layers, Check, ArrowRight, FilePlus, LayoutTemplate } from 'lucide-react';
 import { useStore, closeModal, setPrefs, exportManuscript, setProjectMeta, checkForUpdates } from '../store.js';
-import { activeDraft } from '../lib/project.js';
+import { activeDraft, chaptersOf } from '../lib/project.js';
+import { STRUCTURES } from '../lib/templates.js';
 import { Modal, Segmented, Toggle } from './ui.jsx';
 import { readBookForMerge, readSeriesForMerge, chooseNewSeriesFor, confirmAddToSeries } from '../bibleActions.js';
 import { planMerge, matchReason, numberedCount, bookLabels } from '../lib/series.js';
@@ -250,7 +251,7 @@ function ExportModal() {
       footer={
         <>
           <span className="foot-note">
-            {draft.name} · {draft.chapters.length} chapters
+            {draft.name} · {chaptersOf(draft).length} chapters
           </span>
           <button className="btn" onClick={() => closeModal(null)}>
             Cancel
@@ -322,6 +323,82 @@ function ExportModal() {
           <Toggle checked={titlePage} onChange={setTitlePage} />
         </Row>
       )}
+    </Modal>
+  );
+}
+
+// ---------- starting from a story structure ----------
+// The extra step in New project (mode 'new', which can also start blank) and the Outline's
+// "Add a structure" (mode 'add'). Resolves with { structure, mirror, chapters }.
+
+function StructureModal({ modal }) {
+  const adding = modal.mode === 'add';
+  const [id, setId] = useState(adding ? STRUCTURES[0].id : 'blank');
+  const [mirror, setMirror] = useState(true);
+  const [chapters, setChapters] = useState(false);
+  const structure = STRUCTURES.find((s) => s.id === id) || null;
+  const beats = structure ? structure.folders.reduce((n, f) => n + f.beats.length, 0) : 0;
+  const options = [
+    ...(adding ? [] : [{ id: 'blank', name: 'Blank', summary: 'An empty outline and one chapter. Add folders and structures whenever you like.' }]),
+    ...STRUCTURES,
+  ];
+  const done = () => closeModal({ structure, mirror, chapters });
+  return (
+    <Modal
+      title={adding ? 'Add a structure' : 'Start your book'}
+      width={760}
+      footer={
+        <>
+          <span className="foot-note">{structure ? `${structure.folders.length} folders · ${beats} beats, each with notes to write over` : 'You can add a structure to the Outline later.'}</span>
+          <button className="btn" onClick={() => closeModal(null)}>
+            Cancel
+          </button>
+          <button className="btn primary" onClick={done}>
+            {adding ? 'Add to outline' : 'Continue…'}
+          </button>
+        </>
+      }
+    >
+      <div className="start-grid">
+        <div className="start-options">
+          {options.map((o) => (
+            <button key={o.id} className={`start-option ${id === o.id ? 'on' : ''}`} onClick={() => setId(o.id)} onDoubleClick={() => closeModal({ structure: STRUCTURES.find((s) => s.id === o.id) || null, mirror, chapters })}>
+              {o.id === 'blank' ? <FilePlus size={16} strokeWidth={1.6} /> : <LayoutTemplate size={16} strokeWidth={1.6} />}
+              <span>{o.name}</span>
+            </button>
+          ))}
+        </div>
+        <div className="start-preview">
+          <p className="start-summary">{options.find((o) => o.id === id)?.summary}</p>
+          {structure ? (
+            <>
+              <div className="start-folders">
+                {structure.folders.map((f) => (
+                  <div key={f.title} className="start-folder">
+                    <div className="start-folder-title">
+                      <Folder size={14} strokeWidth={1.7} />
+                      {f.title}
+                    </div>
+                    <ol>
+                      {f.beats.map((b) => (
+                        <li key={b.title}>{b.title}</li>
+                      ))}
+                    </ol>
+                  </div>
+                ))}
+              </div>
+              <Row label="Show the folders in the manuscript" hint="Your chapters get matching folders to live in. Change this per folder any time.">
+                <Toggle checked={mirror} onChange={setMirror} />
+              </Row>
+              <Row label="Start a chapter for each beat" hint="Empty chapters named after the beats, each linked to its outline page.">
+                <Toggle checked={chapters} onChange={setChapters} />
+              </Row>
+            </>
+          ) : (
+            <p className="start-blank">Folders, story structures and links between the outline and your chapters are all there when you want them.</p>
+          )}
+        </div>
+      </div>
     </Modal>
   );
 }
@@ -554,5 +631,6 @@ export default function Modals() {
   if (modal.type === 'settings') return <SettingsModal modal={modal} />;
   if (modal.type === 'export') return <ExportModal />;
   if (modal.type === 'addToSeries') return <AddToSeriesModal modal={modal} />;
+  if (modal.type === 'structure') return <StructureModal modal={modal} />;
   return null;
 }

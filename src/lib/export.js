@@ -1,5 +1,5 @@
 import { marked } from 'marked';
-import { activeDraft, manuscriptWords } from './project.js';
+import { activeDraft, manuscriptWords, chaptersOf, isFolder, partNumbers, partLabel } from './project.js';
 import courierRegular from '@fontsource/courier-prime/files/courier-prime-latin-400-normal.woff2?inline';
 import courierItalic from '@fontsource/courier-prime/files/courier-prime-latin-400-italic.woff2?inline';
 import courierBold from '@fontsource/courier-prime/files/courier-prime-latin-700-normal.woff2?inline';
@@ -19,6 +19,41 @@ export function chapterTitle(c, i) {
   return !t || /^untitled chapter$/i.test(t) ? `Chapter ${i + 1}` : t;
 }
 
+// A part page shows "Part Two" and the folder's name, unless the name only says "Part Two" again.
+function partSubtitle(folder) {
+  const t = (folder.title || '').trim();
+  return !t || /^untitled folder$/i.test(t) || /^part\s+([a-z]+|\d+)$/i.test(t) ? '' : t;
+}
+
+// The book in reading order: chapters, plus a part page wherever a folder marked as a book part
+// starts. Other folders only organize the manuscript and leave no trace. `parent` is the part an
+// item sits in and `depth` how many parts deep it is.
+function bookItems(p) {
+  const draft = activeDraft(p);
+  const byId = new Map(draft.chapters.map((d) => [d.id, d]));
+  const parts = partNumbers(draft);
+  const partAbove = (d) => {
+    for (let f = byId.get(d.parent); f; f = byId.get(f.parent)) if (f.part) return f.id;
+    return null;
+  };
+  const items = [];
+  const depth = {};
+  let index = 0;
+  for (const d of draft.chapters) {
+    const parent = partAbove(d);
+    depth[d.id] = parent ? depth[parent] + 1 : 0;
+    if (!isFolder(d)) {
+      items.push({ type: 'chapter', id: d.id, chapter: d, index, title: chapterTitle(d, index), parent, depth: depth[d.id] });
+      index++;
+    } else if (d.part) {
+      const label = partLabel(parts[d.id]);
+      const subtitle = partSubtitle(d);
+      items.push({ type: 'part', id: d.id, n: parts[d.id], label, subtitle, title: subtitle ? `${label}: ${subtitle}` : label, parent, depth: depth[d.id] });
+    }
+  }
+  return items;
+}
+
 // Exported pages never run scripts (imported Markdown can contain raw HTML).
 const NO_SCRIPTS = `<meta http-equiv="Content-Security-Policy" content="script-src 'none'">`;
 
@@ -26,17 +61,21 @@ const NO_SCRIPTS = `<meta http-equiv="Content-Security-Policy" content="script-s
 
 export function exportMarkdown(p, { titles, titlePage }) {
   const parts = [];
-  const level = titlePage ? '##' : '#';
+  const base = titlePage ? 2 : 1;
+  const heading = (depth, text) => `${'#'.repeat(Math.min(6, base + depth))} ${text}`;
   if (titlePage) parts.push(`# ${p.title}`);
-  activeDraft(p).chapters.forEach((c, i) => {
-    const body = c.content.trim();
-    parts.push(titles ? `${level} ${chapterTitle(c, i)}\n\n${body}` : body);
-  });
+  for (const it of bookItems(p)) {
+    if (it.type === 'part') parts.push(heading(it.depth, it.title));
+    else {
+      const body = it.chapter.content.trim();
+      parts.push(titles ? `${heading(it.depth, it.title)}\n\n${body}` : body);
+    }
+  }
   return parts.filter(Boolean).join('\n\n') + '\n';
 }
 
 export function exportChapterFiles(p, { titles }) {
-  return activeDraft(p).chapters.map((c, i) => ({
+  return chaptersOf(activeDraft(p)).map((c, i) => ({
     name: `${pad(i + 1)} ${chapterTitle(c, i)}.md`,
     content: (titles ? `# ${chapterTitle(c, i)}\n\n` : '') + c.content.trim() + '\n',
   }));
@@ -45,10 +84,13 @@ export function exportChapterFiles(p, { titles }) {
 // ---------- book-style HTML / PDF ----------
 
 export function exportHtml(p, { titles, titlePage }) {
-  const chapters = activeDraft(p)
-    .chapters.map((c, i) => {
-      const heading = titles ? `<h1 class="chapter-title">${escapeHtml(chapterTitle(c, i))}</h1>` : '';
-      return `<section class="chapter">${heading}${marked.parse(c.content || '')}</section>`;
+  const chapters = bookItems(p)
+    .map((it) => {
+      if (it.type === 'part') {
+        return `<section class="part"><p class="part-label">${escapeHtml(it.label)}</p>${it.subtitle ? `<h1 class="part-title">${escapeHtml(it.subtitle)}</h1>` : ''}</section>`;
+      }
+      const heading = titles ? `<h1 class="chapter-title">${escapeHtml(it.title)}</h1>` : '';
+      return `<section class="chapter">${heading}${marked.parse(it.chapter.content || '')}</section>`;
     })
     .join('\n');
   const cover = titlePage
@@ -64,6 +106,9 @@ export function exportHtml(p, { titles, titlePage }) {
   .chapter { break-before: page; page-break-before: always; }
   .chapter:first-of-type { break-before: auto; page-break-before: auto; }
   .chapter-title { font-size: 1.6em; font-weight: 600; margin: 3em 0 1.5em; text-align: center; }
+  .part { min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; break-before: page; page-break-before: always; break-after: page; page-break-after: always; }
+  .part .part-label { text-indent: 0; text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.95em; }
+  .part-title { font-size: 2em; font-weight: 600; text-align: center; margin: 0.6em 0 0; }
   p { margin: 0; text-indent: 1.5em; }
   h1 + p, h2 + p, h3 + p, hr + p, blockquote + p, .chapter > p:first-child { text-indent: 0; }
   hr { border: 0; text-align: center; margin: 1.6em 0; }
@@ -96,10 +141,13 @@ export function exportManuscriptHtml(p, { underlineItalics }) {
   const header = `${surname ? `${surname} / ` : ''}${keyword} / `;
   const words = roundedWords(manuscriptWords(p));
 
-  const chapters = activeDraft(p)
-    .chapters.map((c, i) => {
-      const body = marked.parse(c.content || '').replace(/<hr\s*\/?>/g, '<p class="scene-break">#</p>');
-      return `<section class="chapter"><h1 class="chapter-title">${escapeHtml(chapterTitle(c, i))}</h1>${body}</section>`;
+  const chapters = bookItems(p)
+    .map((it) => {
+      if (it.type === 'part') {
+        return `<section class="part-page"><p>${escapeHtml(it.label.toUpperCase())}</p>${it.subtitle ? `<p>${escapeHtml(it.subtitle)}</p>` : ''}</section>`;
+      }
+      const body = marked.parse(it.chapter.content || '').replace(/<hr\s*\/?>/g, '<p class="scene-break">#</p>');
+      return `<section class="chapter"><h1 class="chapter-title">${escapeHtml(it.title)}</h1>${body}</section>`;
     })
     .join('\n');
 
@@ -145,6 +193,8 @@ export function exportManuscriptHtml(p, { underlineItalics }) {
   .title-block p { text-indent: 0; text-align: center; }
 
   .chapter { break-before: page; padding-top: 2.25in; }
+  .part-page { break-before: page; padding-top: 3.6in; }
+  .part-page p { text-indent: 0; text-align: center; }
   .chapter-title { margin-bottom: 24pt; }
   .scene-break { text-indent: 0; text-align: center; }
   .end { text-indent: 0; text-align: center; margin-top: 24pt; }
@@ -216,7 +266,11 @@ blockquote { margin: 1em 1.5em; }
 body.cover { margin: 0; padding: 0; text-align: center; }
 body.cover div { height: 100vh; }
 body.cover svg { height: 100%; width: 100%; }
+.part-page { text-align: center; margin-top: 30%; page-break-before: always; }
+.part-page .part-label { text-indent: 0; text-transform: uppercase; letter-spacing: 0.15em; }
+.part-title { font-weight: normal; font-size: 1.6em; margin: 0.6em 0 0; }
 nav ol { list-style: none; padding: 0; }
+nav ol ol { padding-left: 1.2em; }
 nav li { margin: 0.4em 0; }
 `;
 
@@ -288,12 +342,14 @@ export async function buildEpub(p, { titles, cover: chosenCover }) {
   const lang = (p.meta?.language || navigator.language || 'en').trim();
   const uid = `urn:uuid:${p.meta.uuid}`;
   const modified = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
-  const chapters = activeDraft(p).chapters.map((c, i) => ({
-    id: `ch${pad(i + 1)}`,
-    file: `chapter-${pad(i + 1)}.xhtml`,
-    title: chapterTitle(c, i),
-    content: c.content,
-  }));
+  // Chapters and part pages, one file each, in reading order.
+  const chapters = bookItems(p).map((it) =>
+    it.type === 'part'
+      ? { ...it, ref: `part${pad(it.n)}`, file: `part-${pad(it.n)}.xhtml` }
+      : { ...it, ref: `ch${pad(it.index + 1)}`, file: `chapter-${pad(it.index + 1)}.xhtml`, content: it.chapter.content }
+  );
+  const within = new Map();
+  for (const c of chapters) within.set(c.parent, [...(within.get(c.parent) || []), c]);
 
   const cover = chosenCover
     ? { ext: chosenCover.ext === 'jpeg' ? 'jpg' : chosenCover.ext, data: chosenCover.data, ...(await imageSize(chosenCover.data)) }
@@ -335,11 +391,32 @@ export async function buildEpub(p, { titles, cover: chosenCover }) {
     )
   );
   for (const c of chapters) {
+    if (c.type === 'part') {
+      const title = c.subtitle ? `<h1 class="part-title">${xml(c.subtitle)}</h1>` : '';
+      add(c.file, xhtmlPage(lang, c.title, `<section epub:type="part" class="part-page"><p class="part-label">${xml(c.label)}</p>${title}</section>`));
+      continue;
+    }
     const heading = titles ? `<h1 class="chapter-title">${xml(c.title)}</h1>` : '';
     add(c.file, xhtmlPage(lang, c.title, `<section epub:type="chapter">${heading}${toXhtml(c.content)}</section>`));
   }
 
-  const tocItems = chapters.map((c) => `<li><a href="${c.file}">${xml(c.title)}</a></li>`).join('\n      ');
+  // Contents nest chapters under their parts.
+  const tocList = (parent, indent) =>
+    (within.get(parent) || [])
+      .map((c) => {
+        const sub = within.has(c.id) ? `\n${indent}  <ol>\n${tocList(c.id, `${indent}    `)}\n${indent}  </ol>\n${indent}` : '';
+        return `${indent}<li><a href="${c.file}">${xml(c.title)}</a>${sub}</li>`;
+      })
+      .join('\n');
+  let order = 0;
+  const navPoints = (parent, indent) =>
+    (within.get(parent) || [])
+      .map((c) => {
+        const n = ++order;
+        const sub = within.has(c.id) ? `\n${navPoints(c.id, `${indent}  `)}\n${indent}` : '';
+        return `${indent}<navPoint id="np${n}" playOrder="${n}"><navLabel><text>${xml(c.title)}</text></navLabel><content src="${c.file}"/>${sub}</navPoint>`;
+      })
+      .join('\n');
   add(
     'nav.xhtml',
     `<?xml version="1.0" encoding="utf-8"?>
@@ -354,7 +431,7 @@ export async function buildEpub(p, { titles, cover: chosenCover }) {
   <nav epub:type="toc" id="toc">
     <h1>Contents</h1>
     <ol>
-      ${tocItems}
+${tocList(null, '      ')}
     </ol>
   </nav>
   <nav epub:type="landmarks" hidden="">
@@ -375,15 +452,13 @@ export async function buildEpub(p, { titles, cover: chosenCover }) {
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
   <head>
     <meta name="dtb:uid" content="${xml(uid)}"/>
-    <meta name="dtb:depth" content="1"/>
+    <meta name="dtb:depth" content="${1 + Math.max(0, ...chapters.map((c) => c.depth))}"/>
     <meta name="dtb:totalPageCount" content="0"/>
     <meta name="dtb:maxPageNumber" content="0"/>
   </head>
   <docTitle><text>${xml(p.title)}</text></docTitle>
   <navMap>
-    ${chapters
-      .map((c, i) => `<navPoint id="np${i + 1}" playOrder="${i + 1}"><navLabel><text>${xml(c.title)}</text></navLabel><content src="${c.file}"/></navPoint>`)
-      .join('\n    ')}
+${navPoints(null, '    ')}
   </navMap>
 </ncx>
 `
@@ -408,12 +483,12 @@ export async function buildEpub(p, { titles, cover: chosenCover }) {
     <item id="cover-image" href="${coverFile}" media-type="${coverType}" properties="cover-image"/>
     <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml" properties="svg"/>
     <item id="titlepage" href="title.xhtml" media-type="application/xhtml+xml"/>
-    ${chapters.map((c) => `<item id="${c.id}" href="${c.file}" media-type="application/xhtml+xml"/>`).join('\n    ')}
+    ${chapters.map((c) => `<item id="${c.ref}" href="${c.file}" media-type="application/xhtml+xml"/>`).join('\n    ')}
   </manifest>
   <spine toc="ncx">
     <itemref idref="cover"/>
     <itemref idref="titlepage"/>
-    ${chapters.map((c) => `<itemref idref="${c.id}"/>`).join('\n    ')}
+    ${chapters.map((c) => `<itemref idref="${c.ref}"/>`).join('\n    ')}
   </spine>
 </package>
 `

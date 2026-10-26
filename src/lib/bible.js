@@ -3,7 +3,7 @@
 // Nothing is ever written into the text. Mentions are found by name and alias (whole words,
 // case-sensitive), so exports stay clean and pasted or imported chapters are counted too.
 
-import { activeDraft, countWords, excerpt } from './project.js';
+import { activeDraft, chaptersOf, countWords, excerpt } from './project.js';
 import { bookLabels } from './series.js';
 
 export const MONTHS = new Set(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
@@ -35,7 +35,7 @@ export function buildContext(project, series) {
     title: project.title,
     current: true,
     missing: false,
-    chapters: activeDraft(project).chapters,
+    chapters: chaptersOf(activeDraft(project)),
     bible: project.bible,
     label: 'This book',
     short: '',

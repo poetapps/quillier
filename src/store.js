@@ -1,6 +1,5 @@
 import { useSyncExternalStore } from 'react';
 import {
-  createProject,
   normalizeProject,
   findDoc,
   mapDoc,
@@ -10,9 +9,16 @@ import {
   countWords,
   todayKey,
   uid,
-  moveItem,
   parseImport,
+  isFolder,
+  chaptersOf,
+  normalizeTree,
+  subtreeRange,
+  moveInTree,
+  nudgeInTree,
+  copyTree,
 } from './lib/project.js';
+import { createBook, mirrorFolders, unmirrorFolders, renameLinked, applyStructure, mirrorOf } from './lib/structure.js';
 import { exportMarkdown, exportChapterFiles, exportHtml, exportManuscriptHtml, buildEpub } from './lib/export.js';
 import { normalizeSeries, candidatePaths, relativePath, dirOf, SERIES_FILE } from './lib/series.js';
 import { noteRange, removeNoteMarks, applyAnchors } from './lib/inlineNotes.js';
@@ -295,7 +301,7 @@ export async function openProjectAt(path, { quiet = false, view, bible } = {}) {
     return false;
   }
   if (!findDoc(project, project.ui.openId)) {
-    project.ui.openId = activeDraft(project).chapters[0]?.id || 'notes';
+    project.ui.openId = chaptersOf(activeDraft(project))[0]?.id || 'notes';
   }
   dirty = false;
   const series = await loadSeriesFor(path, project);
@@ -351,7 +357,7 @@ export async function loadSiblings(seriesPath, data, currentUuid) {
     }
     try {
       const p = normalizeProject(r.data);
-      siblings[r.uuid] = { path: r.path, title: p.title, chapters: activeDraft(p).chapters, bible: p.bible, missing: false };
+      siblings[r.uuid] = { path: r.path, title: p.title, chapters: chaptersOf(activeDraft(p)), bible: p.bible, missing: false };
     } catch {
       siblings[r.uuid] = { missing: true };
     }
@@ -404,12 +410,21 @@ export async function openProjectDialog() {
   if (path) await openProjectAt(path);
 }
 
+// The extra step before a new book: start blank or from a story structure. Resolves to
+// { structure, mirror, chapters } (structure null for blank), or null if cancelled.
+export const chooseStart = () => new Promise((resolve) => setState({ modal: { type: 'structure', mode: 'new', resolve }, menu: null }));
+
+// After a new book opens: a blank one puts the cursor in the chapter title.
+export const focusNewBook = (project) => !project.outline.length && setState({ focusTitleId: project.ui.openId });
+
 export async function newProject() {
+  const start = await chooseStart();
+  if (!start) return;
   const path = await api.chooseNewProject('Untitled');
   if (!path) return;
   await settle();
   const title = path.split(/[\\/]/).pop().replace(/\.(quill|ldraft)$/i, '');
-  const project = createProject(title);
+  const project = createBook(title, start);
   const res = await api.saveProject(path, JSON.stringify(project));
   if (!res.ok) {
     api.confirm({ type: 'warning', message: 'Could not create project', detail: res.error, buttons: ['OK'] });
@@ -417,7 +432,7 @@ export async function newProject() {
   }
   setState({ path: null, project: null });
   await openProjectAt(path);
-  setState({ focusTitleId: project.ui.openId });
+  focusNewBook(project);
 }
 
 export async function closeProject() {
@@ -466,6 +481,7 @@ export function updateDocField(id, field, value) {
     if (!found || found.doc[field] === value) return p;
     let next = mapDoc(p, id, (d) => ({ ...d, [field]: value, updatedAt: new Date().toISOString() }));
     if (field === 'content' && found.kind === 'chapter') next = addDailyWords(next, countWords(value) - countWords(found.doc.content));
+    if (field === 'title' && found.kind === 'folder') next = renameLinked(next, id, value);
     return next;
   });
 }
@@ -566,51 +582,96 @@ export function jumpToNote(noteId) {
   });
 }
 
-export function addChapter() {
+// ---------- outline and manuscript lists (with folders) ----------
+
+const listOf = (p, area) => (area === 'outline' ? p.outline : activeDraft(p).chapters);
+const withList = (p, area, list) => (area === 'outline' ? { ...p, outline: list } : mapActiveChapters(p, () => list));
+
+// Open folder `id` and every folder around it, so an item inside shows in the sidebar.
+function revealIn(list, id) {
+  const open = new Set();
+  for (let d = list.find((x) => x.id === id); d; d = d.parent && list.find((x) => x.id === d.parent)) if (isFolder(d) && !d.open) open.add(d.id);
+  return open.size ? list.map((d) => (open.has(d.id) ? { ...d, open: true } : d)) : list;
+}
+
+// New items go at the end of the folder the open page is in (or of the open folder itself),
+// otherwise at the end of the list. `parent` overrides that: a folder id, or null for the top level.
+function addItem(area, doc, parent) {
   if (!state.project) return;
   flushEditors();
-  const doc = newDoc('chapter', 'Untitled chapter');
-  commit((p) => ({ ...mapActiveChapters(p, (cs) => [...cs, doc]), ui: { ...p.ui, openId: doc.id } }));
+  commit((p) => {
+    let list = listOf(p, area);
+    if (parent === undefined) {
+      const open = list.find((d) => d.id === p.ui.openId);
+      parent = open ? (isFolder(open) ? open.id : open.parent || null) : null;
+    }
+    const index = parent ? subtreeRange(list, parent)[1] : list.length;
+    list = revealIn([...list.slice(0, index), { ...doc, parent }, ...list.slice(index)], doc.id);
+    let next = withList(p, area, list);
+    // A folder made inside one that shows in the manuscript shows there too.
+    if (area === 'outline' && isFolder(doc) && parent && mirrorOf(next, parent)) next = mirrorFolders(next, doc.id);
+    return { ...next, ui: { ...p.ui, openId: doc.id, ...(area === 'outline' ? { outlineOpen: true } : {}) } };
+  });
   setState({ view: 'page', focusTitleId: doc.id });
 }
 
-export function addSection() {
-  if (!state.project) return;
-  flushEditors();
-  const doc = newDoc('section', 'Untitled section');
-  commit((p) => ({ ...p, outline: [...p.outline, doc], ui: { ...p.ui, openId: doc.id, outlineOpen: true } }));
-  setState({ view: 'page', focusTitleId: doc.id });
-}
+const where = (inFolder) => (typeof inFolder === 'string' || inFolder === null ? inFolder : undefined);
+export const addChapter = (inFolder) => addItem('manuscript', newDoc('chapter', 'Untitled chapter'), where(inFolder));
+export const addSection = (inFolder) => addItem('outline', newDoc('section', 'Untitled section'), where(inFolder));
+export const addFolder = (area, inFolder) => addItem(area, newDoc('folder', 'Untitled folder'), where(inFolder));
 
 export function toggleOutline() {
   commit((p) => ({ ...p, ui: { ...p.ui, outlineOpen: !p.ui.outlineOpen } }), { touch: false });
+}
+
+export function toggleFolder(id) {
+  commit((p) => mapDoc(p, id, (d) => ({ ...d, open: !d.open })), { touch: false });
 }
 
 export function duplicateDoc(id) {
   flushEditors();
   const found = findDoc(state.project, id);
   if (!found || found.kind === 'notes') return;
-  const copy = { ...found.doc, id: uid(), title: `${found.doc.title} copy`, createdAt: new Date().toISOString() };
-  const insert = (list) => [...list.slice(0, found.index + 1), copy, ...list.slice(found.index + 1)];
-  commit((p) =>
-    found.kind === 'section'
-      ? { ...p, outline: insert(p.outline), ui: { ...p.ui, openId: copy.id } }
-      : { ...mapActiveChapters(p, insert), ui: { ...p.ui, openId: copy.id } }
-  );
+  commit((p) => {
+    const list = listOf(p, found.area);
+    const [start, end] = subtreeRange(list, id);
+    const copies = copyTree(list.slice(start, end)).map((d) => (found.area === 'manuscript' && isFolder(d) ? { ...d, link: null } : d));
+    copies[0] = { ...copies[0], title: `${found.doc.title} copy`, createdAt: new Date().toISOString() };
+    return { ...withList(p, found.area, [...list.slice(0, end), ...copies, ...list.slice(end)]), ui: { ...p.ui, openId: copies[0].id } };
+  });
 }
 
-export function moveDoc(kind, from, to) {
-  if (from === to || from + 1 === to) return;
-  commit((p) => (kind === 'section' ? { ...p, outline: moveItem(p.outline, from, to) } : mapActiveChapters(p, (cs) => moveItem(cs, from, to))));
+// Move an item (and anything inside it) into folder `parent` (null: top level), before `beforeId` (null: at the end).
+export function moveDoc(area, id, parent, beforeId) {
+  commit((p) => {
+    const list = listOf(p, area);
+    const moved = moveInTree(list, id, parent, beforeId);
+    return moved === list ? p : withList(p, area, parent ? revealIn(moved, parent) : moved);
+  });
 }
 
 export function nudgeDoc(id, dir) {
   const found = findDoc(state.project, id);
-  if (!found) return;
-  const len = found.kind === 'section' ? state.project.outline.length : activeDraft(state.project).chapters.length;
-  const to = dir < 0 ? found.index - 1 : found.index + 2;
-  if (to < 0 || to > len) return;
-  moveDoc(found.kind, found.index, to);
+  if (!found || found.kind === 'notes') return;
+  commit((p) => {
+    const list = listOf(p, found.area);
+    const moved = nudgeInTree(list, id, dir);
+    return moved === list ? p : withList(p, found.area, revealIn(moved, id));
+  });
+}
+
+// Take the folder away but keep what was in it, one level up.
+export function ungroupFolder(id) {
+  const found = findDoc(state.project, id);
+  if (found?.kind !== 'folder') return;
+  flushEditors();
+  commit((p) => {
+    const list = listOf(p, found.area)
+      .filter((d) => d.id !== id)
+      .map((d) => (d.parent === id ? { ...d, parent: found.doc.parent || null } : d));
+    const next = withList(p, found.area, normalizeTree(list));
+    return p.ui.openId === id ? { ...next, ui: { ...next.ui, openId: list[found.index]?.id || 'notes' } } : next;
+  });
 }
 
 export function deleteDoc(id) {
@@ -618,28 +679,32 @@ export function deleteDoc(id) {
   const p0 = state.project;
   const found = findDoc(p0, id);
   if (!found || found.kind === 'notes') return;
+  const list0 = listOf(p0, found.area);
+  const [start, end] = subtreeRange(list0, id);
   const entry = {
     id: uid(),
     kind: found.kind,
+    area: found.area,
     draftId: p0.activeDraftId,
     index: found.index,
     doc: found.doc,
+    ...(found.kind === 'folder' ? { docs: list0.slice(start, end) } : {}),
     deletedAt: new Date().toISOString(),
   };
   commit((p) => {
-    let next =
-      found.kind === 'section'
-        ? { ...p, outline: p.outline.filter((s) => s.id !== id) }
-        : mapActiveChapters(p, (cs) => cs.filter((c) => c.id !== id));
-    next = { ...next, trash: [entry, ...p.trash] };
-    if (p.ui.openId === id) {
-      const siblings = found.kind === 'section' ? next.outline : activeDraft(next).chapters;
-      const neighbor = siblings[Math.min(found.index, siblings.length - 1)];
+    const list = listOf(p, found.area);
+    const gone = new Set(list0.slice(start, end).map((d) => d.id));
+    const left = list.filter((d) => !gone.has(d.id));
+    let next = { ...withList(p, found.area, left), trash: [entry, ...p.trash] };
+    if (gone.has(p.ui.openId)) {
+      const neighbor = left[Math.min(found.index, left.length - 1)];
       next.ui = { ...p.ui, openId: neighbor ? neighbor.id : 'notes' };
     }
     return next;
   });
-  toast(`Moved “${found.doc.title || 'Untitled'}” to trash`, { label: 'Undo', run: () => restoreTrash(entry.id) });
+  const inside = end - start - 1;
+  const what = `“${found.doc.title || 'Untitled'}”${inside ? ` and ${inside} item${inside === 1 ? '' : 's'} in it` : ''}`;
+  toast(`Moved ${what} to trash`, { label: 'Undo', run: () => restoreTrash(entry.id) });
 }
 
 export function restoreTrash(entryId) {
@@ -648,10 +713,11 @@ export function restoreTrash(entryId) {
   commit((p) => {
     let next = { ...p, trash: p.trash.filter((t) => t.id !== entryId) };
     if (entry.kind === 'draft') {
-      return { ...next, drafts: [...next.drafts, entry.draft], activeDraftId: entry.draft.id, ui: { ...next.ui, openId: entry.draft.chapters[0]?.id || 'notes' } };
+      return { ...next, drafts: [...next.drafts, entry.draft], activeDraftId: entry.draft.id, ui: { ...next.ui, openId: chaptersOf(entry.draft)[0]?.id || 'notes' } };
     }
-    const at = (list) => [...list.slice(0, entry.index), entry.doc, ...list.slice(entry.index)];
-    if (entry.kind === 'section') {
+    // The folder it was in may be gone too; then it comes back at the top level.
+    const at = (list) => normalizeTree(revealIn([...list.slice(0, entry.index), ...(entry.docs || [entry.doc]), ...list.slice(entry.index)], entry.doc.id));
+    if (entry.area === 'outline' || entry.kind === 'section') {
       next = { ...next, outline: at(next.outline), ui: { ...next.ui, outlineOpen: true } };
     } else {
       const draftId = next.drafts.some((d) => d.id === entry.draftId) ? entry.draftId : next.activeDraftId;
@@ -708,7 +774,7 @@ export const setStatus = (id, status) => updateDocField(id, 'status', status);
 function openMatchingChapter(p, prevDraft) {
   const found = findDoc({ ...p, activeDraftId: prevDraft }, p.ui.openId);
   const chapters = activeDraft(p).chapters;
-  if (found?.kind === 'chapter') {
+  if (found?.area === 'manuscript') {
     const c = chapters[Math.min(found.index, chapters.length - 1)];
     return { ...p, ui: { ...p.ui, openId: c ? c.id : 'notes' } };
   }
@@ -727,7 +793,7 @@ export async function newDraft() {
   if (!name || !name.trim()) return;
   commit((p) => {
     const src = activeDraft(p);
-    const draft = { id: uid(), name: name.trim(), chapters: src.chapters.map((c) => ({ ...c, id: uid() })) };
+    const draft = { id: uid(), name: name.trim(), chapters: copyTree(src.chapters) };
     return openMatchingChapter({ ...p, drafts: [...p.drafts, draft], activeDraftId: draft.id }, p.activeDraftId);
   });
   toast(`Created ${name.trim()}`);
@@ -753,6 +819,49 @@ export function deleteDraft(id) {
     return openMatchingChapter({ ...next, activeDraftId: drafts[0].id }, id);
   });
   toast(`Moved “${draft.name}” to trash`, { label: 'Undo', run: () => restoreTrash(entry.id) });
+}
+
+// ---------- outline ↔ manuscript ----------
+
+export function setShowInManuscript(outlineId, on) {
+  flushEditors();
+  if (on) return commit((p) => mirrorFolders(p, outlineId));
+  let kept = 0;
+  commit((p) => {
+    const res = unmirrorFolders(p, outlineId);
+    kept = res.kept;
+    return res.project;
+  });
+  if (kept) toast(kept === 1 ? 'The manuscript folder stays, since there’s writing in it' : `${kept} manuscript folders stay, since there’s writing in them`);
+}
+
+export function linkFolder(id, outlineId) {
+  const outline = state.project.outline.find((s) => s.id === outlineId);
+  if (!outline) return;
+  commit((p) => mapDoc(p, id, (d) => ({ ...d, link: outlineId, title: outline.title })));
+}
+
+export const unlinkFolder = (id) => commit((p) => mapDoc(p, id, (d) => ({ ...d, link: null, unlinked: d.link })));
+
+export function toggleBeat(chapterId, beatId) {
+  commit((p) =>
+    mapDoc(p, chapterId, (d) => {
+      const beats = d.beats || [];
+      return { ...d, beats: beats.includes(beatId) ? beats.filter((b) => b !== beatId) : [...beats, beatId] };
+    })
+  );
+}
+
+export async function addStructure(parent = null) {
+  const choice = await new Promise((resolve) => setState({ modal: { type: 'structure', mode: 'add', resolve }, menu: null }));
+  if (!choice?.structure) return;
+  flushEditors();
+  commit((p) => {
+    const next = applyStructure(p, choice.structure, { ...choice, parent });
+    const first = next.outline.find((s) => !p.outline.includes(s) && !isFolder(s));
+    return { ...next, outline: parent ? revealIn(next.outline, parent) : next.outline, ui: { ...next.ui, openId: first?.id || next.ui.openId, outlineOpen: true } };
+  });
+  setState({ view: 'page' });
 }
 
 // ---------- import / export ----------
@@ -804,8 +913,8 @@ export async function checkForUpdates() {
 // ---------- menu commands ----------
 
 const commands = {
-  'new-chapter': addChapter,
-  'new-section': addSection,
+  'new-chapter': () => addChapter(),
+  'new-section': () => addSection(),
   'new-project': newProject,
   'open-project': openProjectDialog,
   import: importManuscript,

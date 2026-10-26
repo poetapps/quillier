@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, FolderOpen, X, FileText, Moon, Sun, SlidersHorizontal, RotateCcw, Trash2, ListTree, Files } from 'lucide-react';
+import { Plus, FolderOpen, Folder, X, FileText, Moon, Sun, SlidersHorizontal, RotateCcw, Trash2, ListTree, Files } from 'lucide-react';
 import {
   useStore,
   newProject,
@@ -11,7 +11,7 @@ import {
   deleteForever,
   emptyTrash,
 } from '../store.js';
-import { countWords, todayKey } from '../lib/project.js';
+import { countWords, todayKey, chaptersOf, isFolder } from '../lib/project.js';
 import { IconButton, Wordmark } from './ui.jsx';
 
 const prettyPath = (p) => p.replace(/^\/Users\/[^/]+/, '~').replace(/\/[^/]+$/, '');
@@ -86,7 +86,7 @@ export function TrashView() {
       <article className="page">
         <h1 className="page-title static">Trash</h1>
         <div className="page-meta">
-          <span>Deleted chapters, sections and drafts stay here until you empty the trash.</span>
+          <span>Deleted chapters, sections, folders and drafts stay here until you empty the trash.</span>
           {trash.length > 0 && (
             <button className="link-btn danger" onClick={emptyTrash}>
               Empty trash
@@ -98,16 +98,23 @@ export function TrashView() {
           {trash.map((t) => {
             const isDraft = t.kind === 'draft';
             const title = isDraft ? t.draft.name : t.doc.title || 'Untitled';
-            const words = isDraft ? t.draft.chapters.reduce((n, c) => n + countWords(c.content), 0) : countWords(t.doc.content);
+            const pages = isDraft ? chaptersOf(t.draft) : (t.docs || [t.doc]).filter((d) => t.kind !== 'folder' || !isFolder(d));
+            const words = pages.reduce((n, c) => n + countWords(c.content), 0);
             const draftName = project.drafts.find((d) => d.id === t.draftId)?.name;
-            const Icon = isDraft ? Files : t.kind === 'section' ? ListTree : FileText;
+            const Icon = isDraft ? Files : t.kind === 'folder' ? Folder : t.kind === 'section' ? ListTree : FileText;
+            const inside = (t.docs?.length || 1) - 1;
+            const label = {
+              section: 'Outline section',
+              folder: `${t.area === 'outline' ? 'Outline folder' : 'Folder'}${inside ? ` · ${inside} item${inside === 1 ? '' : 's'}` : ''}`,
+              chapter: `Chapter${draftName ? ` · ${draftName}` : ''}`,
+            }[t.kind];
             return (
               <div key={t.id} className="trash-row">
                 <Icon size={18} strokeWidth={1.6} className="muted-icon" />
                 <div className="trash-text">
                   <div className="trash-title">{title}</div>
                   <div className="trash-sub">
-                    {isDraft ? `Draft · ${t.draft.chapters.length} chapters` : t.kind === 'section' ? 'Outline section' : `Chapter${draftName ? ` · ${draftName}` : ''}`} ·{' '}
+                    {isDraft ? `Draft · ${chaptersOf(t.draft).length} chapters` : label} ·{' '}
                     {words.toLocaleString()} words · deleted {new Date(t.deletedAt).toLocaleDateString()}
                   </div>
                 </div>

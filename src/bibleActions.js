@@ -13,8 +13,11 @@ import {
   registerCommand,
   reloadSeries,
   adoptProject,
+  chooseStart,
+  focusNewBook,
 } from './store.js';
-import { newEntry, newRelationship, normalizeProject, createProject, defaultAliases } from './lib/project.js';
+import { newEntry, newRelationship, normalizeProject, defaultAliases } from './lib/project.js';
+import { createBook } from './lib/structure.js';
 import { createSeries, normalizeSeries, mergeIntoSeries, removeFromSeries, numberedCount, baseName, dirOf, SERIES_FILE } from './lib/series.js';
 import { buildContext, analyze } from './lib/bible.js';
 
@@ -212,13 +215,15 @@ export async function refreshLibrary() {
 }
 
 export async function newBook() {
+  const start = await chooseStart();
+  if (!start) return;
   const path = await api.chooseNewProject('Untitled');
   if (!path) return;
-  const project = createProject(baseName(path).replace(/\.(quill|ldraft)$/i, ''));
+  const project = createBook(baseName(path).replace(/\.(quill|ldraft)$/i, ''), start);
   const res = await api.writeTogether([{ path, json: JSON.stringify(project) }], 'new');
   if (!res.ok) return api.confirm({ type: 'warning', message: 'Could not create the book', detail: res.error, buttons: ['OK'] });
   await openProjectAt(path);
-  setState({ focusTitleId: project.ui.openId });
+  focusNewBook(project);
 }
 
 export async function newSeries() {
@@ -281,13 +286,15 @@ export async function newBookInSeries(seriesPath) {
   } catch (err) {
     return api.confirm({ type: 'warning', message: 'Could not open the series', detail: String(err.message || err), buttons: ['OK'] });
   }
+  const start = await chooseStart();
+  if (!start) return;
   const bookPath = await api.chooseNewProject(`${series.title} ${numberedCount(series.books) + 1}`, dirOf(seriesPath));
   if (!bookPath) return;
-  const project = createProject(baseName(bookPath).replace(/\.(quill|ldraft)$/i, ''));
+  const project = createBook(baseName(bookPath).replace(/\.(quill|ldraft)$/i, ''), start);
   const out = mergeIntoSeries({ book: project, bookPath, series, seriesPath, position: 'after' });
   if (!(await writeAll([{ path: seriesPath, data: out.series }, { path: bookPath, data: out.book }], 'new-book'))) return;
   await openProjectAt(bookPath);
-  setState({ focusTitleId: out.book.ui.openId });
+  focusNewBook(out.book);
 }
 
 export async function openSeriesBible(item) {

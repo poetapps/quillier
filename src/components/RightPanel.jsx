@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
-import { useStore, setState, togglePanel, updateDocField, updateInlineNote, deleteInlineNote, jumpToNote, showBible } from '../store.js';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { marked } from 'marked';
+import { X, Folder, ListTree } from 'lucide-react';
+import { useStore, setState, setPrefs, togglePanel, updateDocField, updateInlineNote, deleteInlineNote, jumpToNote, showBible, openDoc } from '../store.js';
 import { useBible } from '../lib/useBible.js';
 import {
   findDoc,
@@ -10,9 +11,15 @@ import {
   statusLabel,
   manuscriptWords,
   activeDraft,
+  chaptersOf,
   todayKey,
+  isFolder,
+  subtreeRange,
+  bookStatus,
 } from '../lib/project.js';
+import { beatsOf, linkedOutline, outlinePath } from '../lib/structure.js';
 import MarkdownEditor from './MarkdownEditor.jsx';
+import { Toggle } from './ui.jsx';
 
 function scrollToScene(i) {
   const editor = document.querySelector('.page-editor');
@@ -81,6 +88,89 @@ function InThisChapter({ doc }) {
   );
 }
 
+// Markdown from the outline, shown read-only. Raw HTML in it can't run anything.
+function safeHtml(md) {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = marked.parse(md || '');
+  tpl.content.querySelectorAll('script, style, iframe, object, embed, form, input, button, link, meta, img, video, audio').forEach((el) => el.remove());
+  tpl.content.querySelectorAll('*').forEach((el) => {
+    for (const a of [...el.attributes]) if (/^on/i.test(a.name) || /^\s*javascript:/i.test(a.value)) el.removeAttribute(a.name);
+  });
+  return tpl.innerHTML;
+}
+
+function OutlineCard({ project, doc }) {
+  const [open, setOpen] = useState(false);
+  const html = useMemo(() => safeHtml(doc.content), [doc.content]);
+  const long = doc.content.length > 420;
+  const path = outlinePath(project, doc.id).join(' › ');
+  const Icon = isFolder(doc) ? Folder : ListTree;
+  return (
+    <div className="ocard">
+      <button className="ocard-title" onClick={() => openDoc(doc.id)} title="Open in the outline">
+        <Icon size={14} strokeWidth={1.7} />
+        <span className="ocard-name">{doc.title || 'Untitled'}</span>
+        {path && <span className="ocard-path">{path}</span>}
+      </button>
+      {doc.content.trim() ? (
+        <div className={`ocard-body ${long && !open ? 'clamped' : ''}`} dangerouslySetInnerHTML={{ __html: html }} />
+      ) : (
+        <p className="panel-hint">Nothing written here yet.</p>
+      )}
+      {long && (
+        <button className="ocard-more" onClick={() => setOpen(!open)}>
+          {open ? 'Show less' : 'Show more'}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// What the outline says about this chapter (the pages it covers) or this folder (the one it's linked to).
+function FromOutline({ project, found }) {
+  const { doc, kind, area } = found;
+  const items = kind === 'chapter' ? beatsOf(project, doc) : kind === 'folder' && area === 'manuscript' ? [linkedOutline(project, doc)].filter(Boolean) : [];
+  if (!items.length) return null;
+  return (
+    <>
+      <div className="panel-label">From the outline</div>
+      <div className="ocard-list">
+        {items.map((s) => (
+          <OutlineCard key={s.id} project={project} doc={s} />
+        ))}
+      </div>
+    </>
+  );
+}
+
+function FolderDetails({ project, found }) {
+  const list = found.area === 'outline' ? project.outline : activeDraft(project).chapters;
+  const [start, end] = subtreeRange(list, found.doc.id);
+  const pages = list.slice(start + 1, end).filter((d) => !isFolder(d));
+  const words = pages.reduce((n, d) => n + countWords(d.content), 0);
+  return (
+    <>
+      <div className="panel-label">{found.doc.part ? 'This part' : 'This folder'}</div>
+      <div className="stat-grid">
+        <div>
+          <b>{pages.length}</b>
+          <span>{found.area === 'outline' ? (pages.length === 1 ? 'page' : 'pages') : pages.length === 1 ? 'chapter' : 'chapters'}</span>
+        </div>
+        <div>
+          <b>{words.toLocaleString()}</b>
+          <span>words</span>
+        </div>
+      </div>
+      {found.area === 'manuscript' && pages.length > 0 && (
+        <div className="kv">
+          <span>Status</span>
+          <b>{statusLabel(bookStatus(pages))}</b>
+        </div>
+      )}
+    </>
+  );
+}
+
 function Details({ project, found }) {
   const prefs = useStore((s) => s.prefs);
   const { doc, kind } = found;
@@ -92,6 +182,10 @@ function Details({ project, found }) {
 
   return (
     <div className="panel-scroll">
+      {kind === 'folder' ? (
+        <FolderDetails project={project} found={found} />
+      ) : (
+        <>
       <div className="panel-label">{kind === 'chapter' ? 'This chapter' : kind === 'section' ? 'This section' : 'Notes'}</div>
       <div className="stat-grid">
         <div>
@@ -109,6 +203,8 @@ function Details({ project, found }) {
           </div>
         )}
       </div>
+        </>
+      )}
 
       {kind === 'chapter' && <InThisChapter doc={doc} />}
 
@@ -152,7 +248,7 @@ function Details({ project, found }) {
       </div>
       <div className="kv">
         <span>Chapters</span>
-        <b>{activeDraft(project).chapters.length}</b>
+        <b>{chaptersOf(activeDraft(project)).length}</b>
       </div>
       <div className="panel-sublabel">Last 14 days</div>
       <History daily={project.stats.daily} />
@@ -225,21 +321,78 @@ function InlineNoteCard({ docId, note }) {
   );
 }
 
-function InlineNotes({ doc }) {
-  const notes = [...(doc.inlineNotes || [])].sort((a, b) => !!a.detached - !!b.detached || (a.offset || 0) - (b.offset || 0));
+// Ids of the notes whose passage is on screen, kept current as the page scrolls, resizes or changes.
+function useNotesInView(docId, enabled) {
+  const [ids, setIds] = useState(null);
+  useEffect(() => {
+    setIds(null);
+    const scroller = enabled && document.querySelector('.page-scroll');
+    if (!scroller) return;
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const view = scroller.getBoundingClientRect();
+      const seen = new Set();
+      for (const el of scroller.querySelectorAll('.page-editor [data-note]')) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom > view.top && r.top < view.bottom) seen.add(el.dataset.note);
+      }
+      setIds((prev) => (prev && prev.size === seen.size && [...seen].every((id) => prev.has(id)) ? prev : seen));
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    schedule();
+    scroller.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    const changes = new MutationObserver(schedule);
+    changes.observe(scroller, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['data-note'] });
+    return () => {
+      cancelAnimationFrame(frame);
+      scroller.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      changes.disconnect();
+    };
+  }, [docId, enabled]);
+  return ids;
+}
+
+// Notes pinned to passages. Unless "Show all" is on, only the ones on text you can see are listed
+// (plus the one you're working on), so the list follows you down the page.
+function InlineNotes({ doc, kind }) {
+  const showAll = useStore((s) => s.prefs.notesShowAll === true);
+  const activeId = useStore((s) => s.activeNoteId);
+  const all = [...(doc.inlineNotes || [])].sort((a, b) => !!a.detached - !!b.detached || (a.offset || 0) - (b.offset || 0));
+  const inView = useNotesInView(doc.id, !showAll && all.length > 0);
+  const notes = showAll || !inView ? all : all.filter((n) => inView.has(n.id) || n.id === activeId);
+  const elsewhere = all.length - notes.length;
+  const where = kind === 'chapter' ? 'chapter' : kind === 'notes' ? 'page' : kind;
   return (
     <>
-      <div className="panel-label">
-        On the page{notes.length > 0 && <span className="panel-count">{notes.length}</span>}
+      <div className="panel-label panel-label-row">
+        <span>
+          On the page
+          {all.length > 0 && <span className="panel-count">{showAll || !elsewhere ? all.length : `${notes.length} of ${all.length}`}</span>}
+        </span>
+        {all.length > 0 && (
+          <label className="panel-switch" title="When off, only notes on the text you can see are listed">
+            Show all
+            <Toggle checked={showAll} onChange={(on) => setPrefs({ notesShowAll: on })} />
+          </label>
+        )}
       </div>
-      {notes.length ? (
+      {notes.length > 0 && (
         <div className="inote-list">
           {notes.map((n) => (
             <InlineNoteCard key={n.id} docId={doc.id} note={n} />
           ))}
         </div>
-      ) : (
-        <p className="panel-hint">Select some text and press ⌥⌘M (or the note button in the formatting bar) to pin a note to it.</p>
+      )}
+      {!all.length && <p className="panel-hint">Select some text and press ⌥⌘M (or the note button in the formatting bar) to pin a note to it.</p>}
+      {elsewhere > 0 && (
+        <button className="panel-more" onClick={() => setPrefs({ notesShowAll: true })}>
+          {notes.length ? `${elsewhere} more elsewhere in this ${where}` : `${elsewhere} ${elsewhere === 1 ? 'note' : 'notes'} elsewhere in this ${where}. Scroll to them, or show all.`}
+        </button>
       )}
     </>
   );
@@ -271,8 +424,9 @@ export default function RightPanel() {
         <div className="panel-scroll panel-empty">Open a page to see its notes.</div>
       ) : tab === 'notes' ? (
         <div className="panel-scroll panel-notes">
+          <FromOutline project={project} found={found} />
           <div className="panel-label">
-            {found.kind === 'chapter' ? 'Chapter notes' : found.kind === 'section' ? 'Section notes' : 'Side notes'}
+            {{ chapter: 'Chapter notes', section: 'Section notes', folder: 'Folder notes' }[found.kind] || 'Side notes'}
           </div>
           <div className="free-notes">
             <MarkdownEditor
@@ -286,7 +440,7 @@ export default function RightPanel() {
               className="notes-editor"
             />
           </div>
-          <InlineNotes doc={found.doc} />
+          <InlineNotes doc={found.doc} kind={found.kind} />
         </div>
       ) : (
         <Details project={project} found={found} />

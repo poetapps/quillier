@@ -1,6 +1,6 @@
 import { Home, ChevronRight, Maximize2, Minimize2, PanelRight, PanelLeft, CheckCheck, AlertCircle, Loader } from 'lucide-react';
 import { useStore, closeProject, toggleFocus, togglePanel, toggleSidebar, saveNow, openDoc, showBible } from '../store.js';
-import { findDoc } from '../lib/project.js';
+import { findDoc, chapterNumber } from '../lib/project.js';
 import { IconButton } from './ui.jsx';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -36,8 +36,9 @@ export default function TopBar() {
   let crumb = '';
   if (view === 'trash') crumb = 'Trash';
   else if (view === 'bible') crumb = 'Story bible';
-  else if (found?.kind === 'chapter') crumb = `${pad(found.index + 1)} ${found.doc.title || 'Untitled'}`;
-  else if (found?.kind === 'section') crumb = `Outline / ${found.doc.title || 'Untitled'}`;
+  else if (found?.kind === 'chapter') crumb = `${pad(chapterNumber(project, found.doc.id))} ${found.doc.title || 'Untitled'}`;
+  else if (found?.kind === 'section' || (found?.kind === 'folder' && found.area === 'outline')) crumb = `Outline / ${found.doc.title || 'Untitled'}`;
+  else if (found?.kind === 'folder') crumb = found.doc.title || 'Untitled';
   else if (found) crumb = 'Notes';
 
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ListTree, Link2 } from 'lucide-react';
 import {
   useStore,
   getState,
@@ -12,8 +12,13 @@ import {
   getMainEditor,
   togglePanel,
   addInlineNote,
+  openDoc,
+  setShowInManuscript,
 } from '../store.js';
-import { findDoc, STATUSES, statusLabel, sceneCount, countWords } from '../lib/project.js';
+import { findDoc, STATUSES, statusLabel, sceneCount, countWords, chapterNumber, isFolder, subtreeRange, activeDraft, partNumbers, partLabel } from '../lib/project.js';
+import { beatsOf, chaptersCovering, linkedOutline, mirrorOf, outlinePath } from '../lib/structure.js';
+import { beatMenu } from './Sidebar.jsx';
+import { Toggle } from './ui.jsx';
 import MarkdownEditor from './MarkdownEditor.jsx';
 import NotePeek from './NotePeek.jsx';
 import { nameHintsFor } from '../lib/nameHints.js';
@@ -69,6 +74,53 @@ function StatusPicker({ doc }) {
   );
 }
 
+// Which outline pages this chapter covers; click to change.
+function BeatsButton({ project, doc }) {
+  if (!project.outline.some((s) => !isFolder(s))) return null;
+  const beats = beatsOf(project, doc);
+  return (
+    <button
+      className={`meta-btn beats-btn ${beats.length ? '' : 'empty'}`}
+      title="The outline pages this chapter covers"
+      onClick={(e) => beatMenu(e.currentTarget.getBoundingClientRect(), doc.id)}
+    >
+      <ListTree size={14} strokeWidth={1.7} />
+      <span className="beats-label">{beats.length ? beats.map((b) => b.title || 'Untitled').join(', ') : 'Link to outline'}</span>
+    </button>
+  );
+}
+
+function CoveredBy({ project, doc }) {
+  const chapters = chaptersCovering(project, doc.id);
+  if (!chapters.length) return <span>Outline section</span>;
+  return (
+    <span className="covered-by">
+      Covered in
+      {chapters.map((c) => (
+        <button key={c.id} className="link-btn" onClick={() => openDoc(c.id)} title={c.title}>
+          Chapter {chapterNumber(project, c.id)}
+        </button>
+      ))}
+    </span>
+  );
+}
+
+function MetaToggle({ label, checked, onChange, hint }) {
+  return (
+    <label className="meta-toggle" title={hint}>
+      <Toggle checked={checked} onChange={onChange} />
+      {label}
+    </label>
+  );
+}
+
+// What a folder holds, for its page: chapter or page count and words written.
+function folderStats(list, id) {
+  const [start, end] = subtreeRange(list, id);
+  const inside = list.slice(start + 1, end).filter((d) => !isFolder(d));
+  return { count: inside.length, words: inside.reduce((n, d) => n + countWords(d.content), 0) };
+}
+
 export default function Page() {
   const project = useStore((s) => s.project);
   const prefs = useStore((s) => s.prefs);
@@ -84,21 +136,66 @@ export default function Page() {
   if (!found) {
     return <div className="page-scroll" />;
   }
-  const { doc, kind, index } = found;
+  const { doc, kind, area } = found;
   const words = countWords(doc.content);
   const scenes = sceneCount(doc.content);
+  const outlineFolder = kind === 'folder' && area === 'outline';
+  const bookFolder = kind === 'folder' && area === 'manuscript';
+  const stats = kind === 'folder' ? folderStats(area === 'outline' ? project.outline : activeDraft(project).chapters, doc.id) : null;
+  const linked = bookFolder ? linkedOutline(project, doc) : null;
+  const where = area === 'outline' ? outlinePath(project, doc.id) : [];
 
-  const placeholder =
-    kind === 'chapter' ? 'Start writing…' : kind === 'section' ? 'Plan this part of the story…' : 'Characters, places, research, anything…';
+  const placeholder = {
+    chapter: 'Start writing…',
+    section: 'Plan this part of the story…',
+    notes: 'Characters, places, research, anything…',
+    folder: outlineFolder ? 'What happens in this part of the story…' : 'Notes on this part of the book. They stay out of exports.',
+  }[kind];
+  const kicker = {
+    chapter: `Chapter ${pad(chapterNumber(project, doc.id))}`,
+    section: ['Outline', ...where].join(' · '),
+    folder: outlineFolder ? ['Outline', ...where].join(' · ') : doc.part ? partLabel(partNumbers(activeDraft(project))[doc.id]) : 'Folder',
+    notes: null,
+  }[kind];
 
   return (
     <div className="page-scroll" ref={scrollRef}>
       <article className="page">
-        {kind === 'chapter' && <div className="page-kicker">Chapter {pad(index + 1)}</div>}
-        {kind === 'section' && <div className="page-kicker">Outline</div>}
+        {kicker && <div className="page-kicker">{kicker}</div>}
         <TitleInput doc={doc} readOnly={kind === 'notes'} />
         <div className="page-meta">
-          {kind === 'chapter' ? <StatusPicker doc={doc} /> : <span>{kind === 'notes' ? 'Project notes' : 'Outline section'}</span>}
+          {kind === 'chapter' && (
+            <span className="page-meta-left">
+              <StatusPicker doc={doc} />
+              <BeatsButton project={project} doc={doc} />
+            </span>
+          )}
+          {kind === 'section' && <CoveredBy project={project} doc={doc} />}
+          {kind === 'notes' && <span>Project notes</span>}
+          {outlineFolder && (
+            <MetaToggle
+              label="Show in manuscript"
+              hint="Gives the manuscript a matching folder (and one for each folder inside this one)"
+              checked={!!mirrorOf(project, doc.id)}
+              onChange={(on) => setShowInManuscript(doc.id, on)}
+            />
+          )}
+          {bookFolder && (
+            <span className="page-meta-left">
+              <MetaToggle
+                label="Book part"
+                hint="Exports start this folder with its own part page, like “Part One”"
+                checked={!!doc.part}
+                onChange={(on) => updateDocField(doc.id, 'part', on)}
+              />
+              {linked && (
+                <button className="meta-btn" title="Show what the outline says about it" onClick={() => togglePanel('notes')}>
+                  <Link2 size={14} strokeWidth={1.7} />
+                  Linked to the outline
+                </button>
+              )}
+            </span>
+          )}
           <span className="page-meta-right">
             {kind === 'chapter' && (
               <>
@@ -108,7 +205,21 @@ export default function Page() {
                 <span className="dot-sep">·</span>
               </>
             )}
-            {words.toLocaleString()} {words === 1 ? 'word' : 'words'}
+            {kind === 'folder' ? (
+              <>
+                {stats.count} {area === 'outline' ? (stats.count === 1 ? 'page' : 'pages') : stats.count === 1 ? 'chapter' : 'chapters'}
+                {area === 'manuscript' && (
+                  <>
+                    <span className="dot-sep">·</span>
+                    {stats.words.toLocaleString()} {stats.words === 1 ? 'word' : 'words'}
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                {words.toLocaleString()} {words === 1 ? 'word' : 'words'}
+              </>
+            )}
           </span>
         </div>
         <div ref={bodyRef} className="page-body" onMouseDown={(e) => e.target === e.currentTarget && getMainEditor()?.commands.focus('end')}>
