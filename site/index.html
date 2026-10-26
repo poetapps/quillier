@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quillier: a quiet place to write your book</title>
+    <meta name="description" content="Quillier is a free, open-source writing app for novels and other long work, with a story bible that tracks your characters and places as you write. Your book stays on your computer." />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="Quillier" />
+    <meta property="og:description" content="A quiet place to write your book. Free, open source, and offline." />
+    <meta property="og:image" content="https://quillier.com/app-light.png" />
+    <meta property="og:url" content="https://quillier.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="icon.png" />
+    <link rel="preload" href="fonts/literata-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <style>
+      /* Fonts are the app's own (Literata for writing, Instrument Sans for everything around it),
+         served from here so visiting the site doesn't ping anyone else. */
+      @font-face {
+        font-family: 'Literata';
+        src: url(fonts/literata-latin-opsz-normal.woff2) format('woff2');
+        font-weight: 200 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Literata';
+        src: url(fonts/literata-latin-opsz-italic.woff2) format('woff2');
+        font-weight: 200 900;
+        font-style: italic;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Instrument Sans';
+        src: url(fonts/instrument-sans-latin-wght-normal.woff2) format('woff2');
+        font-weight: 400 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        --paper: #ffffff;
+        --ink: #1b1b1b;
+        --ink-2: #3a3a39;
+        --quiet: #6e6e6b;
+        --rule: #e4e4e2;
+        --edge: rgba(0, 0, 0, 0.08);
+        --lift: 0 1px 2px rgba(0, 0, 0, 0.04), 0 28px 70px -30px rgba(0, 0, 0, 0.28);
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #171717;
+          --ink: #ebebe9;
+          --ink-2: #c4c4c1;
+          --quiet: #9a9a97;
+          --rule: #2c2c2b;
+          --edge: rgba(255, 255, 255, 0.09);
+          --lift: 0 28px 70px -30px rgba(0, 0, 0, 0.8);
+          color-scheme: dark;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink-2);
+        font: 400 19px/1.68 var(--serif);
+        font-optical-sizing: auto;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+        text-decoration-color: var(--rule);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.22em;
+      }
+      a:hover {
+        text-decoration-color: currentColor;
+      }
+      :focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+
+      /* ---------- top ---------- */
+
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 88px;
+      }
+      .wordmark {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.36em;
+        font-family: var(--sans);
+        font-size: 22px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .wordmark b {
+        font-weight: 650;
+      }
+      .wordmark i {
+        font-family: var(--serif);
+        font-weight: 450;
+        letter-spacing: -0.01em;
+      }
+      .wordmark svg {
+        width: 0.95em;
+        height: 0.95em;
+      }
+      .top a:not(.wordmark) {
+        font: 500 15px var(--sans);
+        color: var(--quiet);
+        text-decoration: none;
+      }
+      .top a:not(.wordmark):hover {
+        color: var(--ink);
+      }
+
+      /* ---------- hero ---------- */
+
+      .hero {
+        padding-top: clamp(40px, 9vh, 112px);
+      }
+      h1 {
+        position: relative;
+        margin: 0;
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: clamp(40px, 6.1vw, 68px);
+        line-height: 1.08;
+        letter-spacing: -0.028em;
+        color: var(--ink);
+      }
+      /* While the headline types itself out, an invisible copy holds its final size. */
+      h1 .ghost {
+        visibility: hidden;
+      }
+      h1 .live {
+        position: absolute;
+        inset: 0;
+      }
+      .caret {
+        display: inline-block;
+        width: 3px;
+        height: 0.86em;
+        margin: 0 -3px 0 2px;
+        vertical-align: -0.06em;
+        background: var(--ink);
+      }
+      h1.done .caret {
+        animation: blink 1.05s steps(1) 5, gone 0.4s ease 5.25s forwards;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      @keyframes gone {
+        to {
+          opacity: 0;
+        }
+      }
+      @media (max-width: 899px) {
+        h1 br {
+          display: none;
+        }
+      }
+
+      .lede {
+        max-width: 31em;
+        margin: 28px 0 0;
+        font-size: 21px;
+        line-height: 1.6;
+      }
+
+      /* ---------- download ---------- */
+
+      .download {
+        margin-top: 40px;
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--quiet);
+      }
+      .button {
+        display: inline-block;
+        padding: 14px 24px;
+        border-radius: 10px;
+        background: var(--ink);
+        color: var(--paper);
+        font: 600 16px/1.2 var(--sans);
+        letter-spacing: -0.005em;
+        text-decoration: none;
+      }
+      .button:hover {
+        opacity: 0.86;
+      }
+      .download p {
+        margin: 14px 0 0;
+      }
+      .download .others a {
+        color: var(--ink-2);
+      }
+      .first-run {
+        margin-top: 10px;
+        max-width: 34em;
+      }
+      .first-run summary {
+        cursor: pointer;
+        width: fit-content;
+      }
+      .first-run summary:hover {
+        color: var(--ink);
+      }
+      .first-run p {
+        margin: 8px 0 0;
+        color: var(--ink-2);
+      }
+
+      /* ---------- screenshot ---------- */
+
+      .shot {
+        margin-top: 72px;
+        margin-bottom: 0;
+      }
+      .frame {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px var(--edge), var(--lift);
+      }
+      .frame img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .frame svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      /* ---------- sections: heading in the margin, text beside it ---------- */
+
+      .sec {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+        column-gap: 48px;
+        margin-top: 144px;
+      }
+      .sec h2 {
+        margin: 0;
+        font-family: var(--serif);
+        font-weight: 450;
+        font-size: 30px;
+        line-height: 1.2;
+        letter-spacing: -0.018em;
+        color: var(--ink);
+        max-width: 9em;
+      }
+      .sec .body {
+        max-width: 36em;
+      }
+      .sec .body > p {
+        margin: 0 0 1em;
+      }
+      .sec .body > p:last-child {
+        margin-bottom: 0;
+      }
+      dl {
+        margin: 0;
+      }
+      dt {
+        margin-top: 30px;
+        font: 600 16px/1.4 var(--sans);
+        color: var(--ink);
+      }
+      dt:first-child {
+        margin-top: 4px;
+      }
+      dd {
+        margin: 6px 0 0;
+      }
+      .file-name {
+        font-family: var(--sans);
+        font-size: 0.92em;
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      /* ---------- story bible ---------- */
+
+      .bible-fig {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+        gap: 56px;
+        align-items: start;
+        margin-top: 64px;
+      }
+      .bible-fig figure {
+        margin: 0;
+      }
+      figcaption {
+        max-width: 30em;
+        margin-top: 18px;
+        font: 400 14px/1.5 var(--sans);
+        color: var(--quiet);
+      }
+      .sec .more {
+        grid-column: 2;
+        margin-top: 64px;
+      }
+
+      /* Who appears where: one square per chapter, darker for more mentions. */
+      .cast {
+        --name: 128px;
+        --cell: 16px;
+        --gap: 3px;
+        font-family: var(--sans);
+      }
+      .cast .row {
+        display: grid;
+        grid-template-columns: var(--name) repeat(22, var(--cell)) minmax(0, 1fr);
+        column-gap: var(--gap);
+        align-items: center;
+        height: 30px;
+      }
+      .cast .head {
+        height: 22px;
+        font-size: 11px;
+        color: var(--quiet);
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+      .cast .group {
+        margin: 14px 0 2px;
+        font-size: 13px;
+        color: var(--quiet);
+      }
+      .cast .name {
+        overflow: hidden;
+        font-size: 14px;
+        font-weight: 550;
+        color: var(--ink);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .cast .n {
+        text-align: right;
+        font-size: 13px;
+        color: var(--quiet);
+        font-variant-numeric: tabular-nums;
+      }
+      .cast i {
+        display: block;
+        height: 22px;
+        border-radius: 3px;
+        background: color-mix(in srgb, var(--ink) 7%, var(--paper));
+      }
+      .cast i.l1 {
+        background: color-mix(in srgb, var(--ink) 24%, var(--paper));
+      }
+      .cast i.l2 {
+        background: color-mix(in srgb, var(--ink) 44%, var(--paper));
+      }
+      .cast i.l3 {
+        background: color-mix(in srgb, var(--ink) 66%, var(--paper));
+      }
+      .cast i.l4 {
+        background: var(--ink);
+      }
+      .cast .gone {
+        padding-left: 8px;
+        font: italic 400 13.5px/1 var(--serif);
+        color: var(--quiet);
+        white-space: nowrap;
+      }
+      .cast .short {
+        display: none;
+      }
+
+      /* Relationship map */
+      .map {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+      }
+      .map line {
+        stroke: var(--quiet);
+        stroke-opacity: 0.55;
+        stroke-width: 1.25;
+      }
+      .map .suggested {
+        stroke-dasharray: 4 5;
+      }
+      .map circle {
+        fill: var(--ink);
+      }
+      .map text {
+        text-anchor: middle;
+        paint-order: stroke;
+        stroke: var(--paper);
+        stroke-width: 7px;
+        stroke-linejoin: round;
+      }
+      .map .who {
+        font: 600 14px var(--sans);
+        fill: var(--ink);
+      }
+      .map .rel {
+        font: italic 400 13.5px var(--serif);
+        fill: var(--quiet);
+      }
+
+      /* Inline name completion, as it looks in the editor */
+      .complete {
+        display: block;
+        margin-top: 14px;
+        font-size: 21px;
+        color: var(--ink);
+      }
+      .complete .rest {
+        color: var(--quiet);
+        opacity: 0.75;
+      }
+      .complete .caret {
+        height: 1.05em;
+        width: 2px;
+        margin: 0 0 0 -1px;
+        vertical-align: -0.2em;
+      }
+      kbd {
+        margin-left: 12px;
+        padding: 2px 7px;
+        border: 1px solid var(--rule);
+        border-bottom-width: 2px;
+        border-radius: 5px;
+        font: 500 12px/1.4 var(--sans);
+        color: var(--quiet);
+        vertical-align: 0.2em;
+      }
+
+      /* ---------- footer ---------- */
+
+      footer {
+        margin-top: 144px;
+        border-top: 1px solid var(--rule);
+      }
+      footer .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 28px;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 32px;
+        padding-bottom: 48px;
+        font: 400 14px var(--sans);
+        color: var(--quiet);
+      }
+      footer .wordmark {
+        font-size: 17px;
+      }
+      footer nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+      }
+      footer nav a {
+        text-decoration: none;
+      }
+      footer nav a:hover {
+        color: var(--ink);
+      }
+
+      @media (max-width: 859px) {
+        .sec {
+          grid-template-columns: minmax(0, 1fr);
+          row-gap: 20px;
+          margin-top: 104px;
+        }
+        .sec h2 {
+          max-width: none;
+        }
+        .sec .more {
+          grid-column: auto;
+          margin-top: 48px;
+        }
+        .bible-fig {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 56px;
+          margin-top: 40px;
+        }
+        footer {
+          margin-top: 104px;
+        }
+      }
+      @media (max-width: 640px) {
+        .wrap {
+          padding: 0 16px;
+        }
+        body {
+          font-size: 18px;
+        }
+        .top {
+          height: 72px;
+        }
+        .lede {
+          font-size: 19px;
+        }
+        .shot {
+          margin-top: 56px;
+        }
+        .frame {
+          border-radius: 8px;
+        }
+        .cast {
+          --name: 92px;
+          --cell: 9px;
+          --gap: 2px;
+        }
+        .cast .row {
+          grid-template-columns: var(--name) repeat(22, var(--cell));
+          height: 24px;
+        }
+        .cast .head {
+          height: 18px;
+          font-size: 10px;
+          overflow: visible;
+        }
+        /* Hidden, not removed, so the remaining numbers stay over their columns. */
+        .cast .head .minor {
+          visibility: hidden;
+        }
+        .cast .n,
+        .cast .head span:last-child {
+          display: none;
+        }
+        .cast .name {
+          font-size: 12.5px;
+        }
+        .cast i {
+          height: 18px;
+          border-radius: 2px;
+        }
+        .cast .gone {
+          padding-left: 6px;
+          font-size: 12.5px;
+        }
+        .cast .long {
+          display: none;
+        }
+        .cast .short {
+          display: inline;
+        }
+        .complete {
+          font-size: 19px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="wrap top">
+      <a class="wordmark" href="./" aria-label="Quillier home">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="1.5" y="2.5" width="13" height="15" rx="3.2" fill="currentColor" />
+          <rect x="8.5" y="6.5" width="14" height="16" rx="3.4" fill="currentColor" stroke="var(--paper)" stroke-width="2" />
+        </svg>
+        <span><b>quill</b><i>ier</i></span>
+      </a>
+      <a href="https://github.com/poetapps/quillier">Source code</a>
+    </header>
+
+    <main>
+      <section class="wrap hero">
+        <h1 id="headline">A quiet place to write your book —<br /> and nothing else.</h1>
+        <p class="lede">
+          Quillier is a free writing app for novels and other long work. It keeps your book on your computer in one file, keeps track of who’s
+          in it, and stays out of your way.
+        </p>
+        <div class="download" id="download">
+          <a class="button" data-primary href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac.dmg">Download for Mac</a>
+          <p class="others">
+            Also for
+            <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-Setup.exe">Windows</a> and
+            <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-linux.AppImage">Linux</a>.
+            <span data-version></span>
+          </p>
+          <details class="first-run" data-for="win" hidden>
+            <summary>Opening it for the first time on Windows</summary>
+            <p>If Windows says it protected your PC, click More info, then Run anyway. That happens with new apps that aren’t code-signed yet.</p>
+          </details>
+          <details class="first-run" data-for="linux" hidden>
+            <summary>Opening it for the first time on Linux</summary>
+            <p>Make the AppImage executable (in its file properties, or with <code>chmod +x</code>), then double-click it.</p>
+          </details>
+        </div>
+      </section>
+
+      <figure class="wrap shot">
+        <div class="frame">
+          <picture>
+            <source srcset="app-dark.png" media="(prefers-color-scheme: dark)" />
+            <img
+              src="app-light.png"
+              width="2720"
+              height="1720"
+              alt="Quillier with a novel open: chapters in the sidebar, the chapter text in the middle, and notes on the right."
+            />
+          </picture>
+          <svg viewBox="0 0 1360 860" aria-hidden="true">
+            <circle cx="25" cy="25" r="6" fill="#ff5f57" stroke="rgba(0,0,0,.14)" stroke-width=".6" />
+            <circle cx="45" cy="25" r="6" fill="#febc2e" stroke="rgba(0,0,0,.14)" stroke-width=".6" />
+            <circle cx="65" cy="25" r="6" fill="#28c840" stroke="rgba(0,0,0,.14)" stroke-width=".6" />
+          </svg>
+        </div>
+      </figure>
+
+      <section class="wrap sec" aria-labelledby="h-bible">
+        <h2 id="h-bible">Your story bible, kept up to date</h2>
+        <div class="body">
+          <p>
+            Give each character and place an entry, with aliases and as many notes as you like. As you write, Quillier finds them in your
+            chapters on its own, and shows who appears where, who shares scenes and who’s gone quiet.
+          </p>
+        </div>
+
+        <div class="bible-fig">
+          <figure>
+            <div
+              class="cast"
+              role="img"
+              aria-label="A chart of a 22-chapter draft showing which chapters each character and place appears in. Mara Lind is in every chapter. Tomas Arve hasn’t appeared since chapter 9."
+            >
+            <div class="row head" aria-hidden="true"><span></span><span>1</span><span class="minor">2</span><span class="minor">3</span><span class="minor">4</span><span>5</span><span class="minor">6</span><span class="minor">7</span><span class="minor">8</span><span class="minor">9</span><span>10</span><span class="minor">11</span><span class="minor">12</span><span class="minor">13</span><span class="minor">14</span><span>15</span><span class="minor">16</span><span class="minor">17</span><span class="minor">18</span><span class="minor">19</span><span>20</span><span class="minor">21</span><span class="minor">22</span><span></span></div>
+            <div class="group">Characters</div>
+            <div class="row"><span class="name">Mara Lind</span><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l4"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l4"></i><i class="l4"></i><i class="l4"></i><span class="n">252</span></div>
+            <div class="row"><span class="name">Edith Lind</span><i class="l0"></i><i class="l3"></i><i class="l2"></i><i class="l3"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l2"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l0"></i><i class="l1"></i><i class="l3"></i><i class="l4"></i><i class="l3"></i><span class="n">70</span></div>
+            <div class="row"><span class="name">Ingrid Lind</span><i class="l1"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><span class="n">32</span></div>
+            <div class="row"><span class="name">Tomas Arve</span><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l3"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l3"></i><span class="gone" style="grid-column: span 13"><span class="long">hasn’t appeared since chapter 9</span><span class="short">gone since ch. 9</span></span><span class="n">22</span></div>
+            <div class="row"><span class="name">Pell</span><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l0"></i><i class="l0"></i><span class="n">33</span></div>
+            <div class="group">Places</div>
+            <div class="row"><span class="name">Skarra light</span><i class="l3"></i><i class="l4"></i><i class="l3"></i><i class="l2"></i><i class="l0"></i><i class="l3"></i><i class="l2"></i><i class="l0"></i><i class="l3"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l3"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l3"></i><i class="l3"></i><i class="l0"></i><i class="l4"></i><i class="l4"></i><span class="n">109</span></div>
+            <div class="row"><span class="name">Harbor museum</span><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><span class="n">22</span></div>
+            <div class="row"><span class="name">The bakery</span><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l3"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l3"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l0"></i><i class="l3"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><span class="n">44</span></div>
+            </div>
+            <figcaption>Who appears where, chapter by chapter. Bolder squares mean more mentions. Click any square to jump to that chapter.</figcaption>
+          </figure>
+          <figure>
+            <svg
+              class="map"
+              viewBox="0 0 420 320"
+              role="img"
+              aria-label="A relationship map. Edith Lind is Mara Lind’s grandmother and is estranged from Ingrid Lind, Mara’s mother. Edith is linked to Tomas Arve by the winter of 1961, and Pell rowed Tomas out. A dashed suggested link joins Mara and Pell, who share five scenes."
+            >
+              <line x1="92" y1="70" x2="215" y2="170" />
+              <line x1="330" y1="60" x2="215" y2="170" />
+              <line x1="92" y1="70" x2="330" y2="60" />
+              <line x1="92" y1="70" x2="70" y2="262" />
+              <line x1="70" y1="262" x2="338" y2="264" />
+              <line class="suggested" x1="215" y1="170" x2="338" y2="264" />
+              <text class="rel" x="150" y="124">grandmother</text>
+              <text class="rel" x="276" y="119">mother</text>
+              <text class="rel" x="211" y="70">estranged</text>
+              <text class="rel" x="81" y="170">winter of 1961</text>
+              <text class="rel" x="204" y="267">rowed him out</text>
+              <text class="rel suggested" x="290" y="222">5 scenes together</text>
+              <circle cx="92" cy="70" r="5" />
+              <circle cx="330" cy="60" r="5" />
+              <circle cx="215" cy="170" r="6.5" />
+              <circle cx="70" cy="262" r="5" />
+              <circle cx="338" cy="264" r="5" />
+              <text class="who" x="92" y="52">Edith Lind</text>
+              <text class="who" x="330" y="42">Ingrid Lind</text>
+              <text class="who" x="215" y="196">Mara Lind</text>
+              <text class="who" x="70" y="288">Tomas Arve</text>
+              <text class="who" x="338" y="290">Pell</text>
+            </svg>
+            <figcaption>Relationships are links you label and keep notes on. Dashed links are suggestions: characters who keep sharing scenes.</figcaption>
+          </figure>
+        </div>
+
+        <div class="body more">
+          <dl>
+            <dt>Characters, places and scenes</dt>
+            <dd>
+              Each entry gets a name, aliases, a few short fields and room for as many notes as you want. Scene notes attach to the scenes in your
+              chapters, so nothing gets described twice.
+            </dd>
+            <dt>Tracked from your text, not tags</dt>
+            <dd>
+              You never mark anything up. Quillier finds the names itself, so pasted and imported chapters count too, and exports stay clean.
+              Aliases count as well: “Edith”, “Gran” and “Edith Lind” are one person. Names that are also ordinary words, like Hope or May, can be
+              left out.
+            </dd>
+            <dt>Names finish themselves</dt>
+            <dd>
+              Type the first letters of a name and the rest appears in gray. Tab takes it; keep typing to ignore it.
+              <span class="complete" aria-hidden="true">…and handed the ledger to Ed<span class="rest">ith</span><span class="caret"></span><kbd>Tab</kbd></span>
+            </dd>
+            <dt>A cast list for every chapter</dt>
+            <dd>Each chapter and scene shows who’s in it and where it takes place, worked out from the text.</dd>
+            <dt>Relationships</dt>
+            <dd>Link two characters, label the link and keep notes on it. See the whole cast as a map, or as a grid once it gets big.</dd>
+            <dt>Threads you’ve dropped</dt>
+            <dd>When someone hasn’t appeared for a while, the dashboard says so. Every mention is a click away.</dd>
+            <dt>All on your computer</dt>
+            <dd>Tracking is plain name-matching that runs on your machine, and it’s quick even on a 100,000-word draft. No AI reads your book.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="wrap sec" aria-labelledby="h-book">
+        <h2 id="h-book">Made for a whole book</h2>
+        <div class="body">
+          <dl>
+            <dt>Chapters, in order</dt>
+            <dd>Number, reorder and rename chapters right in the sidebar. Mark each one not started, in progress, drafted, revised or done.</dd>
+            <dt>Drafts you can branch</dt>
+            <dd>Copy the whole manuscript into a new draft before a big rewrite, and switch between drafts whenever you like.</dd>
+            <dt>An outline and a notebook</dt>
+            <dd>Plan in outline sections beside the manuscript, and keep research and loose ideas on a free-form notes page.</dd>
+            <dt>Notes on the text</dt>
+            <dd>Select a passage and leave yourself a note. It shows in the side panel and never ends up in your text, so exports come out clean.</dd>
+            <dt>Punctuation that fixes itself</dt>
+            <dd>Quotes curl, two hyphens become an em dash, and three dots become an ellipsis. Type 1/2 or (c) and it offers ½ or ©.</dd>
+            <dt>Focus mode and dark mode</dt>
+            <dd>Hide everything but the page. Dark mode has a pure black setting for OLED screens.</dd>
+            <dt>Export for submission</dt>
+            <dd>
+              Standard manuscript format as a PDF for agents and editors, an EPUB ebook that passes the W3C’s checker, a book-style PDF, HTML or
+              Markdown.
+            </dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="wrap sec" aria-labelledby="h-file">
+        <h2 id="h-file">Your book is one file</h2>
+        <div class="body">
+          <p>
+            Each book is a single <span class="file-name">.quill</span> file, saved wherever you choose. Inside, it’s plain JSON with every chapter
+            in Markdown, so your words are never locked in, with or without Quillier.
+          </p>
+          <p>
+            It saves as you type. Saves can’t leave half a file behind if your computer crashes, and a backup copy is kept every ten minutes while
+            you write.
+          </p>
+          <p>
+            Nothing you write leaves your computer. There’s no account and no analytics. The only time Quillier goes online is to check for a new
+            version, and you can turn that off in Settings.
+          </p>
+        </div>
+      </section>
+
+      <section class="wrap sec" aria-labelledby="h-free">
+        <h2 id="h-free">Free and open source</h2>
+        <div class="body">
+          <p>
+            Quillier costs nothing, with no subscription and nothing to sign in to. The code is MIT-licensed and
+            <a href="https://github.com/poetapps/quillier">on GitHub</a>, where you can read it, report a bug or suggest an idea.
+          </p>
+          <div class="download">
+            <a class="button" data-primary href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-mac.dmg">Download for Mac</a>
+            <p class="others">
+              Also for
+              <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-Setup.exe">Windows</a> and
+              <a href="https://github.com/poetapps/quillier/releases/latest/download/Quillier-linux.AppImage">Linux</a>.
+              <span data-version></span>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <a class="wordmark" href="./" aria-label="Quillier home">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1.5" y="2.5" width="13" height="15" rx="3.2" fill="currentColor" />
+            <rect x="8.5" y="6.5" width="14" height="16" rx="3.4" fill="currentColor" stroke="var(--paper)" stroke-width="2" />
+          </svg>
+          <span><b>quill</b><i>ier</i></span>
+        </a>
+        <nav>
+          <a href="https://github.com/poetapps/quillier/releases">All releases</a>
+          <a href="https://github.com/poetapps/quillier/blob/main/LICENSE">MIT license</a>
+          <a href="https://github.com/poetapps/quillier">Source code</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      const REPO = 'poetapps/quillier';
+      const BUILDS = {
+        mac: { name: 'Mac', file: 'Quillier-mac.dmg' },
+        win: { name: 'Windows', file: 'Quillier-Setup.exe' },
+        linux: { name: 'Linux', file: 'Quillier-linux.AppImage' },
+      };
+      const fileUrl = (os) => `https://github.com/${REPO}/releases/latest/download/${BUILDS[os].file}`;
+      const link = (os) => `<a href="${fileUrl(os)}">${BUILDS[os].name}</a>`;
+
+      // Put the visitor's own system on the big button. Phones and anything unknown get the Mac build.
+      const ua = navigator.userAgent;
+      const os = /Windows/.test(ua) ? 'win' : /Linux|X11|CrOS/.test(ua) && !/Android/.test(ua) ? 'linux' : 'mac';
+      const [a, b] = Object.keys(BUILDS).filter((k) => k !== os);
+      for (const el of document.querySelectorAll('.download')) {
+        const button = el.querySelector('[data-primary]');
+        button.href = fileUrl(os);
+        button.textContent = `Download for ${BUILDS[os].name}`;
+        const version = el.querySelector('[data-version]');
+        el.querySelector('.others').innerHTML = `Also for ${link(a)} and ${link(b)}. `;
+        el.querySelector('.others').append(version);
+        for (const d of el.querySelectorAll('.first-run')) d.hidden = d.dataset.for !== os;
+      }
+
+      // Show the current version. If nothing has been published yet, send buttons to the releases page.
+      fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
+        .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then((rel) => {
+          const v = String(rel.tag_name || '').replace(/^v/, '');
+          if (v) for (const el of document.querySelectorAll('[data-version]')) el.textContent = `Version ${v}.`;
+        })
+        .catch((status) => {
+          if (status !== 404) return;
+          for (const el of document.querySelectorAll('.download a')) el.href = `https://github.com/${REPO}/releases`;
+        });
+
+      // The headline types itself the way it would in the app: "--" turns into an em dash as you type it.
+      const h1 = document.getElementById('headline');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const finalHtml = h1.innerHTML;
+        const source = h1.textContent.replace('—', '--').replace(/\s+/g, ' ').trim();
+        h1.setAttribute('aria-label', h1.textContent.replace(/\s+/g, ' ').trim());
+        h1.innerHTML = `<span class="ghost" aria-hidden="true">${finalHtml}</span><span class="live" aria-hidden="true"><span></span><span class="caret"></span></span>`;
+        const out = h1.querySelector('.live span');
+        let typed = '';
+        let i = 0;
+        // The line break after the dash matches the final layout (it's hidden on narrow screens).
+        const render = () => {
+          const at = typed.indexOf('—');
+          if (at < 0) out.textContent = typed;
+          else out.replaceChildren(typed.slice(0, at + 1), document.createElement('br'), typed.slice(at + 1));
+        };
+        const step = () => {
+          if (i >= source.length) return h1.classList.add('done');
+          const ch = source[i++];
+          typed += ch;
+          if (typed.endsWith('--')) typed = typed.slice(0, -2) + '—';
+          render();
+          let delay = 34 + Math.random() * 46;
+          if (ch === ' ') delay += 24;
+          if (ch === '-' && source[i] === '-') delay = 340; // let the hyphen sit a beat before it becomes a dash
+          setTimeout(step, delay);
+        };
+        setTimeout(step, 450);
+      }
+    </script>
+  </body>
+</html>

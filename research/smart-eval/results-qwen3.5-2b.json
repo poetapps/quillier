@@ -1,0 +1,4756 @@
+{
+ "measuredAt": "2026-10-05T03:29:54.993Z",
+ "machine": "Apple M1 Max, 64 GB",
+ "model": {
+  "id": "qwen3.5-2b",
+  "label": "2B",
+  "quant": "Q4_K_M",
+  "file": "Qwen3.5-2B-Q4_K_M.gguf",
+  "bytes": 1280835840
+ },
+ "engine": {
+  "loaded": "qwen3.5-2b",
+  "gpu": "metal",
+  "contextSize": 4096,
+  "stats": {
+   "prefixEvals": 199,
+   "prefixReuses": 185
+  }
+ },
+ "caseCount": 191,
+ "tokenMismatch": 0,
+ "extendedPrefix": 21,
+ "loadMs": 1908,
+ "memory": {
+  "rssAfterLoadMB": 1864,
+  "maxRssMB": 2046,
+  "checkpointMB": 20,
+  "vramUsedMB": 1600
+ },
+ "latency": {
+  "batched": {
+   "medianMs": 74,
+   "p90Ms": 123,
+   "meanMs": 93.88601352356021,
+   "wallMs": 17932,
+   "groupMs": {
+    "names": 5756.488542000001,
+    "resolve": 2064.6898340000007,
+    "same": 932.5210419999985,
+    "relation": 3481.077333000001,
+    "relation_reversed": 3436.241917000001,
+    "direction": 456.05108299999847,
+    "speaker": 1056.0295420000002,
+    "presence": 748.6915420000005
+   }
+  },
+  "unbatched": {
+   "medianMs": 290,
+   "p90Ms": 535,
+   "meanMs": 336.6712604712042,
+   "wallMs": 64304,
+   "groupMs": {
+    "names": 22805.272583,
+    "resolve": 7448.362583000002,
+    "same": 2370.271916999998,
+    "relation": 13361.662291,
+    "relation_reversed": 13346.551083999992,
+    "direction": 775.5552909999969,
+    "speaker": 2439.188957999999,
+    "presence": 1757.0185000000056
+   }
+  },
+  "speedup": 3.5859575653057023,
+  "maxProbDiffBatchedVsUnbatched": 0,
+  "verdictChangesBatchedVsUnbatched": 0
+ },
+ "firstToken": {
+  "isLetter": 191,
+  "of": 191,
+  "minLetterMass": 0.989707936436421,
+  "medianLetterMass": 0.9992801095098308
+ },
+ "byGroup": {
+  "names": {
+   "n": 79,
+   "correct": 69
+  },
+  "resolve": {
+   "n": 21,
+   "correct": 17
+  },
+  "same": {
+   "n": 12,
+   "correct": 8
+  },
+  "relation": {
+   "n": 25,
+   "correct": 21
+  },
+  "relation_reversed": {
+   "n": 25,
+   "correct": 17
+  },
+  "direction": {
+   "n": 8,
+   "correct": 7
+  },
+  "speaker": {
+   "n": 12,
+   "correct": 8
+  },
+  "presence": {
+   "n": 9,
+   "correct": 9
+  }
+ },
+ "perCase": [
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.920488,
+     0.070284,
+     0.009228
+    ],
+    "ms": 297,
+    "debug": {
+     "top": "A",
+     "topP": 0.9199482594026582,
+     "letterMass": 0.9994135459734229
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.072929,
+     0.452158,
+     0.474913
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "C",
+     "topP": 0.47434010547817457,
+     "letterMass": 0.9987945841312003
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.008223,
+     0.990686,
+     0.001091
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.9904965041124824,
+     "letterMass": 0.999808524065065
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.011267,
+     0.020008,
+     0.968725
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "C",
+     "topP": 0.9683974149772793,
+     "letterMass": 0.9996616457849308
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.092958,
+     0.561893,
+     0.345149
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "B",
+     "topP": 0.561209217855623,
+     "letterMass": 0.9987840577382576
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.00838,
+     0.989389,
+     0.002231
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "B",
+     "topP": 0.9890621521790803,
+     "letterMass": 0.9996700255155752
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.928066,
+     0.063171,
+     0.008762
+    ],
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.9276145932348756,
+     "letterMass": 0.9995135529756416
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.968462,
+     0.02583,
+     0.005709
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.9680050663106956,
+     "letterMass": 0.9995287546328347
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.242151,
+     0.64832,
+     0.109529
+    ],
+    "ms": 72,
+    "debug": {
+     "top": "B",
+     "topP": 0.6474377893500652,
+     "letterMass": 0.998640236318018
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.102132,
+     0.789743,
+     0.108126
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "B",
+     "topP": 0.788848885074703,
+     "letterMass": 0.9988689204167966
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.052349,
+     0.270908,
+     0.676743
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "C",
+     "topP": 0.6759982258347345,
+     "letterMass": 0.9988996547672668
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.008788,
+     0.989578,
+     0.001634
+    ],
+    "ms": 72,
+    "debug": {
+     "top": "B",
+     "topP": 0.9892780550797362,
+     "letterMass": 0.9996966108922957
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.904234,
+     0.080202,
+     0.015563
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.9036027633073815,
+     "letterMass": 0.9993019623938504
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.007016,
+     0.991122,
+     0.001862
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "B",
+     "topP": 0.9908607165548801,
+     "letterMass": 0.9997365382557453
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.928135,
+     0.061908,
+     0.009957
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "A",
+     "topP": 0.9274664973142128,
+     "letterMass": 0.9992801095098308
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.040286,
+     0.948965,
+     0.010749
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.9485716482669015,
+     "letterMass": 0.9995860994789373
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.975773,
+     0.019941,
+     0.004286
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "A",
+     "topP": 0.9753884585537623,
+     "letterMass": 0.9996056251313314
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.003923,
+     0.994778,
+     0.0013
+    ],
+    "ms": 71,
+    "debug": {
+     "top": "B",
+     "topP": 0.9945285922844497,
+     "letterMass": 0.9997498262027295
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.014839,
+     0.02888,
+     0.956281
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "C",
+     "topP": 0.9557121938009216,
+     "letterMass": 0.9994056247018401
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.768077,
+     0.231923
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.7674013108181837,
+     "letterMass": 0.9991205347818121
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.053828,
+     0.946172
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "B",
+     "topP": 0.9458803514252351,
+     "letterMass": 0.999692351449173
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "month",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.017774,
+     0.982226
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "B",
+     "topP": 0.9820151367808838,
+     "letterMass": 0.9997851668379046
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.995164,
+     0.004836
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "A",
+     "topP": 0.994706076053926,
+     "letterMass": 0.999539575171811
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.958864,
+     0.041136
+    ],
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.958033783889502,
+     "letterMass": 0.9991338919027098
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.766919,
+     0.233081
+    ],
+    "ms": 73,
+    "debug": {
+     "top": "A",
+     "topP": 0.7655988820949093,
+     "letterMass": 0.9982787640325415
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.977299,
+     0.022701
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "A",
+     "topP": 0.9764958376796937,
+     "letterMass": 0.9991783873669362
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.977299,
+     0.022701
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "A",
+     "topP": 0.9764958376796937,
+     "letterMass": 0.9991783873669362
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.107889,
+     0.892111
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "B",
+     "topP": 0.8915029812385594,
+     "letterMass": 0.99931906708969
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.994377,
+     0.005623
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.9940535306665447,
+     "letterMass": 0.9996751838762675
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.230304,
+     0.769696
+    ],
+    "ms": 77,
+    "debug": {
+     "top": "B",
+     "topP": 0.7687081132323583,
+     "letterMass": 0.9987166771037403
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.966892,
+     0.033108
+    ],
+    "ms": 75,
+    "debug": {
+     "top": "A",
+     "topP": 0.9662018568205993,
+     "letterMass": 0.9992866714377603
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.984691,
+     0.015309
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.9839462298518534,
+     "letterMass": 0.9992434848163114
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.321176,
+     0.678824
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "B",
+     "topP": 0.6777989581333534,
+     "letterMass": 0.9984902234498734
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.441312,
+     0.558688
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.558252835200441,
+     "letterMass": 0.9992219053551002
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.026164,
+     0.973836
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.9734356503901873,
+     "letterMass": 0.9995894517683791
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.006941,
+     0.993059
+    ],
+    "ms": 67,
+    "debug": {
+     "top": "B",
+     "topP": 0.9928465313488573,
+     "letterMass": 0.9997865580843326
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.766059,
+     0.233941
+    ],
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.7655234959803804,
+     "letterMass": 0.9993017859775217
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.014441,
+     0.985559
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.9851976212748741,
+     "letterMass": 0.9996332705985046
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.03548,
+     0.96452
+    ],
+    "ms": 73,
+    "debug": {
+     "top": "B",
+     "topP": 0.9640123542766731,
+     "letterMass": 0.9994742337185785
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.019839,
+     0.980161
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "B",
+     "topP": 0.9798610398903495,
+     "letterMass": 0.9996938791294058
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.16142,
+     0.83858
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.8381633642645955,
+     "letterMass": 0.9995032447741429
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.97958,
+     0.02042
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.978425120328936,
+     "letterMass": 0.9988211581852916
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.086538,
+     0.913462
+    ],
+    "ms": 74,
+    "debug": {
+     "top": "B",
+     "topP": 0.9129284170383105,
+     "letterMass": 0.9994160709257883
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.012911,
+     0.987089
+    ],
+    "ms": 74,
+    "debug": {
+     "top": "B",
+     "topP": 0.9867998616604046,
+     "letterMass": 0.999706931781071
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.017958,
+     0.982042
+    ],
+    "ms": 75,
+    "debug": {
+     "top": "B",
+     "topP": 0.9817062217149427,
+     "letterMass": 0.9996584408355603
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.998452,
+     0.001548
+    ],
+    "ms": 75,
+    "debug": {
+     "top": "A",
+     "topP": 0.9979507089956808,
+     "letterMass": 0.999498296802177
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.106899,
+     0.893101
+    ],
+    "ms": 74,
+    "debug": {
+     "top": "B",
+     "topP": 0.8923901066343779,
+     "letterMass": 0.9992049187571184
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.86162,
+     0.13838
+    ],
+    "ms": 75,
+    "debug": {
+     "top": "A",
+     "topP": 0.8604826641927703,
+     "letterMass": 0.9986807106176265
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.036424,
+     0.963576
+    ],
+    "ms": 73,
+    "debug": {
+     "top": "B",
+     "topP": 0.9633130422190607,
+     "letterMass": 0.9997271058688635
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.109806,
+     0.890194
+    ],
+    "ms": 71,
+    "debug": {
+     "top": "B",
+     "topP": 0.8891783349614675,
+     "letterMass": 0.9988594292252442
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.988354,
+     0.011646
+    ],
+    "ms": 71,
+    "debug": {
+     "top": "A",
+     "topP": 0.9877305626759577,
+     "letterMass": 0.9993695730821575
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.157137,
+     0.842863
+    ],
+    "ms": 73,
+    "debug": {
+     "top": "B",
+     "topP": 0.8422977961572196,
+     "letterMass": 0.9993300859390802
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.996081,
+     0.003919
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "A",
+     "topP": 0.9957109665791546,
+     "letterMass": 0.9996285324789604
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.991983,
+     0.008017
+    ],
+    "ms": 72,
+    "debug": {
+     "top": "A",
+     "topP": 0.9915089582747766,
+     "letterMass": 0.9995219899988713
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.998269,
+     0.001731
+    ],
+    "ms": 76,
+    "debug": {
+     "top": "A",
+     "topP": 0.9979541519223917,
+     "letterMass": 0.9996848499995925
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.011611,
+     0.988389
+    ],
+    "ms": 76,
+    "debug": {
+     "top": "B",
+     "topP": 0.9880865749874849,
+     "letterMass": 0.9996945289049759
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.012757,
+     0.987243
+    ],
+    "ms": 74,
+    "debug": {
+     "top": "B",
+     "topP": 0.987017565121318,
+     "letterMass": 0.9997721827188936
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.727042,
+     0.272958
+    ],
+    "ms": 74,
+    "debug": {
+     "top": "A",
+     "topP": 0.7263945799720825,
+     "letterMass": 0.999110406710211
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.994145,
+     0.005855
+    ],
+    "ms": 76,
+    "debug": {
+     "top": "A",
+     "topP": 0.9937215753207209,
+     "letterMass": 0.9995741485054366
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "place",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.020252,
+     0.979748
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.9795756694216111,
+     "letterMass": 0.999823876798756
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "place",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.839295,
+     0.160705
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.838038600329217,
+     "letterMass": 0.9985030748633208
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.991166,
+     0.008834
+    ],
+    "ms": 71,
+    "debug": {
+     "top": "A",
+     "topP": 0.9906345293539826,
+     "letterMass": 0.9994634743308357
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.988667,
+     0.011333
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "A",
+     "topP": 0.9881911005163007,
+     "letterMass": 0.9995187246590822
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "place",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.026791,
+     0.973209
+    ],
+    "ms": 67,
+    "debug": {
+     "top": "B",
+     "topP": 0.9730446271251909,
+     "letterMass": 0.9998307237121894
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.999396,
+     0.000604
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "A",
+     "topP": 0.9992052677218628,
+     "letterMass": 0.9998095118433937
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "place",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.024379,
+     0.975621
+    ],
+    "ms": 67,
+    "debug": {
+     "top": "B",
+     "topP": 0.9753305076222694,
+     "letterMass": 0.9997018893471203
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "place",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.037418,
+     0.962582
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "B",
+     "topP": 0.9622783926114122,
+     "letterMass": 0.9996851814426548
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.93168,
+     0.06832
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.9307379446938967,
+     "letterMass": 0.9989889799186075
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "season",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.050766,
+     0.949234
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "B",
+     "topP": 0.9489240311733114,
+     "letterMass": 0.9996737890642686
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "season",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.014656,
+     0.985344
+    ],
+    "ms": 73,
+    "debug": {
+     "top": "B",
+     "topP": 0.9851264670720565,
+     "letterMass": 0.9997791444276062
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.972112,
+     0.027888
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "A",
+     "topP": 0.9713669018096592,
+     "letterMass": 0.9992337595039804
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.982922,
+     0.017078
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "A",
+     "topP": 0.9824908413496535,
+     "letterMass": 0.9995613315160122
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.237594,
+     0.762406
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.7617865851731549,
+     "letterMass": 0.9991872668371602
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.018628,
+     0.981372
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "B",
+     "topP": 0.9810562735568594,
+     "letterMass": 0.999678488859632
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.722313,
+     0.277687
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "A",
+     "topP": 0.7213655075033601,
+     "letterMass": 0.9986882541337441
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.086107,
+     0.913893
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "B",
+     "topP": 0.9136560660982471,
+     "letterMass": 0.9997413144421932
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.978893,
+     0.021107
+    ],
+    "ms": 66,
+    "debug": {
+     "top": "A",
+     "topP": 0.9784973642092121,
+     "letterMass": 0.9995964360060214
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "entity",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.816384,
+     0.183616
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "A",
+     "topP": 0.8154589229217755,
+     "letterMass": 0.9988670386574395
+    }
+   }
+  },
+  {
+   "group": "names",
+   "gold": "word",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.262385,
+     0.737615
+    ],
+    "ms": 71,
+    "debug": {
+     "top": "B",
+     "topP": 0.7371769032184473,
+     "letterMass": 0.9994067538450773
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Eleanor Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.992688,
+     0.004496,
+     0.000302,
+     0.00008,
+     0.001063,
+     0.000223,
+     0.000581,
+     0.000568
+    ],
+    "ms": 377,
+    "debug": {
+     "top": "A",
+     "topP": 0.9919959017503296,
+     "letterMass": 0.9993024246728973
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Thomas Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.001978,
+     0.99614,
+     0.001746,
+     0.000034,
+     0.000027,
+     0.00001,
+     0.000015,
+     0.00005
+    ],
+    "ms": 85,
+    "debug": {
+     "top": "B",
+     "topP": 0.9954159363464119,
+     "letterMass": 0.9992731929402426
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Isabel Crane",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.00074,
+     0.001978,
+     0.001279,
+     0.00043,
+     0.992498,
+     0.001379,
+     0.000256,
+     0.001441
+    ],
+    "ms": 86,
+    "debug": {
+     "top": "E",
+     "topP": 0.9916363639372676,
+     "letterMass": 0.9991323534221602
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Margaret Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.001275,
+     0.004817,
+     0.992534,
+     0.000126,
+     0.00004,
+     0.000056,
+     0.000473,
+     0.000679
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "C",
+     "topP": 0.9915980333076192,
+     "letterMass": 0.9990567097177288
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Eleanor Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.998665,
+     0.000745,
+     0.000065,
+     0.000017,
+     0.000265,
+     0.000029,
+     0.000066,
+     0.000148
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "A",
+     "topP": 0.9981866637981391,
+     "letterMass": 0.9995207312756336
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Isabel Crane",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.000107,
+     0.000307,
+     0.000559,
+     0.000871,
+     0.997089,
+     0.000303,
+     0.000051,
+     0.000714
+    ],
+    "ms": 83,
+    "debug": {
+     "top": "E",
+     "topP": 0.9962924407573792,
+     "letterMass": 0.9992017997553384
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Josiah Crane",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.000104,
+     0.000032,
+     0.00006,
+     0.997432,
+     0.000091,
+     0.000053,
+     0.000176,
+     0.002051
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "D",
+     "topP": 0.997043317607783,
+     "letterMass": 0.9996107255064648
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Eleanor Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.986124,
+     0.002653,
+     0.000149,
+     0.000049,
+     0.001399,
+     0.000652,
+     0.006506,
+     0.002468
+    ],
+    "ms": 85,
+    "debug": {
+     "top": "A",
+     "topP": 0.9853604468710965,
+     "letterMass": 0.9992255085259314
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Josiah Crane",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.004921,
+     0.000692,
+     0.001046,
+     0.856747,
+     0.005226,
+     0.018599,
+     0.081059,
+     0.03171
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "D",
+     "topP": 0.8556712314458622,
+     "letterMass": 0.9987445083846587
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Abel Fenwick",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.003104,
+     0.000241,
+     0.000133,
+     0.000083,
+     0.000895,
+     0.022241,
+     0.969815,
+     0.003489
+    ],
+    "ms": 86,
+    "debug": {
+     "top": "G",
+     "topP": 0.9683103355134512,
+     "letterMass": 0.998448944435344
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Thomas Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.015781,
+     0.983469,
+     0.000564,
+     0.00002,
+     0.000043,
+     0.000019,
+     0.000021,
+     0.000084
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "B",
+     "topP": 0.9830504065101626,
+     "letterMass": 0.9995748305960429
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Josiah Crane",
+   "correct": false,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.020325,
+     0.021473,
+     0.016325,
+     0.272683,
+     0.63978,
+     0.003388,
+     0.002064,
+     0.023962
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "E",
+     "topP": 0.6385532777301427,
+     "letterMass": 0.9980837837850084
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Silas Reed",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.000254,
+     0.000059,
+     0.000093,
+     0.000104,
+     0.003717,
+     0.995001,
+     0.00025,
+     0.000521
+    ],
+    "ms": 83,
+    "debug": {
+     "top": "F",
+     "topP": 0.9938520229844203,
+     "letterMass": 0.9988452581963095
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "other",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.049647,
+     0.011917,
+     0.008463,
+     0.426155,
+     0.00961,
+     0.002481,
+     0.011324,
+     0.480403
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "H",
+     "topP": 0.4796143786522349,
+     "letterMass": 0.9983595331097961
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Thomas Ashby",
+   "correct": false,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.842765,
+     0.155084,
+     0.00092,
+     0.000104,
+     0.000557,
+     0.000106,
+     0.000138,
+     0.000327
+    ],
+    "ms": 85,
+    "debug": {
+     "top": "A",
+     "topP": 0.8418265549530998,
+     "letterMass": 0.9988871690050979
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Eleanor Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.994796,
+     0.004505,
+     0.000096,
+     0.000023,
+     0.000328,
+     0.000028,
+     0.000065,
+     0.000158
+    ],
+    "ms": 83,
+    "debug": {
+     "top": "A",
+     "topP": 0.9941793524578497,
+     "letterMass": 0.9993799382041174
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Silas Reed",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.011545,
+     0.011268,
+     0.004601,
+     0.009357,
+     0.016941,
+     0.892236,
+     0.0132,
+     0.040852
+    ],
+    "ms": 86,
+    "debug": {
+     "top": "F",
+     "topP": 0.8907349782986688,
+     "letterMass": 0.9983176402019315
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Isabel Crane",
+   "correct": false,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.000341,
+     0.000904,
+     0.997175,
+     0.00017,
+     0.000106,
+     0.000074,
+     0.000121,
+     0.00111
+    ],
+    "ms": 82,
+    "debug": {
+     "top": "C",
+     "topP": 0.9967689346229711,
+     "letterMass": 0.9995926659292721
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Margaret Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.01019,
+     0.01206,
+     0.97681,
+     0.00012,
+     0.000061,
+     0.000059,
+     0.000208,
+     0.000492
+    ],
+    "ms": 85,
+    "debug": {
+     "top": "C",
+     "topP": 0.9758375564602325,
+     "letterMass": 0.9990044569270377
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Eleanor Ashby",
+   "correct": false,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.121728,
+     0.019151,
+     0.005921,
+     0.001572,
+     0.005981,
+     0.118935,
+     0.645894,
+     0.080818
+    ],
+    "ms": 86,
+    "debug": {
+     "top": "G",
+     "topP": 0.6441252479410678,
+     "letterMass": 0.9972637371773377
+    }
+   }
+  },
+  {
+   "group": "resolve",
+   "gold": "Thomas Ashby",
+   "correct": true,
+   "result": {
+    "options": [
+     "Eleanor Ashby",
+     "Thomas Ashby",
+     "Margaret Ashby",
+     "Josiah Crane",
+     "Isabel Crane",
+     "Silas Reed",
+     "Abel Fenwick",
+     "other"
+    ],
+    "probs": [
+     0.118132,
+     0.815247,
+     0.02871,
+     0.002805,
+     0.004755,
+     0.012596,
+     0.007759,
+     0.009997
+    ],
+    "ms": 83,
+    "debug": {
+     "top": "B",
+     "topP": 0.814275620473723,
+     "letterMass": 0.9988091320883034
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": true,
+   "correct": false,
+   "result": {
+    "p": 0.132848,
+    "ms": 194,
+    "debug": {
+     "top": "A",
+     "topP": 0.864970273699736,
+     "letterMass": 0.9974842740097977
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": true,
+   "correct": true,
+   "result": {
+    "p": 0.824892,
+    "ms": 66,
+    "debug": {
+     "top": "B",
+     "topP": 0.8240285336036935,
+     "letterMass": 0.9989532503474902
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.04344,
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.9540893150765326,
+     "letterMass": 0.9974171413153801
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": true,
+   "correct": true,
+   "result": {
+    "p": 0.580461,
+    "ms": 65,
+    "debug": {
+     "top": "B",
+     "topP": 0.5792439108531724,
+     "letterMass": 0.9979032262840831
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.00299,
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.9961973149511753,
+     "letterMass": 0.999184781968634
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": true,
+   "correct": true,
+   "result": {
+    "p": 0.868289,
+    "ms": 68,
+    "debug": {
+     "top": "B",
+     "topP": 0.8676218572319387,
+     "letterMass": 0.9992318820135595
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.01474,
+    "ms": 69,
+    "debug": {
+     "top": "A",
+     "topP": 0.9809119574884767,
+     "letterMass": 0.9955868517471399
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": true,
+   "correct": false,
+   "result": {
+    "p": 0.251359,
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.7456156038177587,
+     "letterMass": 0.9959596319153061
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.001895,
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.9971815140606906,
+     "letterMass": 0.9990745841764316
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": true,
+   "correct": false,
+   "result": {
+    "p": 0.047764,
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.945854221594605,
+     "letterMass": 0.9932984663425577
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": true,
+   "correct": false,
+   "result": {
+    "p": 0.267589,
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.7302155355065507,
+     "letterMass": 0.9970032893434579
+    }
+   }
+  },
+  {
+   "group": "same",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.111366,
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.8856896005426093,
+     "letterMass": 0.9966871858449327
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "siblings",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.987246,
+     0.010668,
+     0.000094,
+     0.000037,
+     0.000049,
+     0.000955,
+     0.000794,
+     0.000023,
+     0.000022,
+     0.000015,
+     0.000097
+    ],
+    "ms": 536,
+    "debug": {
+     "top": "A",
+     "topP": 0.9869680944625197,
+     "letterMass": 0.9997183042149933
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "parent",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.003556,
+     0.987818,
+     0.000296,
+     0.00013,
+     0.000191,
+     0.001587,
+     0.000598,
+     0.0002,
+     0.003182,
+     0.001512,
+     0.000929
+    ],
+    "ms": 119,
+    "debug": {
+     "top": "B",
+     "topP": 0.9873223951872816,
+     "letterMass": 0.9994982699703039
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "work",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.002796,
+     0.00243,
+     0.004595,
+     0.000548,
+     0.000144,
+     0.001318,
+     0.001751,
+     0.030029,
+     0.944987,
+     0.005573,
+     0.005829
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "I",
+     "topP": 0.9445794550167068,
+     "letterMass": 0.9995689472715621
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "mentor",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.000123,
+     0.000164,
+     0.00002,
+     0.000053,
+     0.000043,
+     0.000076,
+     0.000159,
+     0.000568,
+     0.248727,
+     0.750034,
+     0.000032
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "J",
+     "topP": 0.7497562440971477,
+     "letterMass": 0.999629934104465
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "spouses",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.000126,
+     0.000279,
+     0.998852,
+     0.000236,
+     0.000076,
+     0.000018,
+     0.000021,
+     0.000039,
+     0.000024,
+     0.000021,
+     0.000308
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "C",
+     "topP": 0.9986797144373524,
+     "letterMass": 0.9998276652343256
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "romance",
+   "correct": false,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.034924,
+     0.006589,
+     0.091564,
+     0.048845,
+     0.009916,
+     0.025506,
+     0.035512,
+     0.068346,
+     0.005775,
+     0.01917,
+     0.653853
+    ],
+    "ms": 122,
+    "debug": {
+     "top": "K",
+     "topP": 0.6530363639689869,
+     "letterMass": 0.9987521259256977
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "rivals",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.046798,
+     0.007405,
+     0.017692,
+     0.015159,
+     0.004656,
+     0.01879,
+     0.19508,
+     0.534112,
+     0.022082,
+     0.017345,
+     0.12088
+    ],
+    "ms": 124,
+    "debug": {
+     "top": "H",
+     "topP": 0.533253999432966,
+     "letterMass": 0.998393341965575
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "friends",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.017847,
+     0.006091,
+     0.00164,
+     0.000845,
+     0.002273,
+     0.155449,
+     0.810707,
+     0.000518,
+     0.000104,
+     0.001001,
+     0.003525
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "G",
+     "topP": 0.8103461766662332,
+     "letterMass": 0.9995550288149858
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "parent",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.113776,
+     0.886023,
+     0.000017,
+     0.000008,
+     0.000007,
+     0.000011,
+     0.000023,
+     0.000005,
+     0.000035,
+     0.000042,
+     0.000054
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "B",
+     "topP": 0.8856199386445422,
+     "letterMass": 0.9995452371736062
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "none",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.003092,
+     0.000331,
+     0.011762,
+     0.000397,
+     0.00026,
+     0.001283,
+     0.016849,
+     0.00382,
+     0.000503,
+     0.002677,
+     0.959026
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "K",
+     "topP": 0.9587813341501662,
+     "letterMass": 0.9997453251440236
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "former",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.000574,
+     0.000675,
+     0.007538,
+     0.383751,
+     0.603092,
+     0.000679,
+     0.000218,
+     0.000649,
+     0.00021,
+     0.000681,
+     0.001933
+    ],
+    "ms": 124,
+    "debug": {
+     "top": "E",
+     "topP": 0.602785128210103,
+     "letterMass": 0.9994922361665991
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "relative",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.003694,
+     0.003085,
+     0.043915,
+     0.002452,
+     0.01523,
+     0.914272,
+     0.000346,
+     0.002455,
+     0.000615,
+     0.0013,
+     0.012635
+    ],
+    "ms": 122,
+    "debug": {
+     "top": "F",
+     "topP": 0.9137658410546107,
+     "letterMass": 0.9994464391043322
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "parent",
+   "correct": false,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.059092,
+     0.027307,
+     0.041548,
+     0.011102,
+     0.003277,
+     0.041379,
+     0.552958,
+     0.007473,
+     0.001702,
+     0.010842,
+     0.24332
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "G",
+     "topP": 0.5523992890975755,
+     "letterMass": 0.9989897817047361
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "work",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.010323,
+     0.006228,
+     0.011685,
+     0.001088,
+     0.000492,
+     0.012031,
+     0.017382,
+     0.095314,
+     0.814738,
+     0.010186,
+     0.020533
+    ],
+    "ms": 119,
+    "debug": {
+     "top": "I",
+     "topP": 0.8141773842419372,
+     "letterMass": 0.9993128209567654
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "rivals",
+   "correct": false,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.022444,
+     0.006368,
+     0.04317,
+     0.002918,
+     0.005077,
+     0.033719,
+     0.036811,
+     0.202885,
+     0.034844,
+     0.017524,
+     0.59424
+    ],
+    "ms": 125,
+    "debug": {
+     "top": "K",
+     "topP": 0.5936457895603192,
+     "letterMass": 0.9990007787986835
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "friends",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.067826,
+     0.012344,
+     0.016687,
+     0.001541,
+     0.0015,
+     0.061005,
+     0.348374,
+     0.067946,
+     0.140495,
+     0.071634,
+     0.21065
+    ],
+    "ms": 127,
+    "debug": {
+     "top": "G",
+     "topP": 0.34776431281396225,
+     "letterMass": 0.9982514361447792
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "siblings",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.635329,
+     0.027861,
+     0.019449,
+     0.000853,
+     0.000557,
+     0.148137,
+     0.004525,
+     0.000831,
+     0.000998,
+     0.007762,
+     0.153697
+    ],
+    "ms": 132,
+    "debug": {
+     "top": "A",
+     "topP": 0.6348528637599152,
+     "letterMass": 0.9992506603834799
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "relative",
+   "correct": false,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.004458,
+     0.990207,
+     0.000261,
+     0.0001,
+     0.00013,
+     0.001763,
+     0.000192,
+     0.0001,
+     0.001208,
+     0.000988,
+     0.000593
+    ],
+    "ms": 127,
+    "debug": {
+     "top": "B",
+     "topP": 0.9896848056403698,
+     "letterMass": 0.9994731395867728
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "spouses",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.000098,
+     0.001593,
+     0.997784,
+     0.000061,
+     0.000044,
+     0.000021,
+     0.000019,
+     0.000043,
+     0.000063,
+     0.000024,
+     0.000251
+    ],
+    "ms": 124,
+    "debug": {
+     "top": "C",
+     "topP": 0.9976402309581432,
+     "letterMass": 0.9998561746247137
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "romance",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.001286,
+     0.000463,
+     0.011001,
+     0.981141,
+     0.00161,
+     0.000113,
+     0.00026,
+     0.000265,
+     0.000185,
+     0.000566,
+     0.003109
+    ],
+    "ms": 122,
+    "debug": {
+     "top": "D",
+     "topP": 0.9809034696302117,
+     "letterMass": 0.9997576767516881
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "work",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.000013,
+     0.000091,
+     0.000012,
+     0.000013,
+     0.000005,
+     0.000013,
+     0.00002,
+     0.003169,
+     0.996459,
+     0.000188,
+     0.000015
+    ],
+    "ms": 124,
+    "debug": {
+     "top": "I",
+     "topP": 0.996360956788767,
+     "letterMass": 0.9999017486319046
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "parent",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.243703,
+     0.594244,
+     0.011144,
+     0.00223,
+     0.002724,
+     0.075671,
+     0.017656,
+     0.001515,
+     0.004171,
+     0.007656,
+     0.039286
+    ],
+    "ms": 122,
+    "debug": {
+     "top": "B",
+     "topP": 0.5934626773131305,
+     "letterMass": 0.9986850940300849
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "relative",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.009143,
+     0.002227,
+     0.002264,
+     0.000485,
+     0.001721,
+     0.958352,
+     0.000246,
+     0.000398,
+     0.000152,
+     0.000344,
+     0.024667
+    ],
+    "ms": 124,
+    "debug": {
+     "top": "F",
+     "topP": 0.9579491051624667,
+     "letterMass": 0.9995792797756349
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "former",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.002445,
+     0.002062,
+     0.041455,
+     0.111377,
+     0.709907,
+     0.007202,
+     0.001876,
+     0.015288,
+     0.001304,
+     0.00438,
+     0.102704
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "E",
+     "topP": 0.7094649019625753,
+     "letterMass": 0.9993773975946865
+    }
+   }
+  },
+  {
+   "group": "relation",
+   "gold": "none",
+   "correct": true,
+   "result": {
+    "keys": [
+     "siblings",
+     "parent",
+     "spouses",
+     "romance",
+     "former",
+     "relative",
+     "friends",
+     "rivals",
+     "work",
+     "mentor",
+     "none"
+    ],
+    "probs": [
+     0.001927,
+     0.000358,
+     0.019147,
+     0.000369,
+     0.00024,
+     0.000576,
+     0.001625,
+     0.000745,
+     0.000169,
+     0.001377,
+     0.973467
+    ],
+    "ms": 119,
+    "debug": {
+     "top": "K",
+     "topP": 0.973302037079795,
+     "letterMass": 0.9998311623580054
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "siblings",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.0018,
+     0.002077,
+     0.000764,
+     0.00057,
+     0.002024,
+     0.016831,
+     0.000206,
+     0.000348,
+     0.001671,
+     0.120767,
+     0.852941
+    ],
+    "ms": 525,
+    "debug": {
+     "top": "K",
+     "topP": 0.8521407315892329,
+     "letterMass": 0.9990620984134059
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "parent",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.005998,
+     0.001202,
+     0.000503,
+     0.000642,
+     0.000808,
+     0.014822,
+     0.000357,
+     0.000645,
+     0.006262,
+     0.96833,
+     0.00043
+    ],
+    "ms": 124,
+    "debug": {
+     "top": "J",
+     "topP": 0.9675589063178355,
+     "letterMass": 0.9992045992982354
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "work",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.238881,
+     0.027591,
+     0.71298,
+     0.003051,
+     0.00032,
+     0.000233,
+     0.000199,
+     0.001987,
+     0.003677,
+     0.009324,
+     0.001758
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "C",
+     "topP": 0.7122012248837366,
+     "letterMass": 0.9989083100230689
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "mentor",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.001025,
+     0.994968,
+     0.000215,
+     0.000019,
+     0.000039,
+     0.000015,
+     0.000017,
+     0.000066,
+     0.000029,
+     0.003597,
+     0.00001
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "B",
+     "topP": 0.9947675320406245,
+     "letterMass": 0.9997987250399778
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "spouses",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.000056,
+     0.000051,
+     0.000014,
+     0.000014,
+     0.000044,
+     0.000067,
+     0.012778,
+     0.003783,
+     0.983009,
+     0.000179,
+     0.000006
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "I",
+     "topP": 0.9826353922004225,
+     "letterMass": 0.9996202371943343
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "romance",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.547708,
+     0.034188,
+     0.013283,
+     0.021198,
+     0.053529,
+     0.030324,
+     0.125621,
+     0.127674,
+     0.012957,
+     0.029657,
+     0.003862
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "A",
+     "topP": 0.5456385996889409,
+     "letterMass": 0.9962222613365914
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "rivals",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.027675,
+     0.004507,
+     0.006587,
+     0.081137,
+     0.755285,
+     0.01424,
+     0.014616,
+     0.075319,
+     0.002477,
+     0.016933,
+     0.001223
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "E",
+     "topP": 0.7541525052311717,
+     "letterMass": 0.998500794473293
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "friends",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.000687,
+     0.000168,
+     0.000054,
+     0.000465,
+     0.985479,
+     0.012106,
+     0.000177,
+     0.000257,
+     0.000041,
+     0.000557,
+     0.000009
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "E",
+     "topP": 0.9851523822095408,
+     "letterMass": 0.9996690624593665
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "parent",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.001318,
+     0.000207,
+     0.000122,
+     0.000126,
+     0.000087,
+     0.000601,
+     0.000081,
+     0.000098,
+     0.001794,
+     0.99554,
+     0.000024
+    ],
+    "ms": 119,
+    "debug": {
+     "top": "J",
+     "topP": 0.9949877035170527,
+     "letterMass": 0.9994457247415302
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "none",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.997055,
+     0.00039,
+     0.000039,
+     0.00029,
+     0.000199,
+     0.000082,
+     0.000041,
+     0.000073,
+     0.000157,
+     0.001565,
+     0.000108
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "A",
+     "topP": 0.9966159333888711,
+     "letterMass": 0.9995598451413367
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "former",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.000324,
+     0.000136,
+     0.00004,
+     0.00005,
+     0.000212,
+     0.00023,
+     0.962485,
+     0.03625,
+     0.000153,
+     0.000102,
+     0.000018
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "G",
+     "topP": 0.9618293337601705,
+     "letterMass": 0.9993193587756728
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "relative",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.001604,
+     0.000314,
+     0.000391,
+     0.000333,
+     0.000881,
+     0.980733,
+     0.000901,
+     0.000728,
+     0.007923,
+     0.006001,
+     0.00019
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "F",
+     "topP": 0.9796875551092702,
+     "letterMass": 0.9989342295394328
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "parent",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.06942,
+     0.005763,
+     0.001886,
+     0.004898,
+     0.750713,
+     0.091895,
+     0.007104,
+     0.014772,
+     0.005328,
+     0.047661,
+     0.000559
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "E",
+     "topP": 0.7496835435119181,
+     "letterMass": 0.9986293003207019
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "work",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.127002,
+     0.056146,
+     0.7826,
+     0.004699,
+     0.002115,
+     0.003253,
+     0.000635,
+     0.006025,
+     0.010285,
+     0.006382,
+     0.000858
+    ],
+    "ms": 122,
+    "debug": {
+     "top": "C",
+     "topP": 0.7813981112737198,
+     "letterMass": 0.9984641749350353
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "rivals",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.880282,
+     0.006824,
+     0.002684,
+     0.063601,
+     0.004585,
+     0.008748,
+     0.009345,
+     0.007286,
+     0.003338,
+     0.012992,
+     0.000313
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "A",
+     "topP": 0.8792815486476419,
+     "letterMass": 0.998863486979573
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "friends",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.0859,
+     0.359888,
+     0.072535,
+     0.008945,
+     0.344427,
+     0.020867,
+     0.00084,
+     0.004091,
+     0.001298,
+     0.095539,
+     0.005669
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "B",
+     "topP": 0.35940073713798076,
+     "letterMass": 0.9986458548202658
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "siblings",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.10018,
+     0.008278,
+     0.012585,
+     0.002755,
+     0.013119,
+     0.559006,
+     0.000888,
+     0.003217,
+     0.015959,
+     0.112527,
+     0.171486
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "F",
+     "topP": 0.5580260083270764,
+     "letterMass": 0.9982467367464675
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "relative",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.003109,
+     0.000572,
+     0.000482,
+     0.000517,
+     0.001386,
+     0.390147,
+     0.000463,
+     0.000551,
+     0.002867,
+     0.596608,
+     0.003299
+    ],
+    "ms": 118,
+    "debug": {
+     "top": "J",
+     "topP": 0.5960211579280487,
+     "letterMass": 0.9990170385676619
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "spouses",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.000136,
+     0.000083,
+     0.000029,
+     0.000018,
+     0.000062,
+     0.000518,
+     0.000776,
+     0.00122,
+     0.994465,
+     0.002683,
+     0.00001
+    ],
+    "ms": 119,
+    "debug": {
+     "top": "I",
+     "topP": 0.9941271584671737,
+     "letterMass": 0.999660155793648
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "romance",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.000838,
+     0.000269,
+     0.000084,
+     0.000085,
+     0.000506,
+     0.00032,
+     0.379711,
+     0.617619,
+     0.000256,
+     0.000274,
+     0.000038
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "H",
+     "topP": 0.6169525810548389,
+     "letterMass": 0.9989215170846952
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "work",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.000431,
+     0.002325,
+     0.995287,
+     0.000142,
+     0.000038,
+     0.000038,
+     0.000047,
+     0.000295,
+     0.000583,
+     0.000702,
+     0.000112
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "C",
+     "topP": 0.994990653957298,
+     "letterMass": 0.9997025367798716
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "parent",
+   "correct": false,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.107197,
+     0.016699,
+     0.008959,
+     0.004246,
+     0.022297,
+     0.619289,
+     0.007506,
+     0.011056,
+     0.01888,
+     0.180793,
+     0.003079
+    ],
+    "ms": 121,
+    "debug": {
+     "top": "F",
+     "topP": 0.6179873137608315,
+     "letterMass": 0.9978990531916505
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "relative",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.003225,
+     0.000765,
+     0.000993,
+     0.000374,
+     0.001218,
+     0.967081,
+     0.000254,
+     0.000605,
+     0.000446,
+     0.021087,
+     0.003951
+    ],
+    "ms": 123,
+    "debug": {
+     "top": "F",
+     "topP": 0.9663571276344514,
+     "letterMass": 0.9992519890211795
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "former",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.02018,
+     0.001032,
+     0.000413,
+     0.000403,
+     0.00145,
+     0.001736,
+     0.92162,
+     0.048936,
+     0.003723,
+     0.000458,
+     0.000048
+    ],
+    "ms": 125,
+    "debug": {
+     "top": "G",
+     "topP": 0.9207642535786243,
+     "letterMass": 0.99907130300885
+    }
+   }
+  },
+  {
+   "group": "relation_reversed",
+   "gold": "none",
+   "correct": true,
+   "result": {
+    "keys": [
+     "none",
+     "mentor",
+     "work",
+     "rivals",
+     "friends",
+     "relative",
+     "former",
+     "romance",
+     "spouses",
+     "parent",
+     "siblings"
+    ],
+    "probs": [
+     0.997081,
+     0.000722,
+     0.000048,
+     0.000148,
+     0.00023,
+     0.000477,
+     0.000183,
+     0.000131,
+     0.000073,
+     0.000846,
+     0.00006
+    ],
+    "ms": 120,
+    "debug": {
+     "top": "A",
+     "topP": 0.9968192742450575,
+     "letterMass": 0.9997371335544281
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Margaret",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.807558,
+     0.192442
+    ],
+    "ms": 102,
+    "debug": {
+     "top": "A",
+     "topP": 0.800687388216851,
+     "letterMass": 0.9914947967211344
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Crane",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.994682,
+     0.005318
+    ],
+    "ms": 50,
+    "debug": {
+     "top": "A",
+     "topP": 0.9933773720820323,
+     "letterMass": 0.9986896239317269
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Margaret",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.522495,
+     0.477505
+    ],
+    "ms": 50,
+    "debug": {
+     "top": "A",
+     "topP": 0.5202087828294429,
+     "letterMass": 0.9956284124256273
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Margaret",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.263174,
+     0.736826
+    ],
+    "ms": 50,
+    "debug": {
+     "top": "B",
+     "topP": 0.7342238434427526,
+     "letterMass": 0.9964726681480859
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Fenwick",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.984938,
+     0.015062
+    ],
+    "ms": 52,
+    "debug": {
+     "top": "A",
+     "topP": 0.984311877053948,
+     "letterMass": 0.9993656259645218
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Crane",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.040479,
+     0.959521
+    ],
+    "ms": 50,
+    "debug": {
+     "top": "B",
+     "topP": 0.9496437735483378,
+     "letterMass": 0.989707936436421
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Margaret",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.678958,
+     0.321042
+    ],
+    "ms": 50,
+    "debug": {
+     "top": "A",
+     "topP": 0.677644717109087,
+     "letterMass": 0.9980679554078364
+    }
+   }
+  },
+  {
+   "group": "direction",
+   "gold": "Crane",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.985708,
+     0.014292
+    ],
+    "ms": 52,
+    "debug": {
+     "top": "A",
+     "topP": 0.9833154435564744,
+     "letterMass": 0.9975744398186639
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Reed",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.761109,
+     0.238891
+    ],
+    "ms": 196,
+    "debug": {
+     "top": "A",
+     "topP": 0.7602698780574899,
+     "letterMass": 0.9988976054136601
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Eleanor",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.724983,
+     0.275017
+    ],
+    "ms": 68,
+    "debug": {
+     "top": "A",
+     "topP": 0.7241080641733535,
+     "letterMass": 0.9987935606432222
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Reed",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.799133,
+     0.200867
+    ],
+    "ms": 70,
+    "debug": {
+     "top": "A",
+     "topP": 0.797571784814984,
+     "letterMass": 0.9980462708156699
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Eleanor",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.77326,
+     0.22674
+    ],
+    "ms": 69,
+    "debug": {
+     "top": "A",
+     "topP": 0.771321569417128,
+     "letterMass": 0.9974931931814958
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Tom",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.998261,
+     0.001668,
+     0.000071
+    ],
+    "ms": 85,
+    "debug": {
+     "top": "A",
+     "topP": 0.9978968124813236,
+     "letterMass": 0.9996356718813435
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Crane",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.077211,
+     0.820296,
+     0.102494
+    ],
+    "ms": 82,
+    "debug": {
+     "top": "B",
+     "topP": 0.8197017471241186,
+     "letterMass": 0.999275954623033
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Tom",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.051385,
+     0.310236,
+     0.638379
+    ],
+    "ms": 83,
+    "debug": {
+     "top": "C",
+     "topP": 0.6377708286306719,
+     "letterMass": 0.9990467705466386
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Isabel",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.002428,
+     0.002681,
+     0.994891
+    ],
+    "ms": 87,
+    "debug": {
+     "top": "C",
+     "topP": 0.9946112529237116,
+     "letterMass": 0.9997188425832774
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Tom",
+   "correct": false,
+   "result": {
+    "probs": [
+     0.496535,
+     0.36562,
+     0.137845
+    ],
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.4949678376830859,
+     "letterMass": 0.9968438234573002
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Crane",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.992833,
+     0.000525,
+     0.006642
+    ],
+    "ms": 83,
+    "debug": {
+     "top": "A",
+     "topP": 0.9924991762309653,
+     "letterMass": 0.9996641031257586
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Reed",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.091346,
+     0.896919,
+     0.011735
+    ],
+    "ms": 83,
+    "debug": {
+     "top": "B",
+     "topP": 0.8963262476549005,
+     "letterMass": 0.9993389911460135
+    }
+   }
+  },
+  {
+   "group": "speaker",
+   "gold": "Crane",
+   "correct": true,
+   "result": {
+    "probs": [
+     0.911385,
+     0.012581,
+     0.076034
+    ],
+    "ms": 84,
+    "debug": {
+     "top": "A",
+     "topP": 0.910764372107789,
+     "letterMass": 0.9993193487192029
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.08954,
+    "ms": 195,
+    "debug": {
+     "top": "A",
+     "topP": 0.9053891574446995,
+     "letterMass": 0.994430669548831
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": true,
+   "correct": true,
+   "result": {
+    "p": 0.946678,
+    "ms": 67,
+    "debug": {
+     "top": "B",
+     "topP": 0.9462923269579798,
+     "letterMass": 0.999592301797625
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.09273,
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.9022430105972528,
+     "letterMass": 0.9944590457142871
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.135797,
+    "ms": 69,
+    "debug": {
+     "top": "A",
+     "topP": 0.8625595370237745,
+     "letterMass": 0.9980979767178833
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": true,
+   "correct": true,
+   "result": {
+    "p": 0.965221,
+    "ms": 67,
+    "debug": {
+     "top": "B",
+     "topP": 0.9646724111957368,
+     "letterMass": 0.9994321300466538
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.066065,
+    "ms": 67,
+    "debug": {
+     "top": "A",
+     "topP": 0.9310849505710529,
+     "letterMass": 0.9969489515694432
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": true,
+   "correct": true,
+   "result": {
+    "p": 0.885448,
+    "ms": 71,
+    "debug": {
+     "top": "B",
+     "topP": 0.8845049714475749,
+     "letterMass": 0.9989355113792736
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": false,
+   "correct": true,
+   "result": {
+    "p": 0.022808,
+    "ms": 72,
+    "debug": {
+     "top": "A",
+     "topP": 0.9760544242382778,
+     "letterMass": 0.9988356479960212
+    }
+   }
+  },
+  {
+   "group": "presence",
+   "gold": true,
+   "correct": true,
+   "result": {
+    "p": 0.979773,
+    "ms": 73,
+    "debug": {
+     "top": "B",
+     "topP": 0.9794768468829487,
+     "letterMass": 0.9996978336157257
+    }
+   }
+  }
+ ]
+}

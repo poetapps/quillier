@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ececea"/>
+    </linearGradient>
+    <linearGradient id="gap" gradientUnits="userSpaceOnUse" x1="0" y1="-6.5" x2="0" y2="31.5">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ececea"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#bg)" filter="url(#shadow)"/>
+  <g transform="translate(252 241) scale(21.67)">
+    <rect x="1.5" y="2.5" width="13" height="15" rx="3.2" fill="#1b1b1b"/>
+    <rect x="8.5" y="6.5" width="14" height="16" rx="3.4" fill="#1b1b1b" stroke="url(#gap)" stroke-width="1.6"/>
+  </g>
+</svg>

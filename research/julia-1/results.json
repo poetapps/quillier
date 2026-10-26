@@ -1,0 +1,4447 @@
+{
+ "disambiguation": [
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "May pushed the door open and stepped into the rain.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.5690663152577897,
+    "probs": {
+     "entity": 0.42978085065898497,
+     "month": 0.0011528340832253775,
+     "word": 0.5690663152577897
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9930463491912553,
+    "probs": {
+     "entity": 0.9930463491912553,
+     "month": 4.663338817111956e-05,
+     "word": 0.006907017420573561
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9983420784570409,
+    "probs": {
+     "entity": 0.9983420784570409,
+     "month": 2.2398086988661525e-05,
+     "word": 0.0016355234559704724
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.999585542681884
+   },
+   "noul": 0.9486413204781087,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "\"May I sit here?\" the stranger asked.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9984437777436472,
+    "probs": {
+     "entity": 0.9984437777436472,
+     "month": 5.91084585729442e-05,
+     "word": 0.001497113797779807
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.999693222708849,
+    "probs": {
+     "entity": 0.999693222708849,
+     "month": 0.0001583473489363525,
+     "word": 0.0001484299422147506
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999201937797977,
+    "probs": {
+     "entity": 0.9999201937797977,
+     "month": 5.2169830021593437e-05,
+     "word": 2.7636390180688616e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9997574617657248
+   },
+   "noul": 0.18386985188346966,
+   "rules": [
+    false,
+    "modal-question"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "We married in May, just before the floods.",
+   "gold": "month",
+   "multi": false,
+   "plain": {
+    "pick": "month",
+    "conf": 0.5261305230026314,
+    "probs": {
+     "entity": 0.0761049047934445,
+     "month": 0.5261305230026314,
+     "word": 0.39776457220392414
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9985475868585464,
+    "probs": {
+     "entity": 0.9985475868585464,
+     "month": 2.1773818082341276e-05,
+     "word": 0.0014306393233712523
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9995171533140038,
+    "probs": {
+     "entity": 0.9995171533140038,
+     "month": 9.874573562263452e-06,
+     "word": 0.0004729721124338808
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9985744054796236
+   },
+   "noul": 0.9194180857923443,
+   "rules": [
+    false,
+    "time-preposition"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "may",
+   "occ": 0,
+   "passage": "She may not come back tonight.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.6299308322765081,
+    "probs": {
+     "entity": 0.366839502399596,
+     "month": 0.0032296653238959167,
+     "word": 0.6299308322765081
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.999584449459455,
+    "probs": {
+     "entity": 0.999584449459455,
+     "month": 5.122066854515068e-05,
+     "word": 0.00036432987199974714
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9998099416931008,
+    "probs": {
+     "entity": 0.9998099416931008,
+     "month": 7.682907965136547e-06,
+     "word": 0.00018237539893401988
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.997963646107952
+   },
+   "noul": 0.9062430224541406,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "\"May the road rise to meet you,\" Tom said, raising his glass.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.6128087438260971,
+    "probs": {
+     "entity": 0.3837512434928017,
+     "month": 0.003440012681101221,
+     "word": 0.6128087438260971
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.997858086488816,
+    "probs": {
+     "entity": 0.997858086488816,
+     "month": 0.00018349273308671535,
+     "word": 0.0019584207780972934
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9919912048385263,
+    "probs": {
+     "entity": 0.9919912048385263,
+     "month": 8.054952936098176e-06,
+     "word": 0.008000740208537692
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.974646230585539
+   },
+   "noul": 0.21328670886089923,
+   "rules": [
+    false,
+    "modal-question"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "By late May the orchard was white with blossom.",
+   "gold": "month",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.5571210729238874,
+    "probs": {
+     "entity": 0.5571210729238874,
+     "month": 7.002136810883906e-06,
+     "word": 0.4428719249393018
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.6881409814902335,
+    "probs": {
+     "entity": 0.6881409814902335,
+     "month": 4.871175650289777e-06,
+     "word": 0.31185414733411615
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9533385736725172,
+    "probs": {
+     "entity": 0.9533385736725172,
+     "month": 4.611786910157823e-06,
+     "word": 0.046656814540572564
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9838834067592706
+   },
+   "noul": 0.6222018265118645,
+   "rules": [
+    false,
+    "time-preposition"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "Tom handed the letter to May and waited.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.8325903644103636,
+    "probs": {
+     "entity": 0.8325903644103636,
+     "month": 0.0004469915564235049,
+     "word": 0.16696264403321298
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999608355471875,
+    "probs": {
+     "entity": 0.9999608355471875,
+     "month": 2.2016124768902636e-06,
+     "word": 3.696284033554529e-05
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999982675083002,
+    "probs": {
+     "entity": 0.9999982675083002,
+     "month": 4.5677598220757837e-07,
+     "word": 1.2757157176069407e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9996407061560407
+   },
+   "noul": 0.9385111335973141,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "May's hands were shaking as she read it.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9971238674516661,
+    "probs": {
+     "entity": 0.9971238674516661,
+     "month": 0.00016286014037415078,
+     "word": 0.0027132724079596275
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9994450655139061,
+    "probs": {
+     "entity": 0.9994450655139061,
+     "month": 1.1919348456102857e-05,
+     "word": 0.0005430151376377398
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9997623278296416,
+    "probs": {
+     "entity": 0.9997623278296416,
+     "month": 1.7843333433354095e-06,
+     "word": 0.00023588783701495743
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9998879348859223
+   },
+   "noul": 0.7554263478430436,
+   "rules": [
+    true,
+    "possessive"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "May? Are you there?",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9982503618818519,
+    "probs": {
+     "entity": 0.9982503618818519,
+     "month": 6.231619117210219e-05,
+     "word": 0.0016873219269760993
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.998187876294816,
+    "probs": {
+     "entity": 0.998187876294816,
+     "month": 4.37387683223084e-06,
+     "word": 0.0018077498283516358
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999563506716702,
+    "probs": {
+     "entity": 0.9999563506716702,
+     "month": 1.36115994707404e-06,
+     "word": 4.228816838259509e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9980379332547524
+   },
+   "noul": 0.48494627196659884,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "May never forgave him for that winter.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.7896888038795138,
+    "probs": {
+     "entity": 0.7896888038795138,
+     "month": 3.792687860284068e-05,
+     "word": 0.21027326924188328
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9114971443624602,
+    "probs": {
+     "entity": 0.9114971443624602,
+     "month": 2.449306627316099e-06,
+     "word": 0.08850040633091234
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9988325478975743,
+    "probs": {
+     "entity": 0.9988325478975743,
+     "month": 4.2495374368211307e-07,
+     "word": 0.0011670271486821323
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9998841279005398
+   },
+   "noul": 0.11927793329715228,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "\"May she rest in peace,\" whispered the priest.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9942119354141504,
+    "probs": {
+     "entity": 0.9942119354141504,
+     "month": 0.000810558350690147,
+     "word": 0.004977506235159531
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9997325346004001,
+    "probs": {
+     "entity": 0.9997325346004001,
+     "month": 6.507056591959898e-05,
+     "word": 0.00020239483368034207
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9992636720039121,
+    "probs": {
+     "entity": 0.9992636720039121,
+     "month": 1.5325203881111138e-05,
+     "word": 0.0007210027922067232
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9965964308428104
+   },
+   "noul": 0.9703978572952446,
+   "rules": [
+    false,
+    "modal-question"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 1,
+   "passage": "The fair came every May, and every May Tom lost money on it.",
+   "gold": "month",
+   "multi": true,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.6039192583580352,
+    "probs": {
+     "entity": 0.6039192583580352,
+     "month": 0.00134682267365131,
+     "word": 0.39473391896831356
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.994711617936914,
+    "probs": {
+     "entity": 0.994711617936914,
+     "month": 5.251968956598015e-05,
+     "word": 0.005235862373520022
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.995325455079045,
+    "probs": {
+     "entity": 0.995325455079045,
+     "month": 4.619965044067391e-05,
+     "word": 0.004628345270514387
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.999526980465544
+   },
+   "noul": 0.41689241548522904,
+   "rules": [
+    false,
+    "time-preposition"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "\"Come here, May,\" her mother called.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9993103119880724,
+    "probs": {
+     "entity": 0.9993103119880724,
+     "month": 2.2555588784243915e-05,
+     "word": 0.0006671324231434435
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999442222658985,
+    "probs": {
+     "entity": 0.9999442222658985,
+     "month": 1.6525785566757733e-05,
+     "word": 3.925194853468546e-05
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999563003865928,
+    "probs": {
+     "entity": 0.9999563003865928,
+     "month": 5.271396500672366e-06,
+     "word": 3.842821690658596e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9994912833957584
+   },
+   "noul": 0.9773513801139293,
+   "rules": [
+    true,
+    "vocative"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "It was the first of May when the soldiers came.",
+   "gold": "month",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9971461672021718,
+    "probs": {
+     "entity": 0.9971461672021718,
+     "month": 0.0028436901880609824,
+     "word": 1.014260976731186e-05
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9943748872256872,
+    "probs": {
+     "entity": 0.9943748872256872,
+     "month": 0.005523507983530417,
+     "word": 0.0001016047907824863
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9761230923687991,
+    "probs": {
+     "entity": 0.9761230923687991,
+     "month": 0.02365016657971971,
+     "word": 0.0002267410514812612
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.999786005203687
+   },
+   "noul": 0.9745291866288461,
+   "rules": [
+    false,
+    "time-preposition"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "May and Tom reached the bridge at dusk.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9853953209728856,
+    "probs": {
+     "entity": 0.9853953209728856,
+     "month": 0.00013593250723684095,
+     "word": 0.014468746519877444
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9992095837432522,
+    "probs": {
+     "entity": 0.9992095837432522,
+     "month": 8.993506974721694e-05,
+     "word": 0.0007004811870005833
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9970109633506795,
+    "probs": {
+     "entity": 0.9970109633506795,
+     "month": 0.00016657431714242003,
+     "word": 0.002822462332177919
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9947019192524172
+   },
+   "noul": 0.37344957257541744,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "May had been the worst month of her life.",
+   "gold": "month",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9586788079005537,
+    "probs": {
+     "entity": 0.9586788079005537,
+     "month": 0.007871695388257506,
+     "word": 0.03344949671118883
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9993864065331208,
+    "probs": {
+     "entity": 0.9993864065331208,
+     "month": 1.4664761053652345e-05,
+     "word": 0.0005989287058255139
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.997826809246381,
+    "probs": {
+     "entity": 0.997826809246381,
+     "month": 2.4153912213681413e-06,
+     "word": 0.0021707753623975918
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9947767705150213
+   },
+   "noul": 0.7173674589221488,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "May",
+   "occ": 0,
+   "passage": "May had been crying; her eyes were red.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.993382977549201,
+    "probs": {
+     "entity": 0.993382977549201,
+     "month": 0.0004915170219842675,
+     "word": 0.006125505428814673
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9993941075942457,
+    "probs": {
+     "entity": 0.9993941075942457,
+     "month": 0.00011035266260145925,
+     "word": 0.0004955397431528441
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9895069413047978,
+    "probs": {
+     "entity": 0.9895069413047978,
+     "month": 8.804996689307176e-05,
+     "word": 0.010405008728309184
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9970648337488084
+   },
+   "noul": 0.9414041237068457,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "MAY",
+   "occ": 0,
+   "passage": "MAY 14 \u2014 Rain again. No word from Tom.",
+   "gold": "month",
+   "multi": false,
+   "plain": {
+    "pick": "month",
+    "conf": 0.45023129535616,
+    "probs": {
+     "entity": 0.3816608845287026,
+     "month": 0.45023129535616,
+     "word": 0.1681078201151375
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9970471166854495,
+    "probs": {
+     "entity": 0.9970471166854495,
+     "month": 0.0025965575673124095,
+     "word": 0.00035632574723812603
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9995727092885174,
+    "probs": {
+     "entity": 0.9995727092885174,
+     "month": 0.0001575442858214503,
+     "word": 0.000269746425661148
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9979108326182431
+   },
+   "noul": 0.0009917160722324539,
+   "rules": [
+    false,
+    "date"
+   ]
+  },
+  {
+   "entity": "May",
+   "target": "may",
+   "occ": 0,
+   "passage": "Whatever you may think of her, she kept her word.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9416585442429412,
+    "probs": {
+     "entity": 0.9416585442429412,
+     "month": 0.021348635461199975,
+     "word": 0.03699282029585886
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999892182648173,
+    "probs": {
+     "entity": 0.9999892182648173,
+     "month": 2.24045988313816e-06,
+     "word": 8.541275299532858e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999471128618449,
+    "probs": {
+     "entity": 0.9999471128618449,
+     "month": 1.0721420945935318e-06,
+     "word": 5.181499606055387e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999670195789806
+   },
+   "noul": 0.9934022761302765,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "April",
+   "target": "April",
+   "occ": 0,
+   "passage": "April smiled and closed the book.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9978649702876903,
+    "probs": {
+     "entity": 0.9978649702876903,
+     "month": 0.0021350297123097265
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999993530675413,
+    "probs": {
+     "entity": 0.9999993530675413,
+     "month": 6.469324586480757e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999994665482997,
+    "probs": {
+     "entity": 0.9999994665482997,
+     "month": 5.334517003104659e-07
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999963558236369
+   },
+   "noul": 0.9886703864761722,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "April",
+   "target": "April",
+   "occ": 0,
+   "passage": "April was wet and miserable that year.",
+   "gold": "month",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.7741305151182385,
+    "probs": {
+     "entity": 0.7741305151182385,
+     "month": 0.22586948488176142
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999906013755934,
+    "probs": {
+     "entity": 0.9999906013755934,
+     "month": 9.398624406762388e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999986413594839,
+    "probs": {
+     "entity": 0.9999986413594839,
+     "month": 1.3586405160826344e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999930751372375
+   },
+   "noul": 0.9505256504470323,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "April",
+   "target": "April",
+   "occ": 0,
+   "passage": "In April the river flooded the lower fields.",
+   "gold": "month",
+   "multi": false,
+   "plain": {
+    "pick": "month",
+    "conf": 0.9489978528889581,
+    "probs": {
+     "entity": 0.051002147111041916,
+     "month": 0.9489978528889581
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999396356739344,
+    "probs": {
+     "entity": 0.9999396356739344,
+     "month": 6.0364326065498705e-05
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999930839677783,
+    "probs": {
+     "entity": 0.9999930839677783,
+     "month": 6.916032221629116e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999959375359335
+   },
+   "noul": 0.8073969394232963,
+   "rules": [
+    false,
+    "time-preposition"
+   ]
+  },
+  {
+   "entity": "April",
+   "target": "April",
+   "occ": 0,
+   "passage": "April ran to the gate when she heard the horses.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.861333038501479,
+    "probs": {
+     "entity": 0.861333038501479,
+     "month": 0.13866696149852112
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999901264874976,
+    "probs": {
+     "entity": 0.9999901264874976,
+     "month": 9.87351250246453e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999876802442947,
+    "probs": {
+     "entity": 0.9999876802442947,
+     "month": 1.2319755705234498e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999846725955148
+   },
+   "noul": 0.9029946062741229,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "Will tossed the keys onto the table.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9914828542047242,
+    "probs": {
+     "entity": 0.9914828542047242,
+     "word": 0.00851714579527581
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9971243635046199,
+    "probs": {
+     "entity": 0.9971243635046199,
+     "word": 0.0028756364953801115
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9992861612113985,
+    "probs": {
+     "entity": 0.9992861612113985,
+     "word": 0.0007138387886015127
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.998550648908128
+   },
+   "noul": 0.9546072458668287,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "\"Will you marry me?\"",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.7613488458107779,
+    "probs": {
+     "entity": 0.238651154189222,
+     "word": 0.7613488458107779
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9716309973932046,
+    "probs": {
+     "entity": 0.9716309973932046,
+     "word": 0.0283690026067954
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.99950109052894,
+    "probs": {
+     "entity": 0.99950109052894,
+     "word": 0.000498909471060009
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.999767240723185
+   },
+   "noul": 0.9920762639090291,
+   "rules": [
+    false,
+    "modal-question"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "\"Will you stop that, Will?\" she snapped.",
+   "gold": "word",
+   "multi": true,
+   "plain": {
+    "pick": "word",
+    "conf": 0.8591959261547819,
+    "probs": {
+     "entity": 0.14080407384521806,
+     "word": 0.8591959261547819
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9680309999593878,
+    "probs": {
+     "entity": 0.9680309999593878,
+     "word": 0.03196900004061213
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9765888116000597,
+    "probs": {
+     "entity": 0.9765888116000597,
+     "word": 0.02341118839994025
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9941326743562263
+   },
+   "noul": 0.9782801831791238,
+   "rules": [
+    false,
+    "modal-question"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 1,
+   "passage": "\"Will you stop that, Will?\" she snapped.",
+   "gold": "entity",
+   "multi": true,
+   "plain": {
+    "pick": "word",
+    "conf": 0.8591959261547819,
+    "probs": {
+     "entity": 0.14080407384521806,
+     "word": 0.8591959261547819
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9680309999593878,
+    "probs": {
+     "entity": 0.9680309999593878,
+     "word": 0.03196900004061213
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9719526717158359,
+    "probs": {
+     "entity": 0.9719526717158359,
+     "word": 0.028047328284164164
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9928611020941823
+   },
+   "noul": 0.9516967245388013,
+   "rules": [
+    true,
+    "vocative"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "will",
+   "occ": 0,
+   "passage": "His father's will left everything to the church.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.8275177316524581,
+    "probs": {
+     "entity": 0.8275177316524581,
+     "word": 0.17248226834754182
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9954784581750186,
+    "probs": {
+     "entity": 0.9954784581750186,
+     "word": 0.00452154182498151
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9987964924491691,
+    "probs": {
+     "entity": 0.9987964924491691,
+     "word": 0.0012035075508308613
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9955833135488047
+   },
+   "noul": 0.9010377154508946,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "Will had never seen the sea.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9854538076230975,
+    "probs": {
+     "entity": 0.9854538076230975,
+     "word": 0.014546192376902519
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9469469090712326,
+    "probs": {
+     "entity": 0.9469469090712326,
+     "word": 0.05305309092876745
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9872866409738712,
+    "probs": {
+     "entity": 0.9872866409738712,
+     "word": 0.012713359026128856
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9745005062504807
+   },
+   "noul": 0.8190537604108576,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "Will it rain tomorrow, do you think?",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.5183886166715188,
+    "probs": {
+     "entity": 0.5183886166715188,
+     "word": 0.48161138332848114
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9986545811814103,
+    "probs": {
+     "entity": 0.9986545811814103,
+     "word": 0.0013454188185898811
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9986569026142893,
+    "probs": {
+     "entity": 0.9986569026142893,
+     "word": 0.0013430973857107029
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9954469016145515
+   },
+   "noul": 0.9962588250285939,
+   "rules": [
+    false,
+    "modal-question"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "She said she will wait for Will by the gate.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9392885132932541,
+    "probs": {
+     "entity": 0.9392885132932541,
+     "word": 0.060711486706745796
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9797981234322053,
+    "probs": {
+     "entity": 0.9797981234322053,
+     "word": 0.020201876567794746
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9985745463733904,
+    "probs": {
+     "entity": 0.9985745463733904,
+     "word": 0.0014254536266096814
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9996055865965603
+   },
+   "noul": 0.995044888420631,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "Will Archer was not a patient man.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.8512903679999313,
+    "probs": {
+     "entity": 0.14870963200006868,
+     "word": 0.8512903679999313
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9550422704185249,
+    "probs": {
+     "entity": 0.9550422704185249,
+     "word": 0.044957729581475196
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.985945267117244,
+    "probs": {
+     "entity": 0.985945267117244,
+     "word": 0.014054732882756113
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9655464112960954
+   },
+   "noul": 0.8022095913312581,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Will",
+   "target": "Will",
+   "occ": 0,
+   "passage": "\"Will he come back?\" she asked.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.6639973161321937,
+    "probs": {
+     "entity": 0.6639973161321937,
+     "word": 0.3360026838678063
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9900232460433817,
+    "probs": {
+     "entity": 0.9900232460433817,
+     "word": 0.009976753956618494
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9989801423406518,
+    "probs": {
+     "entity": 0.9989801423406518,
+     "word": 0.0010198576593482272
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.99927268372138
+   },
+   "noul": 0.9989192975008735,
+   "rules": [
+    false,
+    "modal-question"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "Hope",
+   "occ": 0,
+   "passage": "Hope found the key under the mat.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9790642960587697,
+    "probs": {
+     "entity": 0.9790642960587697,
+     "word": 0.02093570394123041
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999995707366474,
+    "probs": {
+     "entity": 0.9999995707366474,
+     "word": 4.2926335270491676e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999962513679759,
+    "probs": {
+     "entity": 0.9999962513679759,
+     "word": 3.7486320241068444e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.999990447400481
+   },
+   "noul": 0.5803286515064429,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "Hope",
+   "occ": 0,
+   "passage": "Hope is a dangerous thing in a place like this.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.7303258699993894,
+    "probs": {
+     "entity": 0.2696741300006105,
+     "word": 0.7303258699993894
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.999899844946899,
+    "probs": {
+     "entity": 0.999899844946899,
+     "word": 0.00010015505310101857
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999273879151797,
+    "probs": {
+     "entity": 0.9999273879151797,
+     "word": 7.261208482047855e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999994432674222
+   },
+   "noul": 0.7812621815628997,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "hope",
+   "occ": 0,
+   "passage": "There was no hope left in the village.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9977336705965318,
+    "probs": {
+     "entity": 0.9977336705965318,
+     "word": 0.0022663294034681223
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999987881845279,
+    "probs": {
+     "entity": 0.9999987881845279,
+     "word": 1.2118154720007426e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999963768804985,
+    "probs": {
+     "entity": 0.9999963768804985,
+     "word": 3.623119501621077e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999749050177015
+   },
+   "noul": 0.9994529023047931,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "Hope",
+   "occ": 0,
+   "passage": "Tom looked at Hope and smiled.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9836679088178798,
+    "probs": {
+     "entity": 0.9836679088178798,
+     "word": 0.016332091182120135
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999990950625208,
+    "probs": {
+     "entity": 0.9999990950625208,
+     "word": 9.049374791072003e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999997156069811,
+    "probs": {
+     "entity": 0.9999997156069811,
+     "word": 2.8439301895727805e-07
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999892543628303
+   },
+   "noul": 0.9990319979945146,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "hope",
+   "occ": 0,
+   "passage": "I hope you know what you're doing.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9708572619094096,
+    "probs": {
+     "entity": 0.9708572619094096,
+     "word": 0.02914273809059042
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999978361495765,
+    "probs": {
+     "entity": 0.9999978361495765,
+     "word": 2.163850423524531e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999918915729548,
+    "probs": {
+     "entity": 0.9999918915729548,
+     "word": 8.108427045098467e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.99992643120026
+   },
+   "noul": 0.999595724064509,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "Hope",
+   "occ": 0,
+   "passage": "Hope? Hope, wake up!",
+   "gold": "entity",
+   "multi": true,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9963209532088336,
+    "probs": {
+     "entity": 0.9963209532088336,
+     "word": 0.0036790467911663708
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999982436402411,
+    "probs": {
+     "entity": 0.9999982436402411,
+     "word": 1.7563597588058887e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999808184996641,
+    "probs": {
+     "entity": 0.9999808184996641,
+     "word": 1.9181500335879476e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999788077019467
+   },
+   "noul": 0.9962402766798161,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "Hope",
+   "occ": 0,
+   "passage": "Hope was fading as the sun went down.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9989346211560802,
+    "probs": {
+     "entity": 0.9989346211560802,
+     "word": 0.0010653788439198499
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999996580116318,
+    "probs": {
+     "entity": 0.9999996580116318,
+     "word": 3.419883682183413e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.999998577179174,
+    "probs": {
+     "entity": 0.999998577179174,
+     "word": 1.4228208260087627e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999969542498663
+   },
+   "noul": 0.9935470215316529,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Hope",
+   "target": "Hope",
+   "occ": 0,
+   "passage": "Hope was shivering as the sun went down.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9866944811723929,
+    "probs": {
+     "entity": 0.9866944811723929,
+     "word": 0.013305518827607124
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999988806087823,
+    "probs": {
+     "entity": 0.9999988806087823,
+     "word": 1.1193912175692881e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999971638881462,
+    "probs": {
+     "entity": 0.9999971638881462,
+     "word": 2.8361118538478617e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.99993059459529
+   },
+   "noul": 0.9948146835186323,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Grace",
+   "target": "Grace",
+   "occ": 0,
+   "passage": "Grace poured the tea without a word.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9864108999806963,
+    "probs": {
+     "entity": 0.9864108999806963,
+     "word": 0.013589100019303677
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9914039868291067,
+    "probs": {
+     "entity": 0.9914039868291067,
+     "word": 0.008596013170893379
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9992232919295438,
+    "probs": {
+     "entity": 0.9992232919295438,
+     "word": 0.0007767080704561028
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9992036572900355
+   },
+   "noul": 0.23554925192926887,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Grace",
+   "target": "grace",
+   "occ": 0,
+   "passage": "He moved with a dancer's grace.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.8906648618090828,
+    "probs": {
+     "entity": 0.8906648618090828,
+     "word": 0.10933513819091727
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9937998948610178,
+    "probs": {
+     "entity": 0.9937998948610178,
+     "word": 0.006200105138982281
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9995947440805484,
+    "probs": {
+     "entity": 0.9995947440805484,
+     "word": 0.0004052559194515799
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9994994800689851
+   },
+   "noul": 0.9975545368246539,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Grace",
+   "target": "Grace",
+   "occ": 0,
+   "passage": "\"Your Grace,\" the steward said, bowing low.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9996171298664902,
+    "probs": {
+     "entity": 0.9996171298664902,
+     "word": 0.00038287013350974655
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9998001318696899,
+    "probs": {
+     "entity": 0.9998001318696899,
+     "word": 0.00019986813031017334
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9995587322574123,
+    "probs": {
+     "entity": 0.9995587322574123,
+     "word": 0.000441267742587813
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999045827404945
+   },
+   "noul": 0.03481450322489765,
+   "rules": [
+    true,
+    "vocative"
+   ]
+  },
+  {
+   "entity": "Grace",
+   "target": "grace",
+   "occ": 0,
+   "passage": "They said grace before supper.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.827760464126736,
+    "probs": {
+     "entity": 0.827760464126736,
+     "word": 0.172239535873264
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9996221456909248,
+    "probs": {
+     "entity": 0.9996221456909248,
+     "word": 0.00037785430907524435
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999473192107943,
+    "probs": {
+     "entity": 0.9999473192107943,
+     "word": 5.268078920571572e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9994934438650059
+   },
+   "noul": 0.9878953683047847,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Grace",
+   "target": "Grace",
+   "occ": 0,
+   "passage": "Grace and her brother left at dawn.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9968340551604896,
+    "probs": {
+     "entity": 0.9968340551604896,
+     "word": 0.0031659448395103327
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9924078436712953,
+    "probs": {
+     "entity": 0.9924078436712953,
+     "word": 0.007592156328704798
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9986540140980903,
+    "probs": {
+     "entity": 0.9986540140980903,
+     "word": 0.0013459859019097334
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9995444707486423
+   },
+   "noul": 0.9357123882953832,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Grace",
+   "target": "Grace",
+   "occ": 0,
+   "passage": "Grace under pressure was never his strength.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.8171426033523067,
+    "probs": {
+     "entity": 0.8171426033523067,
+     "word": 0.1828573966476933
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9946074274887898,
+    "probs": {
+     "entity": 0.9946074274887898,
+     "word": 0.005392572511210137
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9585348940196888,
+    "probs": {
+     "entity": 0.9585348940196888,
+     "word": 0.04146510598031127
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9979868344986873
+   },
+   "noul": 0.6777431289175633,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Rose",
+   "target": "Rose",
+   "occ": 0,
+   "passage": "Rose rose early, as she always did.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.7135891114203046,
+    "probs": {
+     "entity": 0.28641088857969543,
+     "word": 0.7135891114203046
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9230416200963655,
+    "probs": {
+     "entity": 0.9230416200963655,
+     "word": 0.0769583799036345
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.99546741848157,
+    "probs": {
+     "entity": 0.99546741848157,
+     "word": 0.00453258151842992
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9998219251967382
+   },
+   "noul": 0.9113095578365773,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Rose",
+   "target": "rose",
+   "occ": 0,
+   "passage": "He brought her a single red rose.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.6369394979806731,
+    "probs": {
+     "entity": 0.6369394979806731,
+     "word": 0.3630605020193268
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9898743772047629,
+    "probs": {
+     "entity": 0.9898743772047629,
+     "word": 0.010125622795237184
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9856049746815289,
+    "probs": {
+     "entity": 0.9856049746815289,
+     "word": 0.01439502531847121
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.961180000479786
+   },
+   "noul": 0.8472175963802673,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Rose",
+   "target": "rose",
+   "occ": 0,
+   "passage": "The sun rose over the hills.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9734423812004663,
+    "probs": {
+     "entity": 0.9734423812004663,
+     "word": 0.02655761879953367
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9961119714630757,
+    "probs": {
+     "entity": 0.9961119714630757,
+     "word": 0.0038880285369242693
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9930340015096657,
+    "probs": {
+     "entity": 0.9930340015096657,
+     "word": 0.006965998490334396
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9974308945393656
+   },
+   "noul": 0.9984565082566599,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Rose",
+   "target": "Rose",
+   "occ": 0,
+   "passage": "Rose climbed the hill behind the house.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.8221803467898875,
+    "probs": {
+     "entity": 0.1778196532101125,
+     "word": 0.8221803467898875
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9387663008031144,
+    "probs": {
+     "entity": 0.9387663008031144,
+     "word": 0.06123369919688565
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9674489144005308,
+    "probs": {
+     "entity": 0.9674489144005308,
+     "word": 0.03255108559946916
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9987041099408507
+   },
+   "noul": 0.9944256903012654,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Rose",
+   "target": "Rose",
+   "occ": 0,
+   "passage": "Rose petals covered the path to the chapel.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.6014740369384528,
+    "probs": {
+     "entity": 0.6014740369384528,
+     "word": 0.3985259630615473
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.8159033983506152,
+    "probs": {
+     "entity": 0.8159033983506152,
+     "word": 0.1840966016493849
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.8571808079484508,
+    "probs": {
+     "entity": 0.8571808079484508,
+     "word": 0.14281919205154925
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9385776643156144
+   },
+   "noul": 0.9910974485022518,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Rose",
+   "target": "Rose",
+   "occ": 0,
+   "passage": "Rose said nothing for a long time.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.996833576766868,
+    "probs": {
+     "entity": 0.003166423233131941,
+     "word": 0.996833576766868
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9725165862766911,
+    "probs": {
+     "entity": 0.9725165862766911,
+     "word": 0.027483413723308713
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9740925446704937,
+    "probs": {
+     "entity": 0.9740925446704937,
+     "word": 0.025907455329506456
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9972095142230156
+   },
+   "noul": 0.9787917072026711,
+   "rules": [
+    true,
+    "speech-tag"
+   ]
+  },
+  {
+   "entity": "Mark",
+   "target": "Mark",
+   "occ": 0,
+   "passage": "Mark my words, he'll be back.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.94345927704123,
+    "probs": {
+     "entity": 0.94345927704123,
+     "word": 0.05654072295877007
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9998947298967263,
+    "probs": {
+     "entity": 0.9998947298967263,
+     "word": 0.00010527010327366256
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9987258727470335,
+    "probs": {
+     "entity": 0.9987258727470335,
+     "word": 0.0012741272529666165
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9985428101167143
+   },
+   "noul": 0.9942503685359415,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Mark",
+   "target": "Mark",
+   "occ": 0,
+   "passage": "Mark knocked twice and waited.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9520044714284417,
+    "probs": {
+     "entity": 0.9520044714284417,
+     "word": 0.04799552857155838
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9996818962011164,
+    "probs": {
+     "entity": 0.9996818962011164,
+     "word": 0.00031810379888359337
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.999464557923867,
+    "probs": {
+     "entity": 0.999464557923867,
+     "word": 0.0005354420761330026
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9993776119675918
+   },
+   "noul": 0.9843513696551505,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Mark",
+   "target": "mark",
+   "occ": 0,
+   "passage": "The arrow missed its mark.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.801926730475654,
+    "probs": {
+     "entity": 0.801926730475654,
+     "word": 0.19807326952434604
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.999688866439151,
+    "probs": {
+     "entity": 0.999688866439151,
+     "word": 0.0003111335608491233
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9995085729448023,
+    "probs": {
+     "entity": 0.9995085729448023,
+     "word": 0.0004914270551976767
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9959945205589287
+   },
+   "noul": 0.8905632848104599,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Mark",
+   "target": "mark",
+   "occ": 0,
+   "passage": "Her wet glass left a mark on the table.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.6507820041433156,
+    "probs": {
+     "entity": 0.6507820041433156,
+     "word": 0.3492179958566845
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999280114929601,
+    "probs": {
+     "entity": 0.9999280114929601,
+     "word": 7.198850703988716e-05
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999515735156024,
+    "probs": {
+     "entity": 0.9999515735156024,
+     "word": 4.842648439765954e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9997950161017541
+   },
+   "noul": 0.9196173453809421,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Mark",
+   "target": "Mark",
+   "occ": 0,
+   "passage": "\"Mark the date on the calendar,\" she told him.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.624157760760494,
+    "probs": {
+     "entity": 0.375842239239506,
+     "word": 0.624157760760494
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9860112422972872,
+    "probs": {
+     "entity": 0.9860112422972872,
+     "word": 0.013988757702712882
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9992276060047953,
+    "probs": {
+     "entity": 0.9992276060047953,
+     "word": 0.0007723939952047769
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9991074577396633
+   },
+   "noul": 0.9013165234965111,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Florence",
+   "target": "Florence",
+   "occ": 0,
+   "passage": "Florence had never liked her cousin.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9941611860048719,
+    "probs": {
+     "entity": 0.9941611860048719,
+     "place": 0.005838813995128158
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999407356589802,
+    "probs": {
+     "entity": 0.9999407356589802,
+     "place": 5.9264341019779846e-05
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999981816901053,
+    "probs": {
+     "entity": 0.9999981816901053,
+     "place": 1.8183098947129907e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999899230008938
+   },
+   "noul": 0.9635876191111178,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Florence",
+   "target": "Florence",
+   "occ": 0,
+   "passage": "They spent the winter in Florence, among the old churches.",
+   "gold": "place",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.6413436997516677,
+    "probs": {
+     "entity": 0.6413436997516677,
+     "place": 0.3586563002483322
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9997862597235142,
+    "probs": {
+     "entity": 0.9997862597235142,
+     "place": 0.0002137402764858685
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999925968331616,
+    "probs": {
+     "entity": 0.9999925968331616,
+     "place": 7.403166838528448e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999900494502888
+   },
+   "noul": 0.941394829666789,
+   "rules": [
+    true,
+    "vocative"
+   ]
+  },
+  {
+   "entity": "Florence",
+   "target": "Florence",
+   "occ": 0,
+   "passage": "Florence was cold and wet that year, and the river rose high.",
+   "gold": "place",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.579661019420961,
+    "probs": {
+     "entity": 0.579661019420961,
+     "place": 0.420338980579039
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999872588800386,
+    "probs": {
+     "entity": 0.9999872588800386,
+     "place": 1.2741119961543241e-05
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999965945541537,
+    "probs": {
+     "entity": 0.9999965945541537,
+     "place": 3.4054458461934053e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999925035576351
+   },
+   "noul": 0.9081307406556021,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Florence",
+   "target": "Florence",
+   "occ": 0,
+   "passage": "Florence was cold and silent all through dinner.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "place",
+    "conf": 0.6012177215333292,
+    "probs": {
+     "entity": 0.39878227846667086,
+     "place": 0.6012177215333292
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999965400949683,
+    "probs": {
+     "entity": 0.9999965400949683,
+     "place": 3.459905031586516e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.999999360695378,
+    "probs": {
+     "entity": 0.999999360695378,
+     "place": 6.393046220625337e-07
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999421949080338
+   },
+   "noul": 0.7811531878219953,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Florence",
+   "target": "Florence",
+   "occ": 0,
+   "passage": "Tom wrote to Florence every week, and she never once replied.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "place",
+    "conf": 0.8154912611624985,
+    "probs": {
+     "entity": 0.18450873883750166,
+     "place": 0.8154912611624985
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9989888880044142,
+    "probs": {
+     "entity": 0.9989888880044142,
+     "place": 0.0010111119955857244
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999582266907774,
+    "probs": {
+     "entity": 0.9999582266907774,
+     "place": 4.17733092225521e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999808707405266
+   },
+   "noul": 0.9994279815588109,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Florence",
+   "target": "Florence",
+   "occ": 0,
+   "passage": "The train to Florence left at nine.",
+   "gold": "place",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9926669153834327,
+    "probs": {
+     "entity": 0.9926669153834327,
+     "place": 0.007333084616567219
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999934573917955,
+    "probs": {
+     "entity": 0.9999934573917955,
+     "place": 6.5426082045191714e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999994846299849,
+    "probs": {
+     "entity": 0.9999994846299849,
+     "place": 5.15370014957444e-07
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.999969774029078
+   },
+   "noul": 0.8968518383492539,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Jordan",
+   "target": "Jordan",
+   "occ": 0,
+   "passage": "Jordan laughed and threw the ball back.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.990146969191528,
+    "probs": {
+     "entity": 0.990146969191528,
+     "place": 0.009853030808472068
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9998548229594828,
+    "probs": {
+     "entity": 0.9998548229594828,
+     "place": 0.00014517704051726
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.999966773695278,
+    "probs": {
+     "entity": 0.999966773695278,
+     "place": 3.322630472205066e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999997481617356
+   },
+   "noul": 0.9763540880362535,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Jordan",
+   "target": "Jordan",
+   "occ": 0,
+   "passage": "They crossed the Jordan at first light.",
+   "gold": "place",
+   "multi": false,
+   "plain": {
+    "pick": "place",
+    "conf": 0.9758978085693355,
+    "probs": {
+     "entity": 0.024102191430664527,
+     "place": 0.9758978085693355
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.994248190578102,
+    "probs": {
+     "entity": 0.994248190578102,
+     "place": 0.005751809421898092
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9996351176863871,
+    "probs": {
+     "entity": 0.9996351176863871,
+     "place": 0.00036488231361292314
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999859895528844
+   },
+   "noul": 0.9966235986241624,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Jordan",
+   "target": "Jordan",
+   "occ": 0,
+   "passage": "The road to Jordan was closed after the border dispute.",
+   "gold": "place",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.6195706397983429,
+    "probs": {
+     "entity": 0.6195706397983429,
+     "place": 0.38042936020165713
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9997675158028761,
+    "probs": {
+     "entity": 0.9997675158028761,
+     "place": 0.00023248419712388916
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9983468964000355,
+    "probs": {
+     "entity": 0.9983468964000355,
+     "place": 0.0016531035999644548
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999817767766137
+   },
+   "noul": 0.24455350278294255,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Summer",
+   "target": "Summer",
+   "occ": 0,
+   "passage": "Summer was the only one who believed him.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9999887748757218,
+    "probs": {
+     "entity": 0.9999887748757218,
+     "season": 1.1225124278238408e-05
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999995877867159,
+    "probs": {
+     "entity": 0.9999995877867159,
+     "season": 4.122132841877101e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999997898065784,
+    "probs": {
+     "entity": 0.9999997898065784,
+     "season": 2.1019342155874264e-07
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999984350114444
+   },
+   "noul": 0.8283337521446017,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Summer",
+   "target": "Summer",
+   "occ": 0,
+   "passage": "Summer came late to the mountains that year.",
+   "gold": "season",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.7679026414145728,
+    "probs": {
+     "entity": 0.7679026414145728,
+     "season": 0.23209735858542715
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999981350208784,
+    "probs": {
+     "entity": 0.9999981350208784,
+     "season": 1.8649791215328183e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999992724522329,
+    "probs": {
+     "entity": 0.9999992724522329,
+     "season": 7.275477672678976e-07
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999995640852526
+   },
+   "noul": 0.4877716254351473,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Summer",
+   "target": "summer",
+   "occ": 0,
+   "passage": "They spent the summer at the lake.",
+   "gold": "season",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9998658105974138,
+    "probs": {
+     "entity": 0.9998658105974138,
+     "season": 0.00013418940258625917
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999998756938723,
+    "probs": {
+     "entity": 0.9999998756938723,
+     "season": 1.2430612773895343e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999973170050362,
+    "probs": {
+     "entity": 0.9999973170050362,
+     "season": 2.6829949637969314e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999991035409418
+   },
+   "noul": 0.8545872640067114,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Summer",
+   "target": "Summer",
+   "occ": 0,
+   "passage": "Summer pulled her coat tighter and kept walking.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9998410964865841,
+    "probs": {
+     "entity": 0.9998410964865841,
+     "season": 0.00015890351341591442
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999998384041776,
+    "probs": {
+     "entity": 0.9999998384041776,
+     "season": 1.6159582236707706e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999999754211962,
+    "probs": {
+     "entity": 0.9999999754211962,
+     "season": 2.4578803721885415e-08
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999998713755475
+   },
+   "noul": 0.9488526674040696,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Reading",
+   "target": "Reading",
+   "occ": 0,
+   "passage": "They took the morning train to Reading.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.7443235902103099,
+    "probs": {
+     "entity": 0.7443235902103099,
+     "word": 0.2556764097896902
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9992513372520208,
+    "probs": {
+     "entity": 0.9992513372520208,
+     "word": 0.0007486627479791518
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9994491349639153,
+    "probs": {
+     "entity": 0.9994491349639153,
+     "word": 0.0005508650360848313
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9987712502954003
+   },
+   "noul": 0.9859258404814641,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Reading",
+   "target": "Reading",
+   "occ": 0,
+   "passage": "Reading was her only escape from that house.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.8731672479269349,
+    "probs": {
+     "entity": 0.8731672479269349,
+     "word": 0.12683275207306502
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9991002564077491,
+    "probs": {
+     "entity": 0.9991002564077491,
+     "word": 0.0008997435922508762
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9587872682635908,
+    "probs": {
+     "entity": 0.9587872682635908,
+     "word": 0.041212731736409096
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9787887226221942
+   },
+   "noul": 0.44131095674683746,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Reading",
+   "target": "reading",
+   "occ": 0,
+   "passage": "He spent the evening reading by the fire.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9250697036142598,
+    "probs": {
+     "entity": 0.9250697036142598,
+     "word": 0.07493029638574031
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9997783023953194,
+    "probs": {
+     "entity": 0.9997783023953194,
+     "word": 0.0002216976046806679
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9994158335698089,
+    "probs": {
+     "entity": 0.9994158335698089,
+     "word": 0.0005841664301911432
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9997058527692323
+   },
+   "noul": 0.32600263361401854,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Reading",
+   "target": "Reading",
+   "occ": 0,
+   "passage": "Reading was grey and crowded when they arrived.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "word",
+    "conf": 0.9659126587776055,
+    "probs": {
+     "entity": 0.03408734122239455,
+     "word": 0.9659126587776055
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9984805765012005,
+    "probs": {
+     "entity": 0.9984805765012005,
+     "word": 0.0015194234987995234
+    }
+   },
+   "marked": {
+    "pick": "word",
+    "conf": 0.7559255884227537,
+    "probs": {
+     "entity": 0.24407441157724635,
+     "word": 0.7559255884227537
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.8907328703206812
+   },
+   "noul": 0.5236223183550172,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Bath",
+   "target": "bath",
+   "occ": 0,
+   "passage": "She drew a hot bath and sank into it.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9663894833721548,
+    "probs": {
+     "entity": 0.9663894833721548,
+     "word": 0.0336105166278453
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999998151682066,
+    "probs": {
+     "entity": 0.9999998151682066,
+     "word": 1.848317933740461e-07
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999998213021957,
+    "probs": {
+     "entity": 0.9999998213021957,
+     "word": 1.7869780436689307e-07
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999944331054366
+   },
+   "noul": 0.9979988290198858,
+   "rules": [
+    false,
+    "lowercase"
+   ]
+  },
+  {
+   "entity": "Bath",
+   "target": "Bath",
+   "occ": 0,
+   "passage": "They moved to Bath for her mother's health.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9996031914445033,
+    "probs": {
+     "entity": 0.9996031914445033,
+     "word": 0.0003968085554968722
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999999270160576,
+    "probs": {
+     "entity": 0.9999999270160576,
+     "word": 7.298394242568599e-08
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999983599116731,
+    "probs": {
+     "entity": 0.9999983599116731,
+     "word": 1.6400883269702718e-06
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999990578973732
+   },
+   "noul": 0.9905129051369891,
+   "rules": [
+    true,
+    "mid-sentence-capital"
+   ]
+  },
+  {
+   "entity": "Bath",
+   "target": "Bath",
+   "occ": 0,
+   "passage": "Bath was full of visitors that season.",
+   "gold": "entity",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9737824398889902,
+    "probs": {
+     "entity": 0.9737824398889902,
+     "word": 0.026217560111009786
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999943434431444,
+    "probs": {
+     "entity": 0.9999943434431444,
+     "word": 5.656556855521522e-06
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999857796479078,
+    "probs": {
+     "entity": 0.9999857796479078,
+     "word": 1.422035209219234e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.9999902733894608
+   },
+   "noul": 0.747267759056535,
+   "rules": [
+    true,
+    "default"
+   ]
+  },
+  {
+   "entity": "Bath",
+   "target": "Bath",
+   "occ": 0,
+   "passage": "Bath time was the only quiet hour of the day.",
+   "gold": "word",
+   "multi": false,
+   "plain": {
+    "pick": "entity",
+    "conf": 0.9371691370255736,
+    "probs": {
+     "entity": 0.9371691370255736,
+     "word": 0.06283086297442647
+    }
+   },
+   "codex": {
+    "pick": "entity",
+    "conf": 0.9999787856311139,
+    "probs": {
+     "entity": 0.9999787856311139,
+     "word": 2.121436888613182e-05
+    }
+   },
+   "marked": {
+    "pick": "entity",
+    "conf": 0.9999873228594991,
+    "probs": {
+     "entity": 0.9999873228594991,
+     "word": 1.2677140500927012e-05
+    }
+   },
+   "marked_reversed": {
+    "pick": "entity",
+    "conf": 0.999888437137345
+   },
+   "noul": 0.7097477878008628,
+   "rules": [
+    true,
+    "default"
+   ]
+  }
+ ],
+ "alias_resolve": [
+  {
+   "mention": "Nell",
+   "passage": "Nell checked the bandage again. The boy would live, she decided.",
+   "gold": "Eleanor Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.8201160187959509
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9263475465364058
+   },
+   "codex_reversed": {
+    "pick": "Thomas Ashby",
+    "conf": 0.43969752845200544
+   }
+  },
+  {
+   "mention": "Tommy",
+   "passage": "\"Tommy, come away from the rail,\" his mother called.",
+   "gold": "Thomas Ashby",
+   "codex": {
+    "pick": "Thomas Ashby",
+    "conf": 0.314511960656744
+   },
+   "codex_aliases": {
+    "pick": "Thomas Ashby",
+    "conf": 0.8913851856180244
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.4375561261939046
+   }
+  },
+  {
+   "mention": "Bel",
+   "passage": "Bel climbed onto a barrel to get a better look at the harbour.",
+   "gold": "Isabel Crane",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.41947819952639837
+   },
+   "codex_aliases": {
+    "pick": "Josiah Crane",
+    "conf": 0.26689465081702873
+   },
+   "codex_reversed": {
+    "pick": "Margaret Ashby",
+    "conf": 0.28335368610486467
+   }
+  },
+  {
+   "mention": "Mrs. Ashby",
+   "passage": "Mrs. Ashby had not left the house since the funeral.",
+   "gold": "Margaret Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.30778309250055375
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.4941464197574516
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.907034229694014
+   }
+  },
+  {
+   "mention": "Miss Ashby",
+   "passage": "\"Miss Ashby, the men are asking for you,\" said the bosun.",
+   "gold": "Eleanor Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.890453350401859
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9657214256357114
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9558958726335681
+   }
+  },
+  {
+   "mention": "Miss Crane",
+   "passage": "Miss Crane refused to stay below during the storm.",
+   "gold": "Isabel Crane",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.6910588168629681
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.5986226042563336
+   },
+   "codex_reversed": {
+    "pick": "Thomas Ashby",
+    "conf": 0.7408526559261311
+   }
+  },
+  {
+   "mention": "Crane",
+   "passage": "Crane ordered the topsails reefed and went below.",
+   "gold": "Josiah Crane",
+   "codex": {
+    "pick": "Josiah Crane",
+    "conf": 0.6108701957180446
+   },
+   "codex_aliases": {
+    "pick": "Josiah Crane",
+    "conf": 0.6404894967211506
+   },
+   "codex_reversed": {
+    "pick": "Josiah Crane",
+    "conf": 0.6525047014041871
+   }
+  },
+  {
+   "mention": "the surgeon",
+   "passage": "Reed and the surgeon argued over the rations for an hour. In the end, the surgeon won.",
+   "gold": "Eleanor Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.6962536852741138
+   },
+   "codex_aliases": {
+    "pick": "Silas Reed",
+    "conf": 0.7364873526426483
+   },
+   "codex_reversed": {
+    "pick": "Josiah Crane",
+    "conf": 0.3010067533339655
+   }
+  },
+  {
+   "mention": "the old man",
+   "passage": "\"Don't let the old man hear you say that,\" Reed warned the new hand.",
+   "gold": "Josiah Crane",
+   "codex": {
+    "pick": "Silas Reed",
+    "conf": 0.41373376148943747
+   },
+   "codex_aliases": {
+    "pick": "Abel Fenwick",
+    "conf": 0.2849503331713296
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.400023997422909
+   }
+  },
+  {
+   "mention": "The Doctor",
+   "passage": "The Doctor had taught her everything she knew about setting bones.",
+   "gold": "Abel Fenwick",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.8184507455420226
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.7819799117953631
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.8446567030542902
+   }
+  },
+  {
+   "mention": "her brother",
+   "passage": "Eleanor found her brother asleep in his hammock.",
+   "gold": "Thomas Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9988917957177207
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9990226497506407
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.8398753370944524
+   }
+  },
+  {
+   "mention": "the girl's father",
+   "passage": "Isabel hid behind the sail locker, but the girl's father found her anyway.",
+   "gold": "Josiah Crane",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.6930799692671701
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.8248569952830552
+   },
+   "codex_reversed": {
+    "pick": "Isabel Crane",
+    "conf": 0.6889489799623895
+   }
+  },
+  {
+   "mention": "The mate",
+   "passage": "The mate counted the casks twice before signing for them.",
+   "gold": "Silas Reed",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.7690300957335937
+   },
+   "codex_aliases": {
+    "pick": "Silas Reed",
+    "conf": 0.5092578825027123
+   },
+   "codex_reversed": {
+    "pick": "Thomas Ashby",
+    "conf": 0.3607135928433971
+   }
+  },
+  {
+   "mention": "A stranger",
+   "passage": "A stranger in a grey coat watched them from the end of the dock.",
+   "gold": "other",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.48462626052143426
+   },
+   "codex_aliases": {
+    "pick": "Josiah Crane",
+    "conf": 0.2709772386582261
+   },
+   "codex_reversed": {
+    "pick": "Thomas Ashby",
+    "conf": 0.34715671976774387
+   }
+  },
+  {
+   "mention": "Young Ashby",
+   "passage": "Young Ashby had never been to sea before, and he was sick for three days.",
+   "gold": "Thomas Ashby",
+   "codex": {
+    "pick": "Isabel Crane",
+    "conf": 0.21507549495245465
+   },
+   "codex_aliases": {
+    "pick": "Abel Fenwick",
+    "conf": 0.37828087127893045
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.30705278412032005
+   }
+  },
+  {
+   "mention": "Ashby",
+   "passage": "\"Ashby! Bring your kit!\" the captain bellowed, and the surgeon came running.",
+   "gold": "Eleanor Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.6712460771421935
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.8193153166365446
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.524705345783318
+   }
+  },
+  {
+   "mention": "He",
+   "passage": "Tom found Reed by the wheel. He looked exhausted, so Tom sent him below to sleep.",
+   "gold": "Silas Reed",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9083986212529027
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.6750286184372519
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.5168938494175535
+   }
+  },
+  {
+   "mention": "she",
+   "passage": "Margaret watched Isabel fold the letter. When she finally sealed it, her hands were shaking.",
+   "gold": "Isabel Crane",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9813433192184214
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9069358212190609
+   },
+   "codex_reversed": {
+    "pick": "Thomas Ashby",
+    "conf": 0.5206383126876074
+   }
+  },
+  {
+   "mention": "The widow",
+   "passage": "The widow kept her late husband's coat on its hook by the door.",
+   "gold": "Margaret Ashby",
+   "codex": {
+    "pick": "Thomas Ashby",
+    "conf": 0.5397059422940249
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9408951229650372
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.37867089265632975
+   }
+  },
+  {
+   "mention": "his old apprentice",
+   "passage": "Fenwick read the letter from his old apprentice twice before he put it down.",
+   "gold": "Eleanor Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.7578544206928629
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.9286748092633519
+   },
+   "codex_reversed": {
+    "pick": "Abel Fenwick",
+    "conf": 0.99179846591246
+   }
+  },
+  {
+   "mention": "the boy's",
+   "passage": "Eleanor stitched the cut on the boy's arm while their mother held him still.",
+   "gold": "Thomas Ashby",
+   "codex": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.6530415550696359
+   },
+   "codex_aliases": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.5640058931332123
+   },
+   "codex_reversed": {
+    "pick": "Eleanor Ashby",
+    "conf": 0.7098500054765724
+   }
+  }
+ ],
+ "alias_same": [
+  {
+   "alias": "Nell",
+   "person": "Eleanor",
+   "passage": "\"Nell,\" her mother said softly. Eleanor didn't look up from her book.",
+   "gold": true,
+   "p": 0.02106212168219073
+  },
+  {
+   "alias": "the old man",
+   "person": "Captain Crane",
+   "passage": "Everyone aboard called Captain Crane 'the old man', though never to his face.",
+   "gold": true,
+   "p": 0.16447936968307358
+  },
+  {
+   "alias": "Bel",
+   "person": "Eleanor",
+   "passage": "Bel and Eleanor sat together on the stern, watching the gulls.",
+   "gold": false,
+   "p": 0.8652154914299284
+  },
+  {
+   "alias": "Tommy",
+   "person": "Tom",
+   "passage": "Tom (Tommy, to his mother) was seventeen that spring.",
+   "gold": true,
+   "p": 0.7295211893148579
+  },
+  {
+   "alias": "the surgeon",
+   "person": "Miss Ashby",
+   "passage": "The surgeon and Miss Ashby were not on speaking terms that week.",
+   "gold": false,
+   "p": 0.011055639577327839
+  },
+  {
+   "alias": "the Doctor",
+   "person": "Fenwick",
+   "passage": "Fenwick, whom the whole town simply called the Doctor, lived above the apothecary.",
+   "gold": true,
+   "p": 0.9040595787594725
+  },
+  {
+   "alias": "Reed",
+   "person": "the captain",
+   "passage": "Reed, the first mate, and Crane, the captain, rarely agreed on anything.",
+   "gold": false,
+   "p": 0.0007192745519123219
+  },
+  {
+   "alias": "Bel",
+   "person": "Isabel",
+   "passage": "Isabel signed every letter 'Bel', even the ones to the bank.",
+   "gold": true,
+   "p": 0.13745242340802521
+  },
+  {
+   "alias": "Mrs. Ashby",
+   "person": "Eleanor",
+   "passage": "Mrs. Ashby poured the tea while her daughter, Eleanor, cut the bread.",
+   "gold": false,
+   "p": 0.7775381743509956
+  },
+  {
+   "alias": "Captain",
+   "person": "Crane",
+   "passage": "\"Captain,\" said Reed. Crane turned from the rail.",
+   "gold": true,
+   "p": 0.9661863868762746
+  },
+  {
+   "alias": "the surgeon",
+   "person": "Eleanor",
+   "passage": "Tom handed the letter to the surgeon \u2014 his sister, Eleanor.",
+   "gold": true,
+   "p": 0.1742605120472259
+  },
+  {
+   "alias": "the mate",
+   "person": "Silas",
+   "passage": "Silas and the mate went ashore together.",
+   "gold": false,
+   "p": 0.9928580157890814
+  }
+ ],
+ "relationships": [
+  {
+   "a": "Eleanor",
+   "b": "Tom",
+   "passage": "Eleanor ruffled her little brother's hair. \"Tom, you're impossible.\"",
+   "gold": "siblings",
+   "pick": "relative",
+   "conf": 0.3603307991712052,
+   "top3": [
+    "relative",
+    "romance",
+    "none"
+   ],
+   "reversed": {
+    "pick": "siblings",
+    "conf": 0.6176184452472432
+   }
+  },
+  {
+   "a": "Margaret",
+   "b": "Tom",
+   "passage": "Margaret had raised Tom alone since his father drowned.",
+   "gold": "parent",
+   "pick": "relative",
+   "conf": 0.628329818006525,
+   "top3": [
+    "relative",
+    "romance",
+    "none"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.8935923226245708
+   }
+  },
+  {
+   "a": "Reed",
+   "b": "Crane",
+   "passage": "Reed saluted. \"Orders, sir?\" Crane didn't look up from the chart.",
+   "gold": "work",
+   "pick": "romance",
+   "conf": 0.35353609274389797,
+   "top3": [
+    "romance",
+    "friends",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.9018183099025421
+   }
+  },
+  {
+   "a": "Fenwick",
+   "b": "Eleanor",
+   "passage": "Fenwick had taken Eleanor on as his apprentice when she was fifteen.",
+   "gold": "mentor",
+   "pick": "spouses",
+   "conf": 0.8613867472483965,
+   "top3": [
+    "spouses",
+    "romance",
+    "none"
+   ],
+   "reversed": {
+    "pick": "spouses",
+    "conf": 0.36539941344575105
+   }
+  },
+  {
+   "a": "Isabel",
+   "b": "Reed",
+   "passage": "Isabel and Reed had been married for three years, and the crew still gossiped about it.",
+   "gold": "spouses",
+   "pick": "spouses",
+   "conf": 0.6184308182672759,
+   "top3": [
+    "spouses",
+    "former",
+    "romance"
+   ],
+   "reversed": {
+    "pick": "spouses",
+    "conf": 0.7515346472478326
+   }
+  },
+  {
+   "a": "Bel",
+   "b": "Tom",
+   "passage": "Bel kissed Tom behind the chart house and made him swear to tell no one.",
+   "gold": "romance",
+   "pick": "none",
+   "conf": 0.9906559600735961,
+   "top3": [
+    "none",
+    "relative",
+    "romance"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.8896123168582878
+   }
+  },
+  {
+   "a": "Reed",
+   "b": "Fenwick",
+   "passage": "Reed would have cheerfully thrown Fenwick overboard, and the feeling was entirely mutual.",
+   "gold": "rivals",
+   "pick": "relative",
+   "conf": 0.9440760804835892,
+   "top3": [
+    "relative",
+    "romance",
+    "none"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.7125287329561183
+   }
+  },
+  {
+   "a": "Eleanor",
+   "b": "Isabel",
+   "passage": "Eleanor and Isabel had shared every secret since they were girls in the same village.",
+   "gold": "friends",
+   "pick": "romance",
+   "conf": 0.3471363004192269,
+   "top3": [
+    "romance",
+    "none",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.9129230753779815
+   }
+  },
+  {
+   "a": "Crane",
+   "b": "Isabel",
+   "passage": "\"I'm ashamed of you,\" Crane told his daughter. Isabel said nothing.",
+   "gold": "parent",
+   "pick": "none",
+   "conf": 0.9995016502427976,
+   "top3": [
+    "none",
+    "relative",
+    "spouses"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.9990645009087962
+   }
+  },
+  {
+   "a": "Reed",
+   "b": "Tom",
+   "passage": "Reed and Tom both reached for the rope at the same moment.",
+   "gold": "none",
+   "pick": "romance",
+   "conf": 0.9455422950797756,
+   "top3": [
+    "romance",
+    "relative",
+    "friends"
+   ],
+   "reversed": {
+    "pick": "romance",
+    "conf": 0.47529409420126
+   }
+  },
+  {
+   "a": "Reed",
+   "b": "Eleanor",
+   "passage": "Reed had once been engaged to Eleanor, before the war changed everything between them.",
+   "gold": "former",
+   "pick": "romance",
+   "conf": 0.42374791039372245,
+   "top3": [
+    "romance",
+    "none",
+    "spouses"
+   ],
+   "reversed": {
+    "pick": "spouses",
+    "conf": 0.2749538522461785
+   }
+  },
+  {
+   "a": "Margaret",
+   "b": "Silas",
+   "passage": "Margaret had never approved of her son-in-law, Silas.",
+   "gold": "relative",
+   "pick": "romance",
+   "conf": 0.40349171256152594,
+   "top3": [
+    "romance",
+    "none",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.7622684550074472
+   }
+  },
+  {
+   "a": "Tom",
+   "b": "Margaret",
+   "passage": "\"Love you, Mum!\" Tom called over his shoulder. Margaret waved from the doorway.",
+   "gold": "parent",
+   "pick": "romance",
+   "conf": 0.4882902543390233,
+   "top3": [
+    "romance",
+    "none",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "spouses",
+    "conf": 0.4322310716233616
+   }
+  },
+  {
+   "a": "Margaret",
+   "b": "Isabel",
+   "passage": "Margaret paid Isabel two shillings a week to scrub the kitchen floors.",
+   "gold": "work",
+   "pick": "none",
+   "conf": 0.7378884728628827,
+   "top3": [
+    "none",
+    "romance",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.9027239270573368
+   }
+  },
+  {
+   "a": "Eleanor",
+   "b": "Fenwick",
+   "passage": "Eleanor and Fenwick applied for the same post at the hospital, and neither ever forgave the other for it.",
+   "gold": "rivals",
+   "pick": "none",
+   "conf": 0.8933570670625445,
+   "top3": [
+    "none",
+    "relative",
+    "romance"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.9472312441080784
+   }
+  },
+  {
+   "a": "Tom",
+   "b": "Reed",
+   "passage": "Whenever Tom was in trouble, it was Reed he went to first, and Reed never once turned him away.",
+   "gold": "friends",
+   "pick": "romance",
+   "conf": 0.7995882002871824,
+   "top3": [
+    "romance",
+    "friends",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "romance",
+    "conf": 0.38456039960820915
+   }
+  },
+  {
+   "a": "Tom",
+   "b": "Eleanor",
+   "passage": "Tom and Eleanor had the same red hair and the same stubborn chin as their mother.",
+   "gold": "siblings",
+   "pick": "rivals",
+   "conf": 0.9685955597699375,
+   "top3": [
+    "rivals",
+    "spouses",
+    "romance"
+   ],
+   "reversed": {
+    "pick": "rivals",
+    "conf": 0.9964163102793516
+   }
+  },
+  {
+   "a": "Fenwick",
+   "b": "Isabel",
+   "passage": "Old Fenwick bounced his granddaughter Isabel on his knee.",
+   "gold": "relative",
+   "pick": "relative",
+   "conf": 0.4887983691957853,
+   "top3": [
+    "relative",
+    "romance",
+    "parent"
+   ],
+   "reversed": {
+    "pick": "relative",
+    "conf": 0.3790466260923774
+   }
+  },
+  {
+   "a": "Silas",
+   "b": "Margaret",
+   "passage": "Silas came home to his wife, Margaret, every evening at six.",
+   "gold": "spouses",
+   "pick": "spouses",
+   "conf": 0.5937406872045886,
+   "top3": [
+    "spouses",
+    "romance",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "spouses",
+    "conf": 0.9880091647795648
+   }
+  },
+  {
+   "a": "Reed",
+   "b": "Isabel",
+   "passage": "Reed wrote Isabel a dozen love letters and never found the courage to send one.",
+   "gold": "romance",
+   "pick": "romance",
+   "conf": 0.819395350427429,
+   "top3": [
+    "romance",
+    "none",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.7963420500435162
+   }
+  },
+  {
+   "a": "Crane",
+   "b": "Tom",
+   "passage": "Crane had signed Tom on as a deck boy and worked him harder than any man aboard.",
+   "gold": "work",
+   "pick": "spouses",
+   "conf": 0.8049621745171417,
+   "top3": [
+    "spouses",
+    "none",
+    "parent"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.5416530158567257
+   }
+  },
+  {
+   "a": "Eleanor",
+   "b": "Margaret",
+   "passage": "Eleanor had her mother's hands, Margaret always said \u2014 quick, and never still.",
+   "gold": "parent",
+   "pick": "spouses",
+   "conf": 0.9654025428716451,
+   "top3": [
+    "spouses",
+    "relative",
+    "romance"
+   ],
+   "reversed": {
+    "pick": "spouses",
+    "conf": 0.4946318845645664
+   }
+  },
+  {
+   "a": "Isabel",
+   "b": "Eleanor",
+   "passage": "Isabel's mother and Eleanor's mother were sisters.",
+   "gold": "relative",
+   "pick": "relative",
+   "conf": 0.77906543867463,
+   "top3": [
+    "relative",
+    "romance",
+    "spouses"
+   ],
+   "reversed": {
+    "pick": "siblings",
+    "conf": 0.8408844040140158
+   }
+  },
+  {
+   "a": "Tom",
+   "b": "Isabel",
+   "passage": "Tom and Isabel had split up last winter and hadn't spoken since.",
+   "gold": "former",
+   "pick": "none",
+   "conf": 0.791075163041526,
+   "top3": [
+    "none",
+    "romance",
+    "spouses"
+   ],
+   "reversed": {
+    "pick": "none",
+    "conf": 0.9884746838388356
+   }
+  },
+  {
+   "a": "Fenwick",
+   "b": "Reed",
+   "passage": "Fenwick had never met Reed and knew him only by reputation.",
+   "gold": "none",
+   "pick": "romance",
+   "conf": 0.4995239707190442,
+   "top3": [
+    "romance",
+    "spouses",
+    "relative"
+   ],
+   "reversed": {
+    "pick": "friends",
+    "conf": 0.6182610463450587
+   }
+  }
+ ],
+ "direction": [
+  {
+   "question": "Who is the parent?",
+   "passage": "Margaret had raised Tom alone since his father drowned.",
+   "gold": "Margaret",
+   "pick": "Tom",
+   "conf": 0.6271011952878892,
+   "reversed": {
+    "pick": "Tom",
+    "conf": 0.774929167914981
+   }
+  },
+  {
+   "question": "Who is the parent?",
+   "passage": "\"I'm ashamed of you,\" Crane told his daughter. Isabel said nothing.",
+   "gold": "Crane",
+   "pick": "Crane",
+   "conf": 0.7894154054935993,
+   "reversed": {
+    "pick": "Crane",
+    "conf": 0.5519797972363395
+   }
+  },
+  {
+   "question": "Who is the parent?",
+   "passage": "\"Love you, Mum!\" Tom called over his shoulder. Margaret waved from the doorway.",
+   "gold": "Margaret",
+   "pick": "Margaret",
+   "conf": 0.8006956974692856,
+   "reversed": {
+    "pick": "Margaret",
+    "conf": 0.6891764827367886
+   }
+  },
+  {
+   "question": "Who is the parent?",
+   "passage": "Eleanor had her mother's hands, Margaret always said \u2014 quick, and never still.",
+   "gold": "Margaret",
+   "pick": "Eleanor",
+   "conf": 0.5278204935415147,
+   "reversed": {
+    "pick": "Eleanor",
+    "conf": 0.9882046259601212
+   }
+  },
+  {
+   "question": "Who is the teacher?",
+   "passage": "Fenwick had taken Eleanor on as his apprentice when she was fifteen.",
+   "gold": "Fenwick",
+   "pick": "Eleanor",
+   "conf": 0.8823542578674801,
+   "reversed": {
+    "pick": "Eleanor",
+    "conf": 0.9984408168161252
+   }
+  },
+  {
+   "question": "Who is in command?",
+   "passage": "Reed saluted. \"Orders, sir?\" Crane didn't look up from the chart.",
+   "gold": "Crane",
+   "pick": "Crane",
+   "conf": 0.6358286248450011,
+   "reversed": {
+    "pick": "Crane",
+    "conf": 0.8940141162795129
+   }
+  },
+  {
+   "question": "Who is the employer?",
+   "passage": "Margaret paid Isabel two shillings a week to scrub the kitchen floors.",
+   "gold": "Margaret",
+   "pick": "Isabel",
+   "conf": 0.7864531995078414,
+   "reversed": {
+    "pick": "Isabel",
+    "conf": 0.6854013304592909
+   }
+  },
+  {
+   "question": "Who is in charge?",
+   "passage": "Crane had signed Tom on as a deck boy and worked him harder than any man aboard.",
+   "gold": "Crane",
+   "pick": "Crane",
+   "conf": 0.9831252845192084,
+   "reversed": {
+    "pick": "Tom",
+    "conf": 0.8539613901958146
+   }
+  }
+ ],
+ "speakers": [
+  {
+   "line": "You're late,",
+   "gold": "Reed",
+   "pick": "Reed",
+   "conf": 0.830436053828336,
+   "reversed": {
+    "pick": "Reed",
+    "conf": 0.9555443066363554
+   }
+  },
+  {
+   "line": "The tide was against us.",
+   "gold": "Eleanor",
+   "pick": "Reed",
+   "conf": 0.5839605044007955,
+   "reversed": {
+    "pick": "Reed",
+    "conf": 0.9338029887154087
+   }
+  },
+  {
+   "line": "The tide is always against you.",
+   "gold": "Reed",
+   "pick": "Eleanor",
+   "conf": 0.6881843687964362,
+   "reversed": {
+    "pick": "Reed",
+    "conf": 0.8945480867765602
+   }
+  },
+  {
+   "line": "Then perhaps you should stop waiting for me.",
+   "gold": "Eleanor",
+   "pick": "Reed",
+   "conf": 0.548795821945453,
+   "reversed": {
+    "pick": "Reed",
+    "conf": 0.8905563892327172
+   }
+  },
+  {
+   "line": "They've found the wreck!",
+   "gold": "Tom",
+   "pick": "Crane",
+   "conf": 0.9935990586477264,
+   "reversed": {
+    "pick": "Crane",
+    "conf": 0.5138945636080076
+   }
+  },
+  {
+   "line": "Where?",
+   "gold": "Crane",
+   "pick": "Crane",
+   "conf": 0.9969274732741227,
+   "reversed": {
+    "pick": "Crane",
+    "conf": 0.8967452640753278
+   }
+  },
+  {
+   "line": "Off the north point. Bel saw it first.",
+   "gold": "Tom",
+   "pick": "Crane",
+   "conf": 0.9831704994334177,
+   "reversed": {
+    "pick": "Isabel",
+    "conf": 0.6431759820730902
+   }
+  },
+  {
+   "line": "I only had the glass because nobody else wanted it.",
+   "gold": "Isabel",
+   "pick": "Crane",
+   "conf": 0.9988443074989113,
+   "reversed": {
+    "pick": "Crane",
+    "conf": 0.7752146159522318
+   }
+  },
+  {
+   "line": "Mother, please.",
+   "gold": "Tom",
+   "pick": "Margaret",
+   "conf": 0.9930421034130197,
+   "reversed": {
+    "pick": "Margaret",
+    "conf": 0.9955724059591888
+   }
+  },
+  {
+   "line": "Hold the line!",
+   "gold": "Crane",
+   "pick": "Eleanor",
+   "conf": 0.83447694331215,
+   "reversed": {
+    "pick": "Crane",
+    "conf": 0.5599336068625362
+   }
+  },
+  {
+   "line": "It won't hold, sir,",
+   "gold": "Reed",
+   "pick": "Eleanor",
+   "conf": 0.6516716386653315,
+   "reversed": {
+    "pick": "Eleanor",
+    "conf": 0.6317127200669043
+   }
+  },
+  {
+   "line": "What are you doing?",
+   "gold": "Crane",
+   "pick": "Eleanor",
+   "conf": 0.8057980747750466,
+   "reversed": {
+    "pick": "Reed",
+    "conf": 0.41224108324782044
+   }
+  }
+ ],
+ "presence": [
+  {
+   "person": "Margaret",
+   "passage": "Eleanor thought about her mother all through the long night watch.",
+   "gold": false,
+   "p": 0.999118795201529
+  },
+  {
+   "person": "Margaret",
+   "passage": "Margaret held the lamp while Eleanor stitched the wound.",
+   "gold": true,
+   "p": 0.9992593324141
+  },
+  {
+   "person": "Eleanor",
+   "passage": "Tom read his sister's letter again by candlelight.",
+   "gold": false,
+   "p": 0.9996430060528156
+  },
+  {
+   "person": "Fenwick",
+   "passage": "\"Fenwick would have known what to do,\" Eleanor muttered, wishing the old man were here.",
+   "gold": false,
+   "p": 0.9986711801298515
+  },
+  {
+   "person": "Fenwick",
+   "passage": "Fenwick leaned over her shoulder. \"Deeper,\" he said. \"Cut deeper.\"",
+   "gold": true,
+   "p": 0.9908477262999013
+  },
+  {
+   "person": "Crane",
+   "passage": "The crew talked about Crane for hours after the funeral.",
+   "gold": false,
+   "p": 0.8576361128543951
+  },
+  {
+   "person": "Crane",
+   "passage": "Crane stood at the wheel all night while the storm battered the Heron.",
+   "gold": true,
+   "p": 0.9991373234019831
+  },
+  {
+   "person": "Isabel's father",
+   "passage": "Isabel dreamed of her father's ship, white sails against a grey sky.",
+   "gold": false,
+   "p": 0.08665448692457822
+  },
+  {
+   "person": "Tom",
+   "passage": "Reed handed Tom the rope and showed him how to tie the knot.",
+   "gold": true,
+   "p": 0.9986585113906221
+  }
+ ],
+ "latency": {
+  "single_ms_median": 30.14952052035369,
+  "batched_ms_per_question": 9.700451171738678,
+  "long_paragraph_ms_median": 96.1269794497639,
+  "long_paragraph_tokens": 424
+ },
+ "wall_seconds": 22.240426063537598
+}

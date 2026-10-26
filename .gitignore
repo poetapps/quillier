@@ -1,0 +1,12 @@
+node_modules/
+dist/
+release/
+.DS_Store
+*.tmp
+
+# Local ML models and eval envs
+models/
+research/**/.venv/
+
+# Third-party eval data (downloaded, not ours to redistribute)
+research/julia-1/repro/

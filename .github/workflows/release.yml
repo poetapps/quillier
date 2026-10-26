@@ -1,0 +1,54 @@
+# Push a version tag (npm version patch && git push --follow-tags) and this builds the app for
+# macOS, Windows and Linux and uploads everything to a draft GitHub Release. Publish the draft
+# on GitHub and it goes live: the website's download buttons and the in-app updater both use it.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  # Make the draft up front so the three builds below all upload into the same one.
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft --verify-tag --title "Quillier ${GITHUB_REF_NAME#v}" --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    needs: draft
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # The Mac build is universal, but npm only installs the local model runtime for the runner's own
+      # chip. Add the Intel one too, or Intel Macs can't use the optional smart features.
+      - if: runner.os == 'macOS'
+        run: |
+          V=$(node -p "require('./node_modules/node-llama-cpp/package.json').version")
+          npm pack @node-llama-cpp/mac-x64@$V --silent
+          mkdir -p node_modules/@node-llama-cpp/mac-x64
+          tar -xzf node-llama-cpp-mac-x64-$V.tgz -C node_modules/@node-llama-cpp/mac-x64 --strip-components=1
+      - run: npm run build
+      - run: npx electron-builder --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Mac signing and notarization. Unused until these repo secrets exist and the
+          # `identity` / `hardenedRuntime` lines are removed from package.json (see RELEASING.md).
+          CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

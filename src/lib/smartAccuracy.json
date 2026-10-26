@@ -1,0 +1,91 @@
+{
+  "measuredOn": "2026-10-04",
+  "machine": "M1 Max",
+  "caseCount": 158,
+  "note": "Measured with the exact model files the app downloads, on short hand-written test passages (real manuscripts are longer and messier). Times are per question when questions are batched by task, on an M1 Max; expect slower on older or smaller machines.",
+  "models": [
+    {
+      "id": "qwen3.5-0.8b",
+      "label": "0.8B",
+      "quant": "Q8_0",
+      "sizeGB": 0.81,
+      "msPerQuestion": 35
+    },
+    {
+      "id": "qwen3.5-2b",
+      "label": "2B",
+      "quant": "Q4_K_M",
+      "sizeGB": 1.28,
+      "msPerQuestion": 74
+    },
+    {
+      "id": "qwen3.5-4b",
+      "label": "4B",
+      "quant": "Q4_K_M",
+      "sizeGB": 2.74,
+      "msPerQuestion": 155
+    }
+  ],
+  "rows": [
+    {
+      "task": "names",
+      "label": "Tells a character's name from an ordinary word (May, Will, Hope)",
+      "cases": 79,
+      "results": {
+        "qwen3.5-0.8b": 0.8,
+        "qwen3.5-2b": 0.87,
+        "qwen3.5-4b": 0.94
+      }
+    },
+    {
+      "task": "presence",
+      "label": "Tells whether a character is in the scene or only mentioned",
+      "cases": 9,
+      "results": {
+        "qwen3.5-0.8b": 1,
+        "qwen3.5-2b": 1,
+        "qwen3.5-4b": 1
+      }
+    },
+    {
+      "task": "relation",
+      "label": "Names the relationship between two characters (11 kinds)",
+      "cases": 25,
+      "results": {
+        "qwen3.5-0.8b": 0.4,
+        "qwen3.5-2b": 0.84,
+        "qwen3.5-4b": 0.96
+      }
+    },
+    {
+      "task": "speaker",
+      "label": "Says who speaks a line of dialogue",
+      "cases": 12,
+      "results": {
+        "qwen3.5-0.8b": 0.5,
+        "qwen3.5-2b": 0.67,
+        "qwen3.5-4b": 0.92
+      }
+    },
+    {
+      "task": "resolve",
+      "label": "Works out who a nickname, title or \"he\"/\"she\" refers to",
+      "cases": 21,
+      "results": {
+        "qwen3.5-0.8b": 0.71,
+        "qwen3.5-2b": 0.81,
+        "qwen3.5-4b": 1
+      }
+    },
+    {
+      "task": "same",
+      "label": "Tells whether two names belong to the same person",
+      "cases": 12,
+      "results": {
+        "qwen3.5-0.8b": 0.83,
+        "qwen3.5-2b": 0.67,
+        "qwen3.5-4b": 0.83
+      }
+    }
+  ]
+}
