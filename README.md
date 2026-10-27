@@ -58,7 +58,8 @@ Double-clicking a `.quill` file opens it in the packaged app. Projects from when
 
 - **Manuscript**: standard submission format as a PDF. 8.5×11, 1" margins, 12pt Courier Prime, double-spaced, ½" indents. The title page has your contact details top-left, a rounded word count top-right, and the title and byline centered. Every page after it carries a "Surname / TITLE / page" header, each chapter starts a third of the way down a new page, scene breaks print as `#`, and the book ends with END. Author and contact details are saved with the project.
 - **EPUB ebook**: EPUB 3 (with EPUB 2 navigation for older readers). It validates cleanly with W3C epubcheck. Use your own cover image, or let it generate a simple typographic one.
-- **PDF** (book-style), **HTML**, one **Markdown** file, or a folder of per-chapter `.md` files. **Import** takes `.md`/`.txt` files. A single file is split into chapters at each `# Heading`.
+- **Book PDF**: a print-ready paperback interior at 5×8, 5.5×8.5 or 6×9 inches. Mirrored margins with the wider one at the spine, justified and hyphenated text, chapters sunk a third of the way down a new page, folios at the foot, and running heads (book title on versos, chapter title on rectos). The title page and part pages are rectos with a blank verso behind them, and none of them, nor a chapter's opening page, carries a folio or head. The trim size is saved with the project.
+- **HTML**, one **Markdown** file, or a folder of per-chapter `.md` files. **Import** takes `.md`/`.txt` files. A single file is split into chapters at each `# Heading`.
 
 ## Alpha features
 

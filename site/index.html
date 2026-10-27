@@ -1058,20 +1058,32 @@
       }
 
       /* export: drawn at twice its size and scaled down as a whole, so browsers with a minimum
-         font size (Safari) don't blow up the tiny manuscript type */
+         font size (Safari) don't blow up the tiny manuscript type. 40px to the inch throughout. */
       .exports-box {
         --s: 0.5;
-        width: calc(1004px * var(--s));
-        height: calc(440px * var(--s));
+        width: calc(1136px * var(--s));
+        height: calc(482px * var(--s));
       }
       .exports {
         display: flex;
-        gap: 44px;
+        gap: 40px;
         align-items: flex-end;
-        width: 1004px;
-        height: 440px;
+        width: 1136px;
+        height: 482px;
         transform: scale(var(--s));
         transform-origin: 0 0;
+      }
+      .ex {
+        display: flex;
+        flex: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .ex-l {
+        font: 500 24px/28px var(--sans);
+        color: var(--quiet);
+        white-space: nowrap;
       }
       .sheet {
         position: relative;
@@ -1105,16 +1117,93 @@
         right: 0;
         text-align: center;
       }
-      .sheet .hd {
-        text-align: right;
+      /* the book PDF at 6 x 9 in, laid out as the export sets it (11/15.5pt, 0.875in gutter,
+         0.625in outside), drawn at 80px to the inch and halved so its small type keeps its shapes */
+      .book {
+        position: relative;
+        flex: none;
+        width: 480px;
+        height: 360px;
+        box-shadow:
+          0 2px 4px rgba(0, 0, 0, 0.07),
+          0 28px 60px -28px rgba(0, 0, 0, 0.3);
       }
-      .sheet .ch {
-        margin-top: 72px;
+      .book::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent 43%,
+          rgba(0, 0, 0, 0.07) 49.6%,
+          rgba(0, 0, 0, 0.12) 50%,
+          rgba(0, 0, 0, 0.06) 50.6%,
+          transparent 57%
+        );
+      }
+      .bk {
+        position: relative;
+        display: flex;
+        width: 960px;
+        height: 720px;
+        overflow: hidden;
+        transform: scale(0.5);
+        transform-origin: 0 0;
+        color: #1a1a1a;
+        font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+      }
+      .bk .pg {
+        position: relative;
+        width: 480px;
+        background: #fbf9f3;
+      }
+      .bk .rh,
+      .bk .fo {
+        position: absolute;
+        left: 70px;
+        right: 50px;
+        text-align: center;
+        line-height: 1;
+      }
+      .bk .rh {
+        top: 32px;
+        font-size: 9.2px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .bk .fo {
+        top: 666px;
+        font-size: 10.4px;
+      }
+      /* one text flow across both pages, the way the PDF breaks it */
+      .bk .flow {
+        position: absolute;
+        top: 60px;
+        left: 50px;
+        width: 860px;
+        height: 585px;
+        column-count: 2;
+        column-gap: 140px;
+        column-fill: auto;
+        font-size: 12.2px;
+        line-height: 17.2px;
+        text-align: justify;
+        hyphens: auto;
+      }
+      .bk h4 {
+        margin: 0 0 39px;
+        padding-top: 180px;
+        font-size: 19.5px;
+        font-weight: 600;
+        line-height: 1.25;
         text-align: center;
       }
-      .sheet p {
-        margin: 12px 0 0;
-        text-indent: 4ch;
+      .bk p {
+        margin: 0;
+        text-indent: 1.5em;
+      }
+      .bk h4 + p {
+        text-indent: 0;
       }
       .cover {
         display: flex;
@@ -1442,7 +1531,14 @@
           gap: 16px;
         }
         .exports-box {
-          --s: 0.29;
+          --s: 0.26;
+          height: calc(440px * var(--s));
+        }
+        .exports {
+          height: 440px;
+        }
+        .ex-l {
+          display: none;
         }
         .cast {
           --name: 92px;
@@ -1781,22 +1877,44 @@
             <div class="spec-fig">
               <div class="exports-box" aria-hidden="true">
               <div class="exports">
-                <div class="sheet">
-                  <div class="tl">Jo Hartley<br />jo@example.com</div>
-                  <div class="tr">about 82,000 words</div>
-                  <div class="mid">SALT AND LANTERN<br /><br />by Jo Hartley</div>
+                <div class="ex">
+                  <div class="sheet">
+                    <div class="tl">Jo Hartley<br />jo@example.com</div>
+                    <div class="tr">about 82,000 words</div>
+                    <div class="mid">SALT AND LANTERN<br /><br />by Jo Hartley</div>
+                  </div>
+                  <span class="ex-l">Manuscript · 8.5 × 11</span>
                 </div>
-                <div class="sheet">
-                  <div class="hd">Hartley / SALT AND LANTERN / 14</div>
-                  <div class="ch">Chapter Two</div>
-                  <p>
-                    Mara found the ledger on the third morning, wedged behind the stove where the floorboards had swollen with salt. It was
-                    bound in oilcloth and smelled of kerosene, and when she opened it a dry moth fell out of the spine and lay on the table
-                    like a pressed flower.
-                  </p>
-                  <p>The handwriting was her grandmother’s. She knew it from birthday cards, from the recipe tin, from the backs of photographs.</p>
+                <div class="ex">
+                  <div class="book">
+                    <div class="bk" lang="en">
+                      <div class="pg"></div>
+                      <div class="pg"><div class="rh">Low Tide</div><div class="fo">15</div></div>
+                      <div class="flow">
+                        <h4>Low Tide</h4>
+                        <p>Mara found the ledger on the third morning, wedged behind the stove where the floorboards had swollen with salt. It was bound in oilcloth and smelled of kerosene, and when she opened it a dry moth fell out of the spine and lay on the table like a pressed flower.</p>
+                        <p>The handwriting was her grandmother’s. She knew it from birthday cards, from the recipe tin, from the backs of photographs: the long, impatient loops, every cross-stroke pressed so hard the pen had torn the paper.</p>
+                        <p><em>March 14. Wind from the northeast. Lamp lit at 6:10. No ships.</em></p>
+                        <p>Every entry was like that. Weather, the time the lamp was lit, the ships that passed or didn’t. Forty years of it, page after page, and not one word about the man who had rowed out to the island in the winter of 1961 and never rowed back.</p>
+                        <p>“She wasn’t the type to write things down,” her mother had said on the phone. “Not feelings. Not anything that mattered.”</p>
+                        <p>But she had written this down, every day, for forty years. Mara turned the pages slowly, the way you would walk through a house you used to live in, and somewhere in November the dates began to skip.</p>
+                        <p>Outside, the tide had gone out further than she had ever seen it go, leaving the causeway bare and glistening, a grey road laid across the bay as if someone had meant her to walk it. The gulls stood along it in a line, all facing the same way.</p>
+                        <p>She made coffee on the camping stove because the range still frightened her, and drank it standing at the window. The keeper’s cottage had one window that faced the mainland and three that faced the sea, which told you, she thought, everything about the people who had built it.</p>
+                        <p>“You’ll want the boat checked before you take it out,” said Tomas, who had come over with the post and stayed for the conversation. “Nobody’s had the engine apart since your gran. Stubborn, that motor. Like her.”</p>
+                        <p>In the afternoon she climbed the tower. The stairs went round and round, a hundred and twelve of them, each one worn into a shallow dish by a century of boots, and at the top the great lens sat in its brass cage like an enormous glass beehive, dusty and dark.</p>
+                        <p>There were initials scratched into the brass at the base of the housing, so faint she had to tilt her head to catch them in the light: <em>E. M.</em>, and beneath them a date that had been worn almost smooth by polishing cloths.</p>
+                        <p>She sat down on the top step with the ledger open across her knees and read the November entries again, slower this time. The skipped days were not random. They fell on Tuesdays, every one of them, and each Wednesday after a gap the lamp had been lit a little later, as if whoever lit it had come a long way to do it.</p>
+                        <p>Below her the causeway was already going under, the sea sliding back over it in thin bright sheets, and by the time she looked up again the gulls had lifted off it all at once and the road to the mainland was gone.</p>
+                        <p>“Tuesdays,” she said aloud, to nobody, and the word went round the glass and came back to her.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="ex-l">Book PDF · 6 × 9</span>
                 </div>
-                <div class="cover"><b>Salt and Lantern</b><span>Jo Hartley</span></div>
+                <div class="ex">
+                  <div class="cover"><b>Salt and Lantern</b><span>Jo Hartley</span></div>
+                  <span class="ex-l">EPUB</span>
+                </div>
               </div>
               </div>
             </div>

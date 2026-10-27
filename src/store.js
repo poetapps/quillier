@@ -19,7 +19,7 @@ import {
   copyTree,
 } from './lib/project.js';
 import { createBook, mirrorFolders, unmirrorFolders, renameLinked, applyStructure, mirrorOf } from './lib/structure.js';
-import { exportMarkdown, exportChapterFiles, exportHtml, exportManuscriptHtml, buildEpub } from './lib/export.js';
+import { exportMarkdown, exportChapterFiles, exportHtml, exportBookHtml, exportManuscriptHtml, buildEpub } from './lib/export.js';
 import { normalizeSeries, candidatePaths, relativePath, dirOf, SERIES_FILE } from './lib/series.js';
 import { noteRange, removeNoteMarks, applyAnchors } from './lib/inlineNotes.js';
 
@@ -895,10 +895,11 @@ export async function exportManuscript(format, opts) {
   if (format === 'md') where = await api.exportFile({ suggested: p.title, ext: 'md', content: exportMarkdown(p, opts) });
   if (format === 'folder') where = await api.exportFolder({ suggested: p.title, files: exportChapterFiles(p, opts) });
   if (format === 'html') where = await api.exportFile({ suggested: p.title, ext: 'html', content: exportHtml(p, opts) });
-  if (format === 'pdf') where = await api.exportPdf({ suggested: p.title, html: exportHtml(p, opts) });
-  if (format === 'manuscript') {
-    where = await api.exportPdf({ suggested: `${p.title} (manuscript)`, html: exportManuscriptHtml(p, opts), cssPage: true });
+  if (format === 'pdf') {
+    const widths = await api.pdfPageWidths({ html: exportBookHtml(p, opts) });
+    where = await api.exportPdf({ suggested: p.title, html: exportBookHtml(p, opts, widths) });
   }
+  if (format === 'manuscript') where = await api.exportPdf({ suggested: `${p.title} (manuscript)`, html: exportManuscriptHtml(p, opts) });
   if (format === 'epub') where = await api.exportEpub({ suggested: p.title, files: await buildEpub(p, opts) });
   if (where) toast('Exported manuscript');
   return where;

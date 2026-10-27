@@ -812,15 +812,8 @@ ipcMain.handle('export:folder', async (_e, { suggested, files }) => {
   return dir;
 });
 
-// `cssPage`: the HTML sets its own page size, margins and running headers with @page rules
-// (used for standard manuscript format). Otherwise a Letter page with book margins.
-ipcMain.handle('export:pdf', async (_e, { suggested, html, cssPage }) => {
-  const { canceled, filePath } = await dialog.showSaveDialog(win, {
-    title: 'Export PDF',
-    defaultPath: path.join(app.getPath('documents'), `${safeName(suggested)}.pdf`),
-    filters: [{ name: 'PDF', extensions: ['pdf'] }],
-  });
-  if (canceled || !filePath) return null;
+// The HTML sets its own page size, margins, folios and running heads with @page rules.
+async function printHtml(html) {
   const tmpHtml = path.join(app.getPath('temp'), `quillier-export-${Date.now()}.html`);
   await fsp.writeFile(tmpHtml, html, 'utf8');
   // The exported HTML carries a CSP that blocks its own scripts; JS is only on so we can wait for fonts.
@@ -828,20 +821,28 @@ ipcMain.handle('export:pdf', async (_e, { suggested, html, cssPage }) => {
   try {
     await pdfWin.loadFile(tmpHtml);
     await pdfWin.webContents.executeJavaScript('document.fonts.ready.then(() => true)');
-    const pdf = await pdfWin.webContents.printToPDF(
-      cssPage
-        ? { preferCSSPageSize: true, printBackground: true }
-        : {
-            pageSize: 'Letter',
-            printBackground: true,
-            margins: { marginType: 'custom', top: 0.9, bottom: 0.9, left: 1, right: 1 },
-          }
-    );
-    await fsp.writeFile(filePath, pdf);
+    return await pdfWin.webContents.printToPDF({ preferCSSPageSize: true, printBackground: true });
   } finally {
     pdfWin.destroy();
     fsp.unlink(tmpHtml).catch(() => {});
   }
+}
+
+// The width in points of every page the HTML prints to, in order. The book PDF prints once to
+// measure where its chapters fall (see exportBookHtml).
+ipcMain.handle('export:pdf-page-widths', async (_e, { html }) => {
+  const pdf = (await printHtml(html)).toString('latin1');
+  return [...pdf.matchAll(/\/MediaBox\s*\[\s*0 0 ([\d.]+) [\d.]+\s*\]/g)].map((m) => +m[1]);
+});
+
+ipcMain.handle('export:pdf', async (_e, { suggested, html }) => {
+  const { canceled, filePath } = await dialog.showSaveDialog(win, {
+    title: 'Export PDF',
+    defaultPath: path.join(app.getPath('documents'), `${safeName(suggested)}.pdf`),
+    filters: [{ name: 'PDF', extensions: ['pdf'] }],
+  });
+  if (canceled || !filePath) return null;
+  await fsp.writeFile(filePath, await printHtml(html));
   shell.showItemInFolder(filePath);
   return filePath;
 });

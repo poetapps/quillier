@@ -81,7 +81,7 @@ export function exportChapterFiles(p, { titles }) {
   }));
 }
 
-// ---------- book-style HTML / PDF ----------
+// ---------- book-style HTML ----------
 
 export function exportHtml(p, { titles, titlePage }) {
   const chapters = bookItems(p)
@@ -119,6 +119,147 @@ export function exportHtml(p, { titles, titlePage }) {
 <body>
 ${cover}
 ${chapters}
+</body></html>`;
+}
+
+// ---------- print-ready book (PDF) ----------
+// A trade paperback interior at one of the usual trim sizes: mirrored margins with the wider one
+// at the spine, justified and hyphenated text, chapters sunk a third of the way down a new page,
+// folios at the foot and running heads (the book's title on versos, the chapter's on rectos).
+// The title page and part pages are rectos with a blank verso behind them; none of those, nor
+// a chapter's opening page, carries a folio or running head.
+//
+// Chromium's @page rules can't pick out the first page of a chapter, so the book prints twice.
+// The measuring print gives every other item (title page, part, chapter) pages 8px wider, and
+// the page widths it comes back with say how many pages each item takes. The real print then
+// knows what is on every page and takes its folios and heads from page-keyed counter styles.
+
+// Sizes in inches, type in points. The text block is a whole number of lines deep.
+export const TRIMS = {
+  '5x8': { label: '5 × 8', w: 5, h: 8, pt: 10, lead: 14, lines: 34, top: 0.65, inside: 0.75, outside: 0.5 },
+  '5.5x8.5': { label: '5.5 × 8.5', w: 5.5, h: 8.5, pt: 10.5, lead: 14.5, lines: 35, top: 0.7, inside: 0.8, outside: 0.55 },
+  '6x9': { label: '6 × 9', w: 6, h: 9, pt: 11, lead: 15.5, lines: 34, top: 0.75, inside: 0.875, outside: 0.625 },
+};
+export const DEFAULT_TRIM = '6x9';
+
+const MEASURE_STEP = 8; // px: a whole number of 1/300 in, which is how finely Chromium sizes pages
+
+// How many pages each item took in the measuring print, or null if the widths don't add up.
+function pageCounts(widths, trim, n) {
+  if (!Array.isArray(widths)) return null;
+  const counts = [];
+  let last = null;
+  for (const w of widths) {
+    const wide = w > trim.w * 72 + (MEASURE_STEP * 0.75) / 2;
+    if (wide === last) counts[counts.length - 1]++;
+    else counts.push(1);
+    last = wide;
+  }
+  return counts.length === n && widths[0] < trim.w * 72 + 1 ? counts : null;
+}
+
+// What goes on each page of the book: blank versos where a recto has to come next, and for each
+// page whether it shows a folio and which running head.
+function pagePlan(items, counts, bookTitle) {
+  const pages = [];
+  const blanks = [];
+  const display = (it) => it?.type === 'title' || it?.type === 'part';
+  items.forEach((it, i) => {
+    blanks[i] = (display(it) || display(items[i - 1])) && pages.length % 2 === 1;
+    if (blanks[i]) pages.push({ folio: false, head: '' });
+    for (let j = 0; j < counts[i]; j++) {
+      const verso = pages.length % 2 === 1;
+      const plain = display(it) || j === 0;
+      pages.push({ folio: !plain, head: plain ? '' : verso ? bookTitle : it.head });
+    }
+  });
+  return { pages, blanks };
+}
+
+// Without `pageWidths` this is the measuring print; with the page widths (in points) that
+// print came back with, it's the book.
+export function exportBookHtml(p, { titles, titlePage }, pageWidths) {
+  const trim = TRIMS[p.meta?.trim] || TRIMS[DEFAULT_TRIM];
+  const lang = (p.meta?.language || navigator.language || 'en').trim();
+  const author = (p.meta?.author || '').trim();
+  const items = [
+    ...(titlePage ? [{ type: 'title' }] : []),
+    ...bookItems(p).map((it) => (it.type === 'chapter' ? { ...it, head: titles ? it.title : p.title } : it)),
+  ];
+  const measuring = pageWidths === undefined;
+  const counts = measuring ? null : pageCounts(pageWidths, trim, items.length);
+  const plan = counts && pagePlan(items, counts, p.title);
+
+  const sections = items
+    .map((it, i) => {
+      const cls = measuring && i % 2 ? ' wide' : '';
+      const blank = plan?.blanks[i] ? '<div class="blank"></div>\n' : '';
+      if (it.type === 'title') {
+        return `${blank}<section class="title-page${cls}"><h1>${escapeHtml(p.title)}</h1>${author ? `<p class="by">${escapeHtml(author)}</p>` : ''}</section>`;
+      }
+      if (it.type === 'part') {
+        return `${blank}<section class="part${cls}"><p class="part-label">${escapeHtml(it.label)}</p>${it.subtitle ? `<h1 class="part-title">${escapeHtml(it.subtitle)}</h1>` : ''}</section>`;
+      }
+      const heading = titles ? `<h1 class="chapter-title">${escapeHtml(it.title)}</h1>` : '';
+      return `${blank}<section class="chapter${cls}">${heading}${marked.parse(it.chapter.content || '')}</section>`;
+    })
+    .join('\n');
+
+  const inch = (n) => `${+n.toFixed(4)}in`;
+  const bottom = trim.h - trim.top - (trim.lines * trim.lead) / 72;
+  const margin = (left, right) => `margin: ${inch(trim.top)} ${right} ${inch(bottom)} ${left};`;
+  const sink = inch(trim.h / 3 - trim.top);
+  const furniture = `font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; color: #000;`;
+  const pageKeyed = (name, f) => `@counter-style ${name} { system: fixed; symbols: ${plan.pages.map((pg, i) => cssString(f(pg, i + 1))).join(' ')}; }`;
+
+  let pageCss;
+  if (measuring) {
+    pageCss = `@page { size: ${inch(trim.w)} ${inch(trim.h)}; ${margin(inch(trim.inside), inch(trim.outside))} }
+  @page wide { size: calc(${inch(trim.w)} + ${MEASURE_STEP}px) ${inch(trim.h)}; margin-right: calc(${inch(trim.outside)} + ${MEASURE_STEP}px); }
+  .wide { page: wide; }`;
+  } else {
+    // Without a page plan (the measuring print didn't add up) every page but the first gets a folio.
+    const head = `@top-center { content: counter(page, head); ${furniture} font-size: ${trim.pt * 0.75}pt; letter-spacing: 0.16em; text-transform: uppercase; vertical-align: bottom; padding-bottom: 0.24in; }`;
+    const folio = `@bottom-center { content: ${plan ? 'counter(page, folio)' : 'counter(page)'}; ${furniture} font-size: ${trim.pt * 0.85}pt; vertical-align: top; padding-top: 0.26in; }`;
+    pageCss = `${plan ? pageKeyed('folio', (pg, n) => (pg.folio ? String(n) : '')) : ''}
+  ${plan ? pageKeyed('head', (pg) => pg.head) : ''}
+  @page { size: ${inch(trim.w)} ${inch(trim.h)}; ${folio} ${plan ? head : ''} }
+  @page :right { ${margin(inch(trim.inside), inch(trim.outside))} }
+  @page :left { ${margin(inch(trim.outside), inch(trim.inside))} }
+  @page :first { @bottom-center { content: none; } }`;
+  }
+
+  return `<!doctype html>
+<html lang="${escapeHtml(lang)}"><head><meta charset="utf-8">${NO_SCRIPTS}<title>${escapeHtml(p.title)}</title>
+<style>
+  ${pageCss}
+  html { font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; font-size: ${trim.pt}pt; line-height: ${trim.lead}pt; color: #000; }
+  body { margin: 0; }
+  p { margin: 0; text-indent: 1.5em; text-align: justify; hyphens: auto; hyphenate-limit-chars: 6 3 3; orphans: 2; widows: 2; }
+  h1 + p, h2 + p, h3 + p, hr + p, blockquote + p, ul + p, ol + p, .chapter > p:first-child { text-indent: 0; }
+  h1, h2, h3, h4 { font-weight: 600; text-align: center; hyphens: manual; break-after: avoid; }
+  h2, h3, h4 { font-size: 1em; margin: 1.4em 0 0.7em; }
+  em, i { font-style: italic; }
+  a { color: inherit; text-decoration: none; }
+  code { font-family: inherit; }
+  img { max-width: 100%; }
+  hr { border: 0; margin: ${trim.lead / 2}pt 0; color: inherit; text-align: center; break-after: avoid; }
+  hr::after { content: '*   *   *'; white-space: pre; }
+  blockquote { margin: ${trim.lead / 2}pt 1.5em; font-style: italic; }
+  ul, ol { margin: ${trim.lead / 2}pt 0; padding-left: 1.5em; }
+
+  .title-page { padding-top: ${inch(trim.h * 0.3 - trim.top)}; text-align: center; }
+  .title-page h1 { font-size: 2.4em; line-height: 1.15; letter-spacing: -0.01em; margin: 0; }
+  .title-page .by { margin-top: 1.4em; text-indent: 0; text-align: center; font-style: italic; }
+  .part { break-before: page; padding-top: ${sink}; text-align: center; }
+  .part .part-label { text-indent: 0; text-align: center; text-transform: uppercase; letter-spacing: 0.2em; }
+  .part-title { font-size: 2em; line-height: 1.2; margin: 0.6em 0 0; }
+  .chapter { break-before: page; padding-top: ${sink}; }
+  .chapter-title { font-size: 1.6em; line-height: 1.25; margin: 0 0 2em; }
+  .blank { break-before: page; height: 1px; }
+</style></head>
+<body>
+${sections}
 </body></html>`;
 }
 

@@ -3,6 +3,7 @@ import { FileText, Folder, Globe, FileDown, FileType2, BookOpen, Layers, Check, 
 import { useStore, closeModal, setPrefs, exportManuscript, setProjectMeta, checkForUpdates } from '../store.js';
 import { activeDraft, chaptersOf } from '../lib/project.js';
 import { STRUCTURES } from '../lib/templates.js';
+import { TRIMS, DEFAULT_TRIM } from '../lib/export.js';
 import { Modal, Segmented, Toggle } from './ui.jsx';
 import { readBookForMerge, readSeriesForMerge, chooseNewSeriesFor, confirmAddToSeries } from '../bibleActions.js';
 import { planMerge, matchReason, numberedCount, bookLabels } from '../lib/series.js';
@@ -195,7 +196,7 @@ function SettingsModal({ modal }) {
 const FORMATS = [
   { id: 'manuscript', icon: FileType2, label: 'Manuscript', sub: 'Submission format: 8.5×11, Courier, double-spaced' },
   { id: 'epub', icon: BookOpen, label: 'EPUB ebook', sub: 'For Apple Books, Kobo, Kindle, any e-reader' },
-  { id: 'pdf', icon: FileDown, label: 'PDF', sub: 'Book-style, chapters on new pages' },
+  { id: 'pdf', icon: FileDown, label: 'Book PDF', sub: 'Print-ready at 5×8, 5.5×8.5 or 6×9' },
   { id: 'html', icon: Globe, label: 'HTML', sub: 'A clean web page, book styling' },
   { id: 'md', icon: FileText, label: 'Markdown', sub: 'One .md file with every chapter' },
   { id: 'folder', icon: Folder, label: 'Markdown folder', sub: 'One .md file per chapter' },
@@ -313,6 +314,15 @@ function ExportModal() {
         </>
       )}
 
+      {format === 'pdf' && (
+        <Row label="Trim size" hint="Inches, as printed and bound">
+          <Segmented
+            value={TRIMS[project.meta.trim] ? project.meta.trim : DEFAULT_TRIM}
+            onChange={(trim) => setProjectMeta({ trim })}
+            options={Object.entries(TRIMS).map(([value, t]) => ({ value, label: t.label }))}
+          />
+        </Row>
+      )}
       {['pdf', 'html', 'md', 'folder'].includes(format) && (
         <Row label="Chapter titles">
           <Toggle checked={titles} onChange={setTitles} />
