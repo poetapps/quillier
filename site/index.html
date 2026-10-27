@@ -200,31 +200,33 @@
 
       /* ---------- hero ---------- */
 
+      /* The words line up with the rest of the page; the editor takes the remaining width and, on wide
+         screens, runs a little past the page's right edge. */
       .hero {
-        padding-top: clamp(40px, 9vh, 104px);
+        display: grid;
+        grid-template-columns: clamp(350px, 32vw, 470px) minmax(0, 1fr);
+        column-gap: clamp(48px, 5vw, 80px);
+        align-items: center;
+        padding: clamp(32px, 6vh, 80px) max(32px, calc((100% - 1120px) / 2 - 96px)) 0 max(32px, calc((100% - 1120px) / 2));
       }
       h1 {
         margin: 0;
         font-family: var(--serif);
         font-weight: 360;
-        font-size: clamp(44px, 8vw, 108px);
-        line-height: 1;
+        font-size: clamp(40px, 3.9vw, 58px);
+        line-height: 1.02;
         letter-spacing: -0.04em;
         color: var(--ink);
         text-wrap: balance;
       }
-      .hero-foot {
-        display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-        column-gap: 64px;
-        align-items: end;
-        margin-top: 44px;
-      }
       .lede {
         max-width: 28em;
-        margin: 0;
-        font-size: 21px;
+        margin: 28px 0 0;
+        font-size: 20px;
         line-height: 1.6;
+      }
+      .hero .download {
+        margin-top: 36px;
       }
 
       /* ---------- download ---------- */
@@ -273,7 +275,8 @@
       /* ---------- the live editor ---------- */
 
       .demo {
-        margin: 72px 0 0;
+        min-width: 0;
+        margin: 0;
       }
       .win {
         border-radius: 14px;
@@ -292,11 +295,11 @@
       .win-bar {
         display: flex;
         align-items: center;
-        gap: 22px;
-        height: 48px;
-        padding: 0 18px;
+        gap: 20px;
+        height: 42px;
+        padding: 0 16px;
         border-bottom: 1px solid var(--rule);
-        font-size: 14px;
+        font-size: 13px;
         color: var(--quiet);
       }
       .lights {
@@ -336,20 +339,24 @@
         margin-left: auto;
         font-variant-numeric: tabular-nums;
       }
+      /* The window keeps one size: the page scrolls inside it, the way it does in the app. */
       .win-body {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 300px;
+        grid-template-columns: minmax(0, 1fr) 220px;
+        height: 412px;
       }
       .page {
-        padding: 48px clamp(24px, 7vw, 96px) 28px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        padding: 28px clamp(22px, 2.6vw, 40px) 20px;
       }
       .kicker {
-        font-size: 14px;
+        font-size: 13px;
         color: var(--quiet);
       }
       .ch-title {
-        margin: 4px 0 28px;
-        font: 650 clamp(32px, 3.6vw, 46px) / 1.08 var(--sans);
+        margin: 0 0 14px;
+        font: 650 clamp(24px, 2vw, 29px) / 1.08 var(--sans);
         letter-spacing: -0.035em;
         color: var(--ink);
       }
@@ -358,7 +365,7 @@
       .editor {
         position: relative;
         max-width: 34em;
-        font: 400 19px/1.8 var(--serif);
+        font: 400 15.5px/1.7 var(--serif);
         color: var(--ink-2);
       }
       .editor textarea,
@@ -432,15 +439,16 @@
       }
 
       .panel {
-        padding: 6px 24px 28px;
+        overflow: hidden;
+        padding: 6px 22px 24px;
         border-left: 1px solid var(--rule);
       }
       .tabs {
         display: flex;
-        gap: 20px;
-        height: 44px;
+        gap: 18px;
+        height: 40px;
         align-items: center;
-        font-size: 14.5px;
+        font-size: 13.5px;
         color: var(--quiet);
       }
       .tabs .on {
@@ -448,8 +456,8 @@
         box-shadow: 0 13px 0 -11px var(--ink);
       }
       .panel-label {
-        margin: 22px 0 8px;
-        font-size: 13px;
+        margin: 14px 0 4px;
+        font-size: 12.5px;
         font-weight: 500;
         color: var(--quiet);
       }
@@ -463,8 +471,8 @@
         grid-template-columns: 8px minmax(0, 1fr) auto;
         column-gap: 11px;
         align-items: center;
-        height: 34px;
-        font-size: 15px;
+        height: 30px;
+        font-size: 14px;
         color: var(--ink);
       }
       .itc li::before {
@@ -479,7 +487,7 @@
       }
       .itc .n {
         color: var(--quiet);
-        font-size: 13.5px;
+        font-size: 13px;
         font-variant-numeric: tabular-nums;
       }
       .itc li.new {
@@ -501,17 +509,17 @@
         }
       }
       .panel-hint {
-        margin: 14px 0 0;
-        font-size: 13px;
+        margin: 12px 0 0;
+        font-size: 12.5px;
         line-height: 1.5;
         color: var(--quiet);
       }
       .win-foot {
         display: flex;
         justify-content: space-between;
-        padding: 12px 22px;
+        padding: 10px 20px;
         border-top: 1px solid var(--rule);
-        font-size: 13px;
+        font-size: 12.5px;
         color: var(--quiet);
         font-variant-numeric: tabular-nums;
       }
@@ -1280,6 +1288,16 @@
 
       /* ---------- smaller screens ---------- */
 
+      /* Below this the editor would get too narrow beside the words, so it moves under them. */
+      @media (max-width: 1080px) {
+        .hero {
+          grid-template-columns: minmax(0, 1fr);
+          row-gap: 64px;
+        }
+        h1 {
+          font-size: clamp(44px, 8vw, 84px);
+        }
+      }
       /* The chart needs about 580px; below this the map moves under it. */
       @media (max-width: 1100px) {
         .bible-fig {
@@ -1301,10 +1319,6 @@
         h1 br {
           display: none;
         }
-        .hero-foot {
-          grid-template-columns: minmax(0, 1fr);
-          row-gap: 36px;
-        }
         .sec {
           margin-top: 120px;
         }
@@ -1322,20 +1336,36 @@
         .bible-fig {
           margin-top: 48px;
         }
+        /* The panel goes under the page as a single row, so finding more names doesn't make the window taller. */
         .win-body {
           grid-template-columns: minmax(0, 1fr);
+          grid-template-rows: 340px auto;
+          height: auto;
         }
         .panel {
+          padding: 14px 22px 16px;
           border-left: 0;
           border-top: 1px solid var(--rule);
         }
         .panel .tabs {
           display: none;
         }
+        .panel-label {
+          margin: 0 0 2px;
+        }
         .itc {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          column-gap: 24px;
+          display: flex;
+          gap: 24px;
+          min-height: 30px;
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+        .itc li {
+          flex: none;
+          grid-template-columns: 8px auto auto;
+        }
+        .panel-hint {
+          margin-top: 4px;
         }
         footer {
           margin-top: 120px;
@@ -1354,11 +1384,13 @@
         .top nav {
           gap: 16px;
         }
+        .hero {
+          padding-left: 16px;
+          padding-right: 16px;
+          row-gap: 48px;
+        }
         .lede {
           font-size: 19px;
-        }
-        .demo {
-          margin-top: 48px;
         }
         .win {
           border-radius: 10px;
@@ -1376,17 +1408,14 @@
           overflow-x: auto;
           scrollbar-width: none;
         }
-        .page {
-          padding: 28px 20px 20px;
+        .win-body {
+          grid-template-rows: 320px auto;
         }
-        .editor {
-          font-size: 17px;
+        .page {
+          padding: 24px 20px 16px;
         }
         .panel {
-          padding: 4px 20px 22px;
-        }
-        .itc {
-          grid-template-columns: minmax(0, 1fr);
+          padding: 12px 20px 14px;
         }
         .demo figcaption,
         .shot figcaption {
@@ -1483,9 +1512,9 @@
     </header>
 
     <main>
-      <section class="wrap hero">
-        <h1>A quiet place to<br /> write your book —<br /> and nothing else.</h1>
-        <div class="hero-foot">
+      <section class="hero">
+        <div class="hero-text">
+          <h1>A quiet place to<br /> write your book —<br /> and nothing else.</h1>
           <p class="lede">
             Quillier is a free writing app for novels and other long work. It keeps your book on your computer in one file, keeps track of who’s
             in it, and stays out of your way.
@@ -1509,7 +1538,6 @@
             </details>
           </div>
         </div>
-
         <!-- A working copy of the editor: it writes a few lines itself, then it's the visitor's turn. -->
         <figure class="demo" id="demo">
           <div class="win">
@@ -2001,10 +2029,12 @@
       const ta = document.getElementById('page');
       const shadow = document.getElementById('shadow');
       const editor = document.getElementById('editor');
+      const scroller = editor.closest('.page');
       const itc = document.getElementById('itc');
       const wordsEl = document.getElementById('words');
       const savedEl = document.getElementById('saved');
       const caret = Object.assign(document.createElement('span'), { className: 'caret' });
+      const end = document.createElement('span');
       const tabKey = Object.assign(document.createElement('kbd'), { textContent: 'Tab' });
       let live = false; // the visitor has taken over
       let ghost = null;
@@ -2015,11 +2045,16 @@
       const render = () => {
         const v = ta.value;
         const atEnd = ta.selectionStart === v.length && ta.selectionEnd === v.length;
-        ghost = (live ? document.activeElement === ta && atEnd : true) ? suggest(v) : null;
+        const writing = live ? document.activeElement === ta && atEnd : true;
+        ghost = writing ? suggest(v) : null;
         shadow.textContent = v;
+        shadow.append(end);
         if (!live) shadow.append(caret);
         if (ghost) shadow.append(Object.assign(document.createElement('span'), { className: 'ghost', textContent: ghost }), tabKey);
         shadow.append('\n​'); // keeps a trailing line break measured, plus a spare line of room
+        // Keep the end of the text in view while it's being written there.
+        const below = writing && end.getBoundingClientRect().bottom - scroller.getBoundingClientRect().bottom + 20;
+        if (below > 0) scroller.scrollTop += below;
 
         const shown = new Map([...itc.children].map((li) => [li.dataset.id, li]));
         mentions(v).forEach(({ e, n }, i) => {
@@ -2068,6 +2103,7 @@
         live = false;
         editor.classList.remove('live');
         ta.value = START;
+        scroller.scrollTop = 0;
         render();
         let i = 0;
         const step = () => {
