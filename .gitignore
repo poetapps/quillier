@@ -10,3 +10,7 @@ research/**/.venv/
 
 # Third-party eval data (downloaded, not ours to redistribute)
 research/julia-1/repro/
+
+# Promo video (HyperFrames project, renders) and its music
+video/
+/*.mp3
