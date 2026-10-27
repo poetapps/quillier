@@ -324,8 +324,17 @@ function cmd(command) {
   };
 }
 
+// What the open project calls its pages, for the File menu: 'book', 'journal' or 'notebook'.
+let menuKind = 'book';
+const MENU_WORDS = {
+  book: { page: 'Chapter', import: 'Manuscript', export: 'Manuscript' },
+  journal: { page: 'Entry', import: 'Entries', export: 'Journal' },
+  notebook: { page: 'Page', import: 'Pages', export: 'Notebook' },
+};
+
 function buildMenu() {
   const recent = prefs.recent.filter((r) => fs.existsSync(r.path));
+  const words = MENU_WORDS[menuKind] || MENU_WORDS.book;
   const template = [
     ...(isMac
       ? [
@@ -351,8 +360,8 @@ function buildMenu() {
     {
       label: 'File',
       submenu: [
-        { label: 'New Chapter', accelerator: 'CmdOrCtrl+N', click: cmd('new-chapter') },
-        { label: 'New Outline Section', accelerator: 'CmdOrCtrl+Alt+N', click: cmd('new-section') },
+        { label: `New ${words.page}`, accelerator: 'CmdOrCtrl+N', click: cmd('new-chapter') },
+        { label: 'New Outline Section', accelerator: 'CmdOrCtrl+Alt+N', click: cmd('new-section'), visible: menuKind === 'book' },
         { type: 'separator' },
         { label: 'New Project…', accelerator: 'CmdOrCtrl+Shift+N', click: cmd('new-project') },
         { label: 'New Series…', click: cmd('new-series') },
@@ -376,8 +385,8 @@ function buildMenu() {
             : [{ label: 'No recent projects', enabled: false }],
         },
         { type: 'separator' },
-        { label: 'Import Manuscript…', click: cmd('import') },
-        { label: 'Export Manuscript…', accelerator: 'CmdOrCtrl+E', click: cmd('export') },
+        { label: `Import ${words.import}…`, click: cmd('import') },
+        { label: `Export ${words.export}…`, accelerator: 'CmdOrCtrl+E', click: cmd('export') },
         { label: 'Save a Copy…', accelerator: 'CmdOrCtrl+Shift+S', click: cmd('save-copy') },
         { label: 'Show Project in ' + (isMac ? 'Finder' : 'Folder'), click: cmd('reveal') },
         { type: 'separator' },
@@ -647,13 +656,18 @@ async function bookSummary(filePath) {
       ? chapters.reduce((low, c) => (STATUS_ORDER.indexOf(c.status || 'idea') < STATUS_ORDER.indexOf(low) ? c.status || 'idea' : low), 'done')
       : 'idea';
     const bible = data.bible || {};
+    const pages = chapters.filter((c) => c.type !== 'folder');
+    const dates = pages.map((c) => c.date).filter((d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d));
     const summary = {
       path: filePath,
       exists: true,
       uuid: data.meta?.uuid || null,
+      kind: ['journal', 'notebook'].includes(data.kind) ? data.kind : 'book',
       title: data.title || path.basename(filePath, path.extname(filePath)),
       words: chapters.reduce((n, c) => n + countWords(c.content), 0),
       chapters: chapters.length,
+      pages: pages.length,
+      lastDate: dates.length ? dates.reduce((a, b) => (b > a ? b : a)) : null,
       status,
       characters: (bible.entries || []).filter((e) => e.type !== 'place').length,
       places: (bible.entries || []).filter((e) => e.type === 'place').length,
@@ -744,6 +758,13 @@ ipcMain.handle('shell:reveal', (_e, filePath) => shell.showItemInFolder(filePath
 ipcMain.handle('shell:open-backups', async () => {
   await fsp.mkdir(backupDir, { recursive: true });
   return shell.openPath(backupDir);
+});
+
+ipcMain.handle('window:set-kind', (_e, kind) => {
+  const next = MENU_WORDS[kind] ? kind : 'book';
+  if (next === menuKind) return;
+  menuKind = next;
+  buildMenu();
 });
 
 ipcMain.handle('window:set-title', (_e, title, filePath, edited) => {

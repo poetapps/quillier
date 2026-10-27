@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, ListTree, Link2 } from 'lucide-react';
+import { ChevronDown, ListTree, Link2, Plus } from 'lucide-react';
 import {
   useStore,
   getState,
@@ -14,8 +14,27 @@ import {
   addInlineNote,
   openDoc,
   setShowInManuscript,
+  setEntryDate,
+  addChapter,
 } from '../store.js';
-import { findDoc, STATUSES, statusLabel, sceneCount, countWords, chapterNumber, isFolder, subtreeRange, activeDraft, partNumbers, partLabel } from '../lib/project.js';
+import {
+  findDoc,
+  STATUSES,
+  statusLabel,
+  sceneCount,
+  countWords,
+  chapterNumber,
+  isFolder,
+  subtreeRange,
+  activeDraft,
+  partNumbers,
+  partLabel,
+  kindOf,
+  wordsFor,
+  countOf,
+  longDate,
+  todayKey,
+} from '../lib/project.js';
 import { beatsOf, chaptersCovering, linkedOutline, mirrorOf, outlinePath } from '../lib/structure.js';
 import { beatMenu } from './Sidebar.jsx';
 import { Toggle } from './ui.jsx';
@@ -24,6 +43,39 @@ import NotePeek from './NotePeek.jsx';
 import { nameHintsFor } from '../lib/nameHints.js';
 
 const pad = (n) => String(n).padStart(2, '0');
+
+// A journal entry's date, above its title. Click to move the entry to another day.
+function EntryDate({ doc }) {
+  const ref = useRef(null);
+  const today = doc.date === todayKey();
+  return (
+    <div className="page-kicker entry-date">
+      <button className="entry-date-btn" title="Change the date" onClick={() => ref.current?.showPicker?.()}>
+        {longDate(doc.date)}
+        {today && <span className="entry-today">Today</span>}
+      </button>
+      <input
+        ref={ref}
+        type="date"
+        className="entry-date-input"
+        tabIndex={-1}
+        aria-label="Entry date"
+        value={doc.date}
+        onChange={(e) => e.target.value && setEntryDate(doc.id, e.target.value)}
+      />
+    </div>
+  );
+}
+
+// The path of folders a notebook page sits in: "Biology › Cells".
+function folderPath(list, id) {
+  const names = [];
+  for (let d = list.find((x) => x.id === id); d?.parent; ) {
+    d = list.find((x) => x.id === d.parent);
+    if (d) names.unshift(d.title || 'Untitled');
+  }
+  return names;
+}
 
 function TitleInput({ doc, readOnly }) {
   const ref = useRef(null);
@@ -128,15 +180,39 @@ export default function Page() {
   const scrollRef = useRef(null);
   const bodyRef = useRef(null);
   const [editor, setEditor] = useState(null);
+  const focusBodyId = useStore((s) => s.focusBodyId);
+  const pk = kindOf(project);
+  const wording = wordsFor(project);
 
   useEffect(() => {
     scrollRef.current?.scrollTo(0, 0);
   }, [found?.doc.id]);
 
+  // A new journal entry starts with the cursor in its text. (The last page's editor is destroyed a
+  // little later, so wait for the one that's actually on the page.)
+  useEffect(() => {
+    if (editor && !editor.isDestroyed && editor.view.dom.isConnected && focusBodyId && focusBodyId === found?.doc.id) {
+      editor.commands.focus('end');
+      setState({ focusBodyId: null });
+    }
+  }, [editor, focusBodyId, found?.doc.id]);
+
   if (!found) {
-    return <div className="page-scroll" />;
+    if (pk === 'book') return <div className="page-scroll" />;
+    return (
+      <div className="page-scroll">
+        <div className="page-empty">
+          <p>{pk === 'journal' ? 'No entries yet.' : 'No pages yet.'}</p>
+          <button className="btn primary" onClick={() => addChapter()}>
+            <Plus size={16} strokeWidth={1.8} /> New {wording.page}
+          </button>
+        </div>
+      </div>
+    );
   }
   const { doc, kind, area } = found;
+  const book = pk === 'book';
+  const entry = pk === 'journal' && kind === 'chapter';
   const words = countWords(doc.content);
   const scenes = sceneCount(doc.content);
   const outlineFolder = kind === 'folder' && area === 'outline';
@@ -146,25 +222,34 @@ export default function Page() {
   const where = area === 'outline' ? outlinePath(project, doc.id) : [];
 
   const placeholder = {
-    chapter: 'Start writing…',
+    chapter: { book: 'Start writing…', journal: 'What’s on your mind?', notebook: 'Notes, quotes, sources, anything…' }[pk],
     section: 'Plan this part of the story…',
     notes: 'Characters, places, research, anything…',
-    folder: outlineFolder ? 'What happens in this part of the story…' : 'Notes on this part of the book. They stay out of exports.',
+    folder: outlineFolder
+      ? 'What happens in this part of the story…'
+      : book
+        ? 'Notes on this part of the book. They stay out of exports.'
+        : 'What this folder is for. It stays out of exports.',
   }[kind];
+  const pagePath = !book && !entry && area === 'manuscript' ? folderPath(activeDraft(project).chapters, doc.id) : [];
   const kicker = {
-    chapter: `Chapter ${pad(chapterNumber(project, doc.id))}`,
+    chapter: book ? `Chapter ${pad(chapterNumber(project, doc.id))}` : pagePath.join(' › ') || null,
     section: ['Outline', ...where].join(' · '),
-    folder: outlineFolder ? ['Outline', ...where].join(' · ') : doc.part ? partLabel(partNumbers(activeDraft(project))[doc.id]) : 'Folder',
+    folder: outlineFolder
+      ? ['Outline', ...where].join(' · ')
+      : doc.part && book
+        ? partLabel(partNumbers(activeDraft(project))[doc.id])
+        : ['Folder', ...pagePath].join(' · '),
     notes: null,
   }[kind];
 
   return (
-    <div className="page-scroll" ref={scrollRef}>
+    <div className={`page-scroll kind-${pk}`} ref={scrollRef}>
       <article className="page">
-        {kicker && <div className="page-kicker">{kicker}</div>}
+        {entry ? <EntryDate doc={doc} /> : kicker && <div className="page-kicker">{kicker}</div>}
         <TitleInput doc={doc} readOnly={kind === 'notes'} />
         <div className="page-meta">
-          {kind === 'chapter' && (
+          {book && kind === 'chapter' && (
             <span className="page-meta-left">
               <StatusPicker doc={doc} />
               <BeatsButton project={project} doc={doc} />
@@ -180,7 +265,7 @@ export default function Page() {
               onChange={(on) => setShowInManuscript(doc.id, on)}
             />
           )}
-          {bookFolder && (
+          {bookFolder && book && (
             <span className="page-meta-left">
               <MetaToggle
                 label="Book part"
@@ -197,7 +282,7 @@ export default function Page() {
             </span>
           )}
           <span className="page-meta-right">
-            {kind === 'chapter' && (
+            {book && kind === 'chapter' && (
               <>
                 <button className="link-btn" onClick={() => togglePanel('details')}>
                   {scenes} {scenes === 1 ? 'scene' : 'scenes'}
@@ -207,7 +292,7 @@ export default function Page() {
             )}
             {kind === 'folder' ? (
               <>
-                {stats.count} {area === 'outline' ? (stats.count === 1 ? 'page' : 'pages') : stats.count === 1 ? 'chapter' : 'chapters'}
+                {area === 'outline' ? `${stats.count} ${stats.count === 1 ? 'page' : 'pages'}` : countOf(project, stats.count)}
                 {area === 'manuscript' && (
                   <>
                     <span className="dot-sep">·</span>
@@ -233,7 +318,7 @@ export default function Page() {
             placeholder={placeholder}
             typography={prefs.smartTypography}
             symbolHints={prefs.symbolHints}
-            getNames={prefs.nameHints !== false ? () => nameHintsFor(getState().project, getState().series) : null}
+            getNames={book && prefs.nameHints !== false ? () => nameHintsFor(getState().project, getState().series) : null}
             spellcheck={prefs.spellcheck}
             className="page-editor"
             formatBar

@@ -26,12 +26,84 @@ export function newDoc(kind, title, content = '') {
   return doc;
 }
 
-export function createProject(title) {
-  const chapter = newDoc('chapter', 'Untitled chapter');
+// ---------- kinds of project ----------
+// A book has chapters, an outline and a story bible. A journal is dated entries, newest first, and a
+// notebook is pages in folders (research, study notes). All three keep their pages in the draft's
+// chapter list, so saving, trash, word counts and export work the same; a journal or notebook just
+// never shows the outline, the story bible or more than one draft.
+
+export const KINDS = ['book', 'journal', 'notebook'];
+export const kindOf = (p) => (KINDS.includes(p?.kind) ? p.kind : 'book');
+export const isBook = (p) => kindOf(p) === 'book';
+
+const WORDING = {
+  book: { name: 'Book', page: 'chapter', pages: 'chapters', Page: 'Chapter', Pages: 'Chapters', whole: 'Manuscript' },
+  journal: { name: 'Journal', page: 'entry', pages: 'entries', Page: 'Entry', Pages: 'Entries', whole: 'Journal' },
+  notebook: { name: 'Notebook', page: 'page', pages: 'pages', Page: 'Page', Pages: 'Pages', whole: 'Notebook' },
+};
+export const wordsFor = (p) => WORDING[kindOf(p)];
+export const countOf = (p, n) => `${n.toLocaleString('en-US')} ${n === 1 ? wordsFor(p).page : wordsFor(p).pages}`;
+
+// A new chapter, journal entry (dated today) or notebook page.
+export function newPage(p, title) {
+  const kind = kindOf(p);
+  if (kind === 'journal') return { ...newDoc('page', title || ''), date: todayKey() };
+  if (kind === 'notebook') return newDoc('page', title || 'Untitled page');
+  return newDoc('chapter', title || 'Untitled chapter');
+}
+
+// The page to open when nothing else is: a book's Notes, a journal's newest entry, a notebook's first page.
+export function homeId(p) {
+  const pages = chaptersOf(activeDraft(p));
+  if (kindOf(p) === 'journal') return pages[pages.length - 1]?.id || null;
+  return isBook(p) ? 'notes' : pages[0]?.id || null;
+}
+
+// ---------- journal dates ----------
+// An entry's `date` is a local calendar day, "2026-10-26". Entries are kept in date order (oldest
+// first, so exports read in order) and the sidebar lists them newest first.
+
+const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
+export const isDayKey = (s) => typeof s === 'string' && DAY.test(s);
+export const dayOf = (key) => {
+  const [, y, m, d] = key.match(DAY);
+  return new Date(+y, +m - 1, +d);
+};
+export const entryDate = (d) => (isDayKey(d.date) ? d.date : todayKey(d.createdAt ? new Date(d.createdAt) : new Date()));
+
+export function sortEntries(list) {
+  const pages = list.filter((d) => !isFolder(d)).map((d, i) => ({ d: d.parent ? { ...d, parent: null } : d, key: entryDate(d), i }));
+  pages.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : a.i - b.i));
+  const out = pages.map((x) => x.d);
+  return out.length === list.length && out.every((d, i) => d === list[i]) ? list : out;
+}
+
+export const longDate = (key) => dayOf(key).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+export const shortDate = (key) =>
+  dayOf(key).toLocaleDateString(undefined, { month: 'short', day: 'numeric', ...(key.slice(0, 4) === todayKey().slice(0, 4) ? {} : { year: 'numeric' }) });
+export const monthLabel = (key) =>
+  dayOf(`${key.slice(0, 7)}-01`).toLocaleDateString(undefined, { month: 'long', ...(key.slice(0, 4) === todayKey().slice(0, 4) ? {} : { year: 'numeric' }) });
+
+// What an entry is called in lists: its title, else its first words.
+export const entryLabel = (d) => (d.title || '').trim() || excerpt(d.content, 8) || 'Empty entry';
+
+// What a page is called in toasts and the trash. A journal entry goes by its date.
+export const docName = (d) => (isDayKey(d?.date) && !isFolder(d) ? [shortDate(d.date), (d.title || '').trim()].filter(Boolean).join(' · ') : d?.title || 'Untitled');
+
+// "2026-10-26 Rain all day" (an imported file's name or heading) → its date and the rest.
+export function splitDate(title) {
+  const m = (title || '').match(/^(\d{4}-\d{2}-\d{2})(?:[\s._–—-]+(.*))?$/);
+  return m && todayKey(dayOf(m[1])) === m[1] ? { date: m[1], title: (m[2] || '').trim() } : { date: null, title: title || '' };
+}
+
+export function createProject(title, kind = 'book') {
+  const p = { kind };
+  const chapter = newPage(p);
   const draft = { id: uid(), name: 'Draft 1', chapters: [chapter] };
   return {
     format: FORMAT,
     formatVersion: FORMAT_VERSION,
+    kind: kindOf(p),
     title,
     createdAt: nowIso(),
     updatedAt: nowIso(),
@@ -147,12 +219,16 @@ export function normalizeProject(data) {
     name: dr.name || 'Draft',
     chapters: normalizeTree((dr.chapters || []).map((c) => fixDoc(c, isFolder(c) ? 'folder' : 'chapter'))),
   }));
+  const kind = kindOf(data);
+  // Every journal entry has a date, and they stay in date order.
+  if (kind === 'journal') drafts = drafts.map((dr) => ({ ...dr, chapters: sortEntries(dr.chapters.map((c) => (isDayKey(c.date) ? c : { ...c, date: entryDate(c) }))) }));
   const activeDraftId = drafts.some((d) => d.id === data.activeDraftId) ? data.activeDraftId : drafts[0].id;
   // Unknown keys are kept, so a file written by a newer version keeps its data when an older one saves it.
   return {
     ...data,
     format: FORMAT,
     formatVersion: FORMAT_VERSION,
+    kind,
     title: data.title || 'Untitled',
     createdAt: data.createdAt || nowIso(),
     updatedAt: data.updatedAt || nowIso(),

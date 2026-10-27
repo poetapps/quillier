@@ -17,6 +17,16 @@ import {
   moveInTree,
   nudgeInTree,
   copyTree,
+  kindOf,
+  isBook,
+  docName,
+  newPage,
+  homeId,
+  sortEntries,
+  splitDate,
+  wordsFor,
+  countOf,
+  longDate,
 } from './lib/project.js';
 import { createBook, mirrorFolders, unmirrorFolders, renameLinked, applyStructure, mirrorOf } from './lib/structure.js';
 import { exportMarkdown, exportChapterFiles, exportHtml, exportBookHtml, exportManuscriptHtml, buildEpub } from './lib/export.js';
@@ -51,6 +61,7 @@ let state = {
   toast: null,
   renamingId: null,
   focusTitleId: null,
+  focusBodyId: null, // page whose text should take the cursor (a new journal entry)
   activeNoteId: null, // inline note under the cursor
   focusNoteId: null, // inline note whose text box should take focus
 };
@@ -300,8 +311,8 @@ export async function openProjectAt(path, { quiet = false, view, bible } = {}) {
     if (!quiet) api.confirm({ type: 'warning', message: 'Could not open project', detail: err.message, buttons: ['OK'] });
     return false;
   }
-  if (!findDoc(project, project.ui.openId)) {
-    project.ui.openId = chaptersOf(activeDraft(project))[0]?.id || 'notes';
+  if (!findDoc(project, project.ui.openId) || (!isBook(project) && project.ui.openId === 'notes')) {
+    project.ui.openId = isBook(project) ? chaptersOf(activeDraft(project))[0]?.id || 'notes' : homeId(project);
   }
   dirty = false;
   const series = await loadSeriesFor(path, project);
@@ -410,17 +421,24 @@ export async function openProjectDialog() {
   if (path) await openProjectAt(path);
 }
 
-// The extra step before a new book: start blank or from a story structure. Resolves to
-// { structure, mirror, chapters } (structure null for blank), or null if cancelled.
-export const chooseStart = () => new Promise((resolve) => setState({ modal: { type: 'structure', mode: 'new', resolve }, menu: null }));
+// The extra step before a new project: a book (blank or from a story structure), or, unless `kinds`
+// is false, a journal or notebook. Resolves to { kind, structure, mirror, chapters } (structure null
+// for a blank book), or null if cancelled.
+export const chooseStart = ({ kinds = true } = {}) =>
+  new Promise((resolve) => setState({ modal: { type: 'structure', mode: 'new', kinds, resolve }, menu: null }));
 
-// After a new book opens: a blank one puts the cursor in the chapter title.
-export const focusNewBook = (project) => !project.outline.length && setState({ focusTitleId: project.ui.openId });
+// After a new project opens: a journal puts the cursor in the entry, a blank book or a notebook in the title.
+export function focusNewBook(project) {
+  if (kindOf(project) === 'journal') setState({ focusBodyId: project.ui.openId });
+  else if (!project.outline.length) setState({ focusTitleId: project.ui.openId });
+}
+
+export const suggestedName = (start) => ({ journal: 'Journal', notebook: 'Notebook' })[start?.kind] || 'Untitled';
 
 export async function newProject() {
   const start = await chooseStart();
   if (!start) return;
-  const path = await api.chooseNewProject('Untitled');
+  const path = await api.chooseNewProject(suggestedName(start));
   if (!path) return;
   await settle();
   const title = path.split(/[\\/]/).pop().replace(/\.(quill|ldraft)$/i, '');
@@ -607,16 +625,50 @@ function addItem(area, doc, parent) {
     }
     const index = parent ? subtreeRange(list, parent)[1] : list.length;
     list = revealIn([...list.slice(0, index), { ...doc, parent }, ...list.slice(index)], doc.id);
+    if (area === 'manuscript' && kindOf(p) === 'journal') list = sortEntries(list);
     let next = withList(p, area, list);
     // A folder made inside one that shows in the manuscript shows there too.
     if (area === 'outline' && isFolder(doc) && parent && mirrorOf(next, parent)) next = mirrorFolders(next, doc.id);
     return { ...next, ui: { ...p.ui, openId: doc.id, ...(area === 'outline' ? { outlineOpen: true } : {}) } };
   });
-  setState({ view: 'page', focusTitleId: doc.id });
+  setState({ view: 'page', ...(area === 'manuscript' && kindOf(state.project) === 'journal' ? { focusBodyId: doc.id } : { focusTitleId: doc.id }) });
 }
 
 const where = (inFolder) => (typeof inFolder === 'string' || inFolder === null ? inFolder : undefined);
-export const addChapter = (inFolder) => addItem('manuscript', newDoc('chapter', 'Untitled chapter'), where(inFolder));
+
+// A new chapter, notebook page or journal entry. In a journal, an untouched entry from today is
+// reused instead of starting a second empty one.
+export function addChapter(inFolder) {
+  const p = state.project;
+  if (!p) return;
+  if (kindOf(p) === 'journal') {
+    const today = chaptersOf(activeDraft(p)).filter((c) => c.date === todayKey()).pop();
+    if (today && !today.title.trim() && !today.content.trim()) {
+      openDoc(today.id);
+      return setState({ focusBodyId: today.id });
+    }
+  }
+  addItem('manuscript', newPage(p), isBook(p) ? where(inFolder) : kindOf(p) === 'journal' ? null : where(inFolder));
+}
+
+// Move a journal entry to another day.
+export function setEntryDate(id, date) {
+  commit((p) => {
+    const found = findDoc(p, id);
+    if (!found || found.doc.date === date) return p;
+    const moved = mapDoc(p, id, (d) => ({ ...d, date, updatedAt: new Date().toISOString() }));
+    const closed = (p.ui.closedMonths || []).filter((m) => m !== date.slice(0, 7));
+    return { ...mapActiveChapters(moved, sortEntries), ui: { ...p.ui, closedMonths: closed } };
+  });
+}
+
+// Collapse or expand a month in a journal's list ("2026-10").
+export function toggleMonth(month) {
+  commit((p) => {
+    const closed = p.ui.closedMonths || [];
+    return { ...p, ui: { ...p.ui, closedMonths: closed.includes(month) ? closed.filter((m) => m !== month) : [...closed, month] } };
+  }, { touch: false });
+}
 export const addSection = (inFolder) => addItem('outline', newDoc('section', 'Untitled section'), where(inFolder));
 export const addFolder = (area, inFolder) => addItem(area, newDoc('folder', 'Untitled folder'), where(inFolder));
 
@@ -670,7 +722,7 @@ export function ungroupFolder(id) {
       .filter((d) => d.id !== id)
       .map((d) => (d.parent === id ? { ...d, parent: found.doc.parent || null } : d));
     const next = withList(p, found.area, normalizeTree(list));
-    return p.ui.openId === id ? { ...next, ui: { ...next.ui, openId: list[found.index]?.id || 'notes' } } : next;
+    return p.ui.openId === id ? { ...next, ui: { ...next.ui, openId: list[found.index]?.id || homeId(next) } } : next;
   });
 }
 
@@ -698,12 +750,12 @@ export function deleteDoc(id) {
     let next = { ...withList(p, found.area, left), trash: [entry, ...p.trash] };
     if (gone.has(p.ui.openId)) {
       const neighbor = left[Math.min(found.index, left.length - 1)];
-      next.ui = { ...p.ui, openId: neighbor ? neighbor.id : 'notes' };
+      next.ui = { ...p.ui, openId: neighbor ? neighbor.id : homeId(next) };
     }
     return next;
   });
   const inside = end - start - 1;
-  const what = `“${found.doc.title || 'Untitled'}”${inside ? ` and ${inside} item${inside === 1 ? '' : 's'} in it` : ''}`;
+  const what = `“${docName(found.doc)}”${inside ? ` and ${inside} item${inside === 1 ? '' : 's'} in it` : ''}`;
   toast(`Moved ${what} to trash`, { label: 'Undo', run: () => restoreTrash(entry.id) });
 }
 
@@ -723,6 +775,7 @@ export function restoreTrash(entryId) {
       const draftId = next.drafts.some((d) => d.id === entry.draftId) ? entry.draftId : next.activeDraftId;
       next = { ...next, activeDraftId: draftId };
       next = mapActiveChapters(next, at);
+      if (kindOf(next) === 'journal') next = mapActiveChapters(next, sortEntries);
     }
     return { ...next, ui: { ...next.ui, openId: entry.doc.id } };
   });
@@ -732,7 +785,7 @@ export function restoreTrash(entryId) {
 export async function deleteForever(entryId) {
   const entry = state.project.trash.find((t) => t.id === entryId);
   if (!entry) return;
-  const name = entry.kind === 'draft' ? entry.draft.name : entry.doc.title;
+  const name = entry.kind === 'draft' ? entry.draft.name : docName(entry.doc);
   const ok = await api.confirm({
     type: 'warning',
     message: `Permanently delete “${name}”?`,
@@ -870,27 +923,42 @@ export async function importManuscript() {
   if (!state.project) return;
   const files = await api.chooseImport();
   if (!files.length) return;
-  const chapters = parseImport(files).map((c) => newDoc('chapter', c.title, c.content));
+  const p0 = state.project;
+  const journal = kindOf(p0) === 'journal';
+  // A journal takes each entry's date from a file name or heading that starts with one ("2026-10-26 …").
+  const chapters = parseImport(files).map((c) => {
+    if (!journal) return { ...newPage(p0, c.title), content: c.content };
+    const { date, title } = splitDate(c.title);
+    return { ...newPage(p0, date ? title : c.title), content: c.content, ...(date ? { date } : {}) };
+  });
   if (!chapters.length) return;
   flushEditors();
   commit((p) => {
     const next = mapActiveChapters(p, (cs) => {
       const blank = cs.length === 1 && !cs[0].content.trim() && !cs[0].notes.trim();
-      return blank ? chapters : [...cs, ...chapters];
+      const list = blank ? chapters : [...cs, ...chapters];
+      return journal ? sortEntries(list) : list;
     });
     return { ...next, ui: { ...next.ui, openId: chapters[0].id } };
   });
   setState({ view: 'page' });
-  toast(`Imported ${chapters.length} chapter${chapters.length === 1 ? '' : 's'}`);
+  toast(`Imported ${countOf(p0, chapters.length)}`);
 }
 
 export function setProjectMeta(patch) {
   commit((p) => ({ ...p, meta: { ...p.meta, ...patch } }));
 }
 
+// A journal exports each entry under its date (and title, if it has one).
+function exportable(p) {
+  if (kindOf(p) !== 'journal') return p;
+  const title = (c) => [longDate(c.date), c.title.trim()].filter(Boolean).join(' — ');
+  return mapActiveChapters(p, (cs) => cs.map((c) => (isFolder(c) ? c : { ...c, title: title(c) })));
+}
+
 export async function exportManuscript(format, opts) {
   await settle();
-  const p = state.project;
+  const p = exportable(state.project);
   let where = null;
   if (format === 'md') where = await api.exportFile({ suggested: p.title, ext: 'md', content: exportMarkdown(p, opts) });
   if (format === 'folder') where = await api.exportFolder({ suggested: p.title, files: exportChapterFiles(p, opts) });
@@ -901,7 +969,7 @@ export async function exportManuscript(format, opts) {
   }
   if (format === 'manuscript') where = await api.exportPdf({ suggested: `${p.title} (manuscript)`, html: exportManuscriptHtml(p, opts) });
   if (format === 'epub') where = await api.exportEpub({ suggested: p.title, files: await buildEpub(p, opts) });
-  if (where) toast('Exported manuscript');
+  if (where) toast(`Exported ${wordsFor(p).whole.toLowerCase()}`);
   return where;
 }
 
@@ -915,7 +983,7 @@ export async function checkForUpdates() {
 
 const commands = {
   'new-chapter': () => addChapter(),
-  'new-section': () => addSection(),
+  'new-section': () => isBook(state.project) && addSection(),
   'new-project': newProject,
   'open-project': openProjectDialog,
   import: importManuscript,

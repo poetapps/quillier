@@ -11,7 +11,7 @@ import {
   deleteForever,
   emptyTrash,
 } from '../store.js';
-import { countWords, todayKey, chaptersOf, isFolder } from '../lib/project.js';
+import { countWords, todayKey, chaptersOf, isFolder, isBook, wordsFor, docName } from '../lib/project.js';
 import { IconButton, Wordmark } from './ui.jsx';
 
 const prettyPath = (p) => p.replace(/^\/Users\/[^/]+/, '~').replace(/\/[^/]+$/, '');
@@ -86,7 +86,11 @@ export function TrashView() {
       <article className="page">
         <h1 className="page-title static">Trash</h1>
         <div className="page-meta">
-          <span>Deleted chapters, sections, folders and drafts stay here until you empty the trash.</span>
+          <span>
+            {isBook(project)
+              ? 'Deleted chapters, sections, folders and drafts stay here until you empty the trash.'
+              : `Deleted ${wordsFor(project).pages}${project.kind === 'notebook' ? ' and folders' : ''} stay here until you empty the trash.`}
+          </span>
           {trash.length > 0 && (
             <button className="link-btn danger" onClick={emptyTrash}>
               Empty trash
@@ -97,7 +101,7 @@ export function TrashView() {
           {!trash.length && <p className="muted">Nothing here.</p>}
           {trash.map((t) => {
             const isDraft = t.kind === 'draft';
-            const title = isDraft ? t.draft.name : t.doc.title || 'Untitled';
+            const title = isDraft ? t.draft.name : docName(t.doc);
             const pages = isDraft ? chaptersOf(t.draft) : (t.docs || [t.doc]).filter((d) => t.kind !== 'folder' || !isFolder(d));
             const words = pages.reduce((n, c) => n + countWords(c.content), 0);
             const draftName = project.drafts.find((d) => d.id === t.draftId)?.name;
@@ -106,7 +110,7 @@ export function TrashView() {
             const label = {
               section: 'Outline section',
               folder: `${t.area === 'outline' ? 'Outline folder' : 'Folder'}${inside ? ` · ${inside} item${inside === 1 ? '' : 's'}` : ''}`,
-              chapter: `Chapter${draftName ? ` · ${draftName}` : ''}`,
+              chapter: isBook(project) ? `Chapter${draftName ? ` · ${draftName}` : ''}` : wordsFor(project).Page,
             }[t.kind];
             return (
               <div key={t.id} className="trash-row">
@@ -147,7 +151,7 @@ export function StatusBar() {
     const s = project.outline.find((x) => x.id === id);
     const c = !s && project.drafts.find((d) => d.id === project.activeDraftId)?.chapters.find((x) => x.id === id);
     words = countWords((s || c)?.content);
-    where = s ? 'Outline' : 'Manuscript';
+    where = s ? 'Outline' : wordsFor(project).whole;
   }
   const today = project.stats.daily[todayKey()] || 0;
   return (

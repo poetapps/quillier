@@ -51,6 +51,7 @@ contextBridge.exposeInMainWorld('api', {
   reveal: (path) => ipcRenderer.invoke('shell:reveal', path),
   openBackups: () => ipcRenderer.invoke('shell:open-backups'),
   setTitle: (title, path, edited) => ipcRenderer.invoke('window:set-title', title, path, edited),
+  setKind: (kind) => ipcRenderer.invoke('window:set-kind', kind),
   confirm: (opts) => ipcRenderer.invoke('dialog:confirm', opts),
 
   chooseImport: () => ipcRenderer.invoke('import:choose'),

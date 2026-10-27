@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Layers, Plus, FolderOpen, Book, Users, MoreHorizontal, Moon, Sun, SlidersHorizontal, ArrowUp, ArrowDown, Pencil, X, LogOut } from 'lucide-react';
+import { Layers, Plus, FolderOpen, Book, Users, MoreHorizontal, Moon, Sun, SlidersHorizontal, ArrowUp, ArrowDown, Pencil, X, LogOut, NotebookPen, NotebookText } from 'lucide-react';
 import { useStore, openProjectAt, openProjectDialog, toggleTheme, openModal, openMenu } from '../store.js';
 import {
   refreshLibrary,
@@ -14,7 +14,7 @@ import {
   removeFromLibrary,
   startAddToSeries,
 } from '../bibleActions.js';
-import { statusLabel } from '../lib/project.js';
+import { statusLabel, shortDate } from '../lib/project.js';
 import { bookLabels } from '../lib/series.js';
 import { IconButton, Wordmark } from './ui.jsx';
 
@@ -127,6 +127,27 @@ function SeriesCard({ s, highlight }) {
   );
 }
 
+// A journal or notebook in the library: no series, no status.
+function NotebookRow({ b }) {
+  const journal = b.kind === 'journal';
+  const Icon = journal ? NotebookPen : NotebookText;
+  return (
+    <div className="lib-standalone-row">
+      <button className="lib-standalone-main" onClick={() => openProjectAt(b.path)} title={b.path}>
+        <Icon size={18} strokeWidth={1.6} className="muted-icon" />
+        <span className="lib-standalone-text">
+          <span className="lib-standalone-title">{b.title}</span>
+          <span className="lib-meta">
+            {journal ? plural(b.pages, 'entry', 'entries') : plural(b.pages, 'page')} · {plural(b.words, 'word')}
+            {journal && b.lastDate && <> · last entry {shortDate(b.lastDate)}</>}
+          </span>
+        </span>
+      </button>
+      <IconButton icon={MoreHorizontal} size={16} title="More" className="lib-row-more" onClick={(e) => standaloneMenu(e, b)} />
+    </div>
+  );
+}
+
 export default function Library() {
   const isDark = useStore((s) => s.isDark);
   const library = useStore((s) => s.library);
@@ -137,8 +158,11 @@ export default function Library() {
   }, [nonce]);
 
   const series = library?.series || [];
-  const standalone = library?.standalone || [];
-  const empty = library && !series.length && !standalone.length;
+  const all = library?.standalone || [];
+  const standalone = all.filter((b) => !b.kind || b.kind === 'book');
+  const journals = all.filter((b) => b.kind === 'journal');
+  const notebooks = all.filter((b) => b.kind === 'notebook');
+  const empty = library && !series.length && !all.length;
 
   return (
     <div className="library">
@@ -149,7 +173,7 @@ export default function Library() {
         <div className="library-head">
           <div>
             <h1 className="library-title">Library</h1>
-            <p className="library-sub">Standalone books and series, saved on this computer.</p>
+            <p className="library-sub">Books, series, journals and notebooks, saved on this computer.</p>
           </div>
           <div className="library-actions">
             <button className="btn" onClick={openProjectDialog} title="Open a book or series file">
@@ -158,8 +182,8 @@ export default function Library() {
             <button className="btn" onClick={newSeries}>
               <Layers size={16} strokeWidth={1.7} /> New series
             </button>
-            <button className="btn primary" onClick={newBook}>
-              <Plus size={16} strokeWidth={1.8} /> New book
+            <button className="btn primary" onClick={newBook} title="A book, a journal or a notebook">
+              <Plus size={16} strokeWidth={1.8} /> New…
             </button>
           </div>
         </div>
@@ -167,7 +191,7 @@ export default function Library() {
         {empty && (
           <div className="library-empty">
             <p>A quiet place to write. Your books live in files on this computer and save as you type.</p>
-            <p className="muted">Start a book on its own, or a series of books that share one story bible.</p>
+            <p className="muted">Start a book on its own, a series of books that share one story bible, or a journal or notebook.</p>
           </div>
         )}
 
@@ -201,6 +225,28 @@ export default function Library() {
                   </button>
                   <IconButton icon={MoreHorizontal} size={16} title="More" className="lib-row-more" onClick={(e) => standaloneMenu(e, b)} />
                 </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {journals.length > 0 && (
+          <section className="library-section">
+            <div className="library-section-label">Journals</div>
+            <div className="lib-standalone">
+              {journals.map((b) => (
+                <NotebookRow key={b.path} b={b} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {notebooks.length > 0 && (
+          <section className="library-section">
+            <div className="library-section-label">Notebooks</div>
+            <div className="lib-standalone">
+              {notebooks.map((b) => (
+                <NotebookRow key={b.path} b={b} />
               ))}
             </div>
           </section>

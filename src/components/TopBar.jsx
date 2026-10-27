@@ -1,6 +1,6 @@
 import { Home, ChevronRight, Maximize2, Minimize2, PanelRight, PanelLeft, CheckCheck, AlertCircle, Loader } from 'lucide-react';
 import { useStore, closeProject, toggleFocus, togglePanel, toggleSidebar, saveNow, openDoc, showBible } from '../store.js';
-import { findDoc, chapterNumber } from '../lib/project.js';
+import { findDoc, chapterNumber, kindOf, shortDate } from '../lib/project.js';
 import { IconButton } from './ui.jsx';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -32,10 +32,13 @@ export default function TopBar() {
   const panel = useStore((s) => s.panel);
   const series = useStore((s) => s.series);
   const found = findDoc(project, project.ui.openId);
+  const kind = kindOf(project);
 
   let crumb = '';
   if (view === 'trash') crumb = 'Trash';
   else if (view === 'bible') crumb = 'Story bible';
+  else if (found?.kind === 'chapter' && kind === 'journal') crumb = [shortDate(found.doc.date), found.doc.title.trim()].filter(Boolean).join(' · ');
+  else if (found?.kind === 'chapter' && kind === 'notebook') crumb = found.doc.title || 'Untitled';
   else if (found?.kind === 'chapter') crumb = `${pad(chapterNumber(project, found.doc.id))} ${found.doc.title || 'Untitled'}`;
   else if (found?.kind === 'section' || (found?.kind === 'folder' && found.area === 'outline')) crumb = `Outline / ${found.doc.title || 'Untitled'}`;
   else if (found?.kind === 'folder') crumb = found.doc.title || 'Untitled';
@@ -56,9 +59,13 @@ export default function TopBar() {
             <ChevronRight size={15} strokeWidth={1.6} className="crumb-sep" />
           </>
         )}
-        <button className="crumb" onClick={() => openDoc('notes')}>
-          {project.title}
-        </button>
+        {kind === 'book' ? (
+          <button className="crumb" onClick={() => openDoc('notes')}>
+            {project.title}
+          </button>
+        ) : (
+          <span className="crumb">{project.title}</span>
+        )}
         {crumb && (
           <>
             <ChevronRight size={15} strokeWidth={1.6} className="crumb-sep" />

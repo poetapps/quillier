@@ -121,8 +121,10 @@ export function applyStructure(p, structure, { parent = null, mirror = true, cha
   return next;
 }
 
-// A new book, blank or started from a structure. `start` is what the New project step returns.
+// A new book, blank or started from a structure, or a new journal or notebook. `start` is what the
+// New project step returns.
 export function createBook(title, start) {
+  if (start?.kind && start.kind !== 'book') return createProject(title, start.kind);
   const blank = createProject(title);
   if (!start?.structure) return blank;
   const first = activeDraft(blank).chapters[0];

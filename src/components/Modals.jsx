@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { FileText, Folder, Globe, FileDown, FileType2, BookOpen, Layers, Check, ArrowRight, FilePlus, LayoutTemplate } from 'lucide-react';
+import { FileText, Folder, Globe, FileDown, FileType2, BookOpen, Layers, Check, ArrowRight, FilePlus, LayoutTemplate, NotebookPen, NotebookText } from 'lucide-react';
 import { useStore, closeModal, setPrefs, exportManuscript, setProjectMeta, checkForUpdates } from '../store.js';
-import { activeDraft, chaptersOf } from '../lib/project.js';
+import { activeDraft, chaptersOf, isBook, wordsFor, countOf, todayKey, dayOf, monthLabel } from '../lib/project.js';
 import { STRUCTURES } from '../lib/templates.js';
 import { TRIMS, DEFAULT_TRIM } from '../lib/export.js';
 import { Modal, Segmented, Toggle } from './ui.jsx';
@@ -220,7 +220,10 @@ function AuthorRow({ project }) {
 
 function ExportModal() {
   const project = useStore((s) => s.project);
-  const [format, setFormatState] = useState(lastFormat);
+  const formats = FORMATS.filter((f) => isBook(project) || f.id !== 'manuscript');
+  const [format, setFormatState] = useState(formats.some((f) => f.id === lastFormat) ? lastFormat : 'pdf');
+  const words = wordsFor(project);
+  const titlesLabel = { book: 'Chapter titles', journal: 'Dates and titles', notebook: 'Page titles' }[project.kind] || 'Chapter titles';
   const [titles, setTitles] = useState(true);
   const [titlePage, setTitlePage] = useState(true);
   const [underlineItalics, setUnderlineItalics] = useState(false);
@@ -247,13 +250,11 @@ function ExportModal() {
 
   return (
     <Modal
-      title="Export manuscript"
+      title={`Export ${words.whole.toLowerCase()}`}
       width={540}
       footer={
         <>
-          <span className="foot-note">
-            {draft.name} · {chaptersOf(draft).length} chapters
-          </span>
+          <span className="foot-note">{isBook(project) ? `${draft.name} · ${chaptersOf(draft).length} chapters` : countOf(project, chaptersOf(draft).length)}</span>
           <button className="btn" onClick={() => closeModal(null)}>
             Cancel
           </button>
@@ -264,11 +265,11 @@ function ExportModal() {
       }
     >
       <div className="format-grid">
-        {FORMATS.map((f) => (
+        {formats.map((f) => (
           <button key={f.id} className={`format-card ${format === f.id ? 'on' : ''}`} onClick={() => setFormat(f.id)}>
             <f.icon size={18} strokeWidth={1.6} />
             <span className="format-label">{f.label}</span>
-            <span className="format-sub">{f.sub}</span>
+            <span className="format-sub">{f.sub.replace('chapter', words.page)}</span>
           </button>
         ))}
       </div>
@@ -308,7 +309,7 @@ function ExportModal() {
               {cover ? 'Change…' : 'Choose image…'}
             </button>
           </Row>
-          <Row label="Chapter titles">
+          <Row label={titlesLabel}>
             <Toggle checked={titles} onChange={setTitles} />
           </Row>
         </>
@@ -324,7 +325,7 @@ function ExportModal() {
         </Row>
       )}
       {['pdf', 'html', 'md', 'folder'].includes(format) && (
-        <Row label="Chapter titles">
+        <Row label={titlesLabel}>
           <Toggle checked={titles} onChange={setTitles} />
         </Row>
       )}
@@ -337,33 +338,117 @@ function ExportModal() {
   );
 }
 
-// ---------- starting from a story structure ----------
-// The extra step in New project (mode 'new', which can also start blank) and the Outline's
-// "Add a structure" (mode 'add'). Resolves with { structure, mirror, chapters }.
+// ---------- starting a project ----------
+// The extra step in New project (mode 'new': a book, blank or from a story structure, or with `kinds`
+// a journal or notebook) and the Outline's "Add a structure" (mode 'add'). Resolves with
+// { kind, structure, mirror, chapters }.
+
+const NOTEBOOKS = [
+  {
+    id: 'journal',
+    name: 'Journal',
+    icon: NotebookPen,
+    summary: 'Dated entries, newest first and grouped by month. ⌘N starts today’s entry, and an entry can move to any other day.',
+    more: 'No chapters, outline or story bible. Exports print each entry under its date.',
+  },
+  {
+    id: 'notebook',
+    name: 'Research & study',
+    icon: NotebookText,
+    summary: 'Pages in folders, as deep as you like, for research, study notes or a commonplace book.',
+    more: 'No chapter numbers, statuses or story bible. Just pages, with side notes and notes on text like everywhere else.',
+  },
+];
+
+// What the sidebar of a new journal looks like: a few days back from today.
+function JournalSample() {
+  const days = [0, 2, 5].map((back) => {
+    const d = new Date();
+    d.setDate(d.getDate() - back);
+    return todayKey(d);
+  });
+  const titles = ['Coffee before anyone was up', 'First cold morning', 'Notes from the train'];
+  return (
+    <div className="start-sample">
+      {days.map((k, i) => (
+        <div key={k}>
+          {(i === 0 || k.slice(0, 7) !== days[i - 1].slice(0, 7)) && <div className="start-sample-month">{monthLabel(k)}</div>}
+          <div className="start-sample-row">
+            <span className="sb-day">
+              <b>{dayOf(k).getDate()}</b>
+              {dayOf(k).toLocaleDateString(undefined, { weekday: 'short' })}
+            </span>
+            {titles[i]}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function NotebookSample() {
+  const tree = [
+    ['Research', ['Sources', 'Interview notes']],
+    ['Study', ['Lecture 1', 'Lecture 2', 'Exam review']],
+  ];
+  return (
+    <div className="start-sample">
+      {tree.map(([folder, pages]) => (
+        <div key={folder}>
+          <div className="start-sample-row sample-folder">
+            <Folder size={14} strokeWidth={1.7} />
+            {folder}
+          </div>
+          {pages.map((t) => (
+            <div key={t} className="start-sample-row sample-page">
+              <FileText size={14} strokeWidth={1.6} />
+              {t}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function StructureModal({ modal }) {
   const adding = modal.mode === 'add';
+  const kinds = !adding && modal.kinds;
   const [id, setId] = useState(adding ? STRUCTURES[0].id : 'blank');
   const [mirror, setMirror] = useState(true);
   const [chapters, setChapters] = useState(false);
   const structure = STRUCTURES.find((s) => s.id === id) || null;
+  const notebook = NOTEBOOKS.find((n) => n.id === id) || null;
   const beats = structure ? structure.folders.reduce((n, f) => n + f.beats.length, 0) : 0;
   const options = [
     ...(adding ? [] : [{ id: 'blank', name: 'Blank', summary: 'An empty outline and one chapter. Add folders and structures whenever you like.' }]),
     ...STRUCTURES,
   ];
-  const done = () => closeModal({ structure, mirror, chapters });
+  const finish = (pick) =>
+    closeModal(NOTEBOOKS.some((n) => n.id === pick) ? { kind: pick } : { kind: 'book', structure: STRUCTURES.find((s) => s.id === pick) || null, mirror, chapters });
+  const option = (o, Icon) => (
+    <button key={o.id} className={`start-option ${id === o.id ? 'on' : ''}`} onClick={() => setId(o.id)} onDoubleClick={() => finish(o.id)}>
+      <Icon size={16} strokeWidth={1.6} />
+      <span>{o.name}</span>
+    </button>
+  );
   return (
     <Modal
-      title={adding ? 'Add a structure' : 'Start your book'}
+      title={adding ? 'Add a structure' : kinds ? 'Start something new' : 'Start your book'}
       width={760}
       footer={
         <>
-          <span className="foot-note">{structure ? `${structure.folders.length} folders · ${beats} beats, each with notes to write over` : 'You can add a structure to the Outline later.'}</span>
+          <span className="foot-note">
+            {notebook
+              ? 'Saved as a .quill file, like a book.'
+              : structure
+                ? `${structure.folders.length} folders · ${beats} beats, each with notes to write over`
+                : 'You can add a structure to the Outline later.'}
+          </span>
           <button className="btn" onClick={() => closeModal(null)}>
             Cancel
           </button>
-          <button className="btn primary" onClick={done}>
+          <button className="btn primary" onClick={() => finish(id)}>
             {adding ? 'Add to outline' : 'Continue…'}
           </button>
         </>
@@ -371,16 +456,23 @@ function StructureModal({ modal }) {
     >
       <div className="start-grid">
         <div className="start-options">
-          {options.map((o) => (
-            <button key={o.id} className={`start-option ${id === o.id ? 'on' : ''}`} onClick={() => setId(o.id)} onDoubleClick={() => closeModal({ structure: STRUCTURES.find((s) => s.id === o.id) || null, mirror, chapters })}>
-              {o.id === 'blank' ? <FilePlus size={16} strokeWidth={1.6} /> : <LayoutTemplate size={16} strokeWidth={1.6} />}
-              <span>{o.name}</span>
-            </button>
-          ))}
+          {kinds && <div className="start-heading">Book</div>}
+          {options.map((o) => option(o, o.id === 'blank' ? FilePlus : LayoutTemplate))}
+          {kinds && (
+            <>
+              <div className="start-heading">Notebook</div>
+              {NOTEBOOKS.map((o) => option(o, o.icon))}
+            </>
+          )}
         </div>
         <div className="start-preview">
-          <p className="start-summary">{options.find((o) => o.id === id)?.summary}</p>
-          {structure ? (
+          <p className="start-summary">{(notebook || options.find((o) => o.id === id))?.summary}</p>
+          {notebook ? (
+            <>
+              {notebook.id === 'journal' ? <JournalSample /> : <NotebookSample />}
+              <p className="start-blank">{notebook.more}</p>
+            </>
+          ) : structure ? (
             <>
               <div className="start-folders">
                 {structure.folders.map((f) => (

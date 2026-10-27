@@ -15,6 +15,7 @@ import {
   adoptProject,
   chooseStart,
   focusNewBook,
+  suggestedName,
 } from './store.js';
 import { newEntry, newRelationship, normalizeProject, defaultAliases } from './lib/project.js';
 import { createBook } from './lib/structure.js';
@@ -217,7 +218,7 @@ export async function refreshLibrary() {
 export async function newBook() {
   const start = await chooseStart();
   if (!start) return;
-  const path = await api.chooseNewProject('Untitled');
+  const path = await api.chooseNewProject(suggestedName(start));
   if (!path) return;
   const project = createBook(baseName(path).replace(/\.(quill|ldraft)$/i, ''), start);
   const res = await api.writeTogether([{ path, json: JSON.stringify(project) }], 'new');
@@ -286,7 +287,7 @@ export async function newBookInSeries(seriesPath) {
   } catch (err) {
     return api.confirm({ type: 'warning', message: 'Could not open the series', detail: String(err.message || err), buttons: ['OK'] });
   }
-  const start = await chooseStart();
+  const start = await chooseStart({ kinds: false });
   if (!start) return;
   const bookPath = await api.chooseNewProject(`${series.title} ${numberedCount(series.books) + 1}`, dirOf(seriesPath));
   if (!bookPath) return;

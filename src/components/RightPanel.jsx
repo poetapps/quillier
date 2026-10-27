@@ -16,6 +16,8 @@ import {
   isFolder,
   subtreeRange,
   bookStatus,
+  isBook,
+  wordsFor,
 } from '../lib/project.js';
 import { beatsOf, linkedOutline, outlinePath } from '../lib/structure.js';
 import MarkdownEditor from './MarkdownEditor.jsx';
@@ -154,14 +156,14 @@ function FolderDetails({ project, found }) {
       <div className="stat-grid">
         <div>
           <b>{pages.length}</b>
-          <span>{found.area === 'outline' ? (pages.length === 1 ? 'page' : 'pages') : pages.length === 1 ? 'chapter' : 'chapters'}</span>
+          <span>{found.area === 'outline' ? (pages.length === 1 ? 'page' : 'pages') : pages.length === 1 ? wordsFor(project).page : wordsFor(project).pages}</span>
         </div>
         <div>
           <b>{words.toLocaleString()}</b>
           <span>words</span>
         </div>
       </div>
-      {found.area === 'manuscript' && pages.length > 0 && (
+      {found.area === 'manuscript' && isBook(project) && pages.length > 0 && (
         <div className="kv">
           <span>Status</span>
           <b>{statusLabel(bookStatus(pages))}</b>
@@ -179,6 +181,7 @@ function Details({ project, found }) {
   const total = manuscriptWords(project);
   const today = project.stats.daily[todayKey()] || 0;
   const goal = prefs.dailyGoal || 0;
+  const book = isBook(project);
 
   return (
     <div className="panel-scroll">
@@ -186,7 +189,7 @@ function Details({ project, found }) {
         <FolderDetails project={project} found={found} />
       ) : (
         <>
-      <div className="panel-label">{kind === 'chapter' ? 'This chapter' : kind === 'section' ? 'This section' : 'Notes'}</div>
+      <div className="panel-label">{kind === 'chapter' ? `This ${wordsFor(project).page}` : kind === 'section' ? 'This section' : 'Notes'}</div>
       <div className="stat-grid">
         <div>
           <b>{words.toLocaleString()}</b>
@@ -196,7 +199,7 @@ function Details({ project, found }) {
           <b>{Math.max(words ? 1 : 0, Math.round(words / 230))}</b>
           <span>min read</span>
         </div>
-        {kind === 'chapter' && (
+        {book && kind === 'chapter' && (
           <div>
             <b>{scenes.length}</b>
             <span>{scenes.length === 1 ? 'scene' : 'scenes'}</span>
@@ -206,9 +209,9 @@ function Details({ project, found }) {
         </>
       )}
 
-      {kind === 'chapter' && <InThisChapter doc={doc} />}
+      {book && kind === 'chapter' && <InThisChapter doc={doc} />}
 
-      {kind === 'chapter' && scenes.length > 0 && (
+      {book && kind === 'chapter' && scenes.length > 0 && (
         <>
           <div className="panel-label">Scenes</div>
           <div className="scene-list">
@@ -243,11 +246,11 @@ function Details({ project, found }) {
         </div>
       )}
       <div className="kv">
-        <span>Manuscript</span>
+        <span>{wordsFor(project).whole}</span>
         <b>{total.toLocaleString()} words</b>
       </div>
       <div className="kv">
-        <span>Chapters</span>
+        <span>{wordsFor(project).Pages}</span>
         <b>{chaptersOf(activeDraft(project)).length}</b>
       </div>
       <div className="panel-sublabel">Last 14 days</div>
@@ -256,7 +259,7 @@ function Details({ project, found }) {
       {kind !== 'notes' && (
         <>
           <div className="panel-label">Info</div>
-          {kind === 'chapter' && (
+          {book && kind === 'chapter' && (
             <div className="kv">
               <span>Status</span>
               <b>{statusLabel(doc.status)}</b>
@@ -360,13 +363,14 @@ function useNotesInView(docId, enabled) {
 // Notes pinned to passages. Unless "Show all" is on, only the ones on text you can see are listed
 // (plus the one you're working on), so the list follows you down the page.
 function InlineNotes({ doc, kind }) {
+  const project = useStore((s) => s.project);
   const showAll = useStore((s) => s.prefs.notesShowAll === true);
   const activeId = useStore((s) => s.activeNoteId);
   const all = [...(doc.inlineNotes || [])].sort((a, b) => !!a.detached - !!b.detached || (a.offset || 0) - (b.offset || 0));
   const inView = useNotesInView(doc.id, !showAll && all.length > 0);
   const notes = showAll || !inView ? all : all.filter((n) => inView.has(n.id) || n.id === activeId);
   const elsewhere = all.length - notes.length;
-  const where = kind === 'chapter' ? 'chapter' : kind === 'notes' ? 'page' : kind;
+  const where = kind === 'chapter' ? wordsFor(project).page : kind === 'notes' ? 'page' : kind;
   return (
     <>
       <div className="panel-label panel-label-row">
@@ -426,7 +430,7 @@ export default function RightPanel() {
         <div className="panel-scroll panel-notes">
           <FromOutline project={project} found={found} />
           <div className="panel-label">
-            {{ chapter: 'Chapter notes', section: 'Section notes', folder: 'Folder notes' }[found.kind] || 'Side notes'}
+            {{ chapter: `${wordsFor(project).Page} notes`, section: 'Section notes', folder: 'Folder notes' }[found.kind] || 'Side notes'}
           </div>
           <div className="free-notes">
             <MarkdownEditor

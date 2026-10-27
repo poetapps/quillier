@@ -9,6 +9,7 @@ import { TrashView, StatusBar } from './components/Views.jsx';
 import Library from './components/Library.jsx';
 import Bible from './components/Bible.jsx';
 import { MenuLayer, Toast } from './components/ui.jsx';
+import { kindOf } from './lib/project.js';
 
 const FONTS = {
   sans: "'Instrument Sans Variable', -apple-system, system-ui, sans-serif",
@@ -41,12 +42,17 @@ export default function App() {
   const focus = useStore((s) => s.focus);
   const view = useStore((s) => s.view);
   const title = project?.title;
+  const kind = project ? kindOf(project) : 'book';
 
   useEditorVars(prefs);
 
   useEffect(() => {
     window.api.setTitle(title || 'Quillier', path, saveStatus !== 'saved');
   }, [title, path, saveStatus]);
+
+  useEffect(() => {
+    window.api.setKind(kind);
+  }, [kind]);
 
   useEffect(() => {
     const onKey = (e) => {

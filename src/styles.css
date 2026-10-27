@@ -540,6 +540,56 @@ button.sb-twisty:hover {
   min-height: 42px;
 }
 
+/* A journal's entries, by month */
+.sb-new-entry {
+  margin-bottom: 2px;
+}
+.sb-month-head {
+  width: 100%;
+  padding-top: 16px;
+  text-align: left;
+}
+.sb-month-head:hover {
+  color: var(--text-2);
+}
+.sb-entry {
+  min-height: 42px;
+  gap: 12px;
+}
+.sb-day {
+  flex: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 28px;
+  font-size: 10.5px;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sb-day b {
+  font-size: 15px;
+  font-weight: 560;
+  letter-spacing: 0;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+.sb-item.active .sb-day b {
+  color: var(--text);
+}
+.sb-label.excerpt {
+  color: var(--muted);
+}
+.sb-item.active .sb-label.excerpt {
+  color: var(--text-2);
+}
+.sb-empty-note {
+  padding: 14px 12px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
 .sb-rename {
   flex: 1;
   min-width: 0;
@@ -696,6 +746,59 @@ button.crumb:hover {
   color: var(--muted);
   letter-spacing: 0.02em;
   margin-bottom: 8px;
+}
+
+/* A journal entry's date, in place of the kicker */
+.entry-date {
+  position: relative;
+  display: flex;
+}
+.entry-date-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  margin: -3px 0 -3px -6px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.entry-date-btn:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+.entry-today {
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  padding: 0 4px;
+  line-height: 16px;
+}
+/* Kept on the page (invisible) so the date picker opens beside the date. */
+.entry-date-input {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
+}
+
+.page-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding-top: 28vh;
+  color: var(--muted);
+  font-size: 15px;
+}
+.page-empty p {
+  margin: 0;
 }
 
 .page-title {
@@ -4083,8 +4186,50 @@ button.bd-heat-name:hover {
   color: var(--text);
   font-weight: 560;
 }
+.start-heading {
+  padding: 10px 12px 4px;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.start-heading:first-child {
+  padding-top: 0;
+}
 .start-preview {
   min-width: 0;
+}
+.start-sample {
+  padding: 10px 14px 12px;
+  margin-bottom: 12px;
+  border-radius: 11px;
+  background: var(--surface);
+  max-width: 340px;
+}
+.start-sample-month {
+  padding: 6px 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.start-sample-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 38px;
+  font-size: 13.5px;
+  color: var(--text-2);
+}
+.start-sample-row.sample-folder,
+.start-sample-row.sample-page {
+  min-height: 30px;
+  gap: 9px;
+}
+.start-sample-row.sample-page {
+  padding-left: 22px;
+}
+.start-sample-row svg {
+  flex: none;
+  color: var(--muted);
 }
 .start-summary {
   margin: 4px 0 14px;
