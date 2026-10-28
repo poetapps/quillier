@@ -13,7 +13,7 @@ Everything ships through GitHub Releases on `poetapps/quillier`:
    gh repo create poetapps/quillier --public --source . --push
    ```
 
-   If you use a different name, update `repository` and `build.publish` in `package.json`, and the `poetapps/quillier` links in `site/index.html`.
+   If you use a different name, update `repository` and `build.publish` in `package.json`, and the `poetapps/quillier` links in `site/*.html` and `site/site.js`.
 
 2. The website is the `quillier` project on Vercel (team poetapps' projects), connected to this repo with **Root Directory** `site` and no build step. Every push to `main` deploys it; other branches get preview URLs. `quillier.com` is registered through Vercel and uses its nameservers, and `www.quillier.com` redirects to it.
 

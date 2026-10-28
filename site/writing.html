@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Writing a book in Quillier</title>
+    <meta name="description" content="Chapters in folders and parts, an outline linked to them, notes on the text, scenes, and journals and notebooks, in one quiet window." />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="Writing a book in Quillier" />
+    <meta property="og:description" content="Chapters in folders and parts, an outline linked to them, notes on the text, scenes, and journals and notebooks, in one quiet window." />
+    <meta property="og:image" content="https://quillier.com/app-light.png" />
+    <meta property="og:url" content="https://quillier.com/writing" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://quillier.com/writing" />
+    <link rel="icon" href="/icon.png" />
+    <link rel="preload" href="/fonts/literata-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/site.css" />
+  </head>
+  <body class="sub">
+    <header class="top">
+      <div class="wrap">
+        <a class="wordmark" href="/" aria-label="Quillier home">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1.5" y="2.5" width="13" height="15" rx="3.2" fill="currentColor" />
+            <rect x="8.5" y="6.5" width="14" height="16" rx="3.4" fill="currentColor" stroke="var(--paper)" stroke-width="2" />
+          </svg>
+          <span><b>quill</b><i>ier</i></span>
+        </a>
+        <nav class="pages" aria-label="Pages">
+          <a href="/writing" aria-current="page">Writing</a>
+          <a href="/story-bible">Story bible</a>
+          <a href="/versions">Versions</a>
+          <a href="/export">Export</a>
+        </nav>
+        <a class="mini always" data-mini href="/download">Download</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="wrap page-hero">
+        <p class="eyebrow">Writing</p>
+        <h1>Made for a whole book</h1>
+        <p class="lede">Chapters in folders and parts, an outline that knows which chapters cover it, and notes beside the page, all in one quiet window. When you want nothing but the page, focus mode hides the rest.</p>
+      </section>
+
+      <section class="wrap sec first" aria-label="The app">
+        <figure class="shot">
+          <div class="frame">
+            <img
+              id="shot"
+              src="/app-light.png"
+              width="2720"
+              height="1720"
+              alt="Quillier with a novel open: the outline and the manuscript's three parts in the sidebar, a chapter in the middle, and on the right the two outline beats it covers, a chapter note and a note on a passage."
+            />
+            <svg viewBox="0 0 1360 860" aria-hidden="true">
+              <circle cx="25" cy="25" r="6" fill="#ff5f57" stroke="rgba(0,0,0,.14)" stroke-width=".6" />
+              <circle cx="45" cy="25" r="6" fill="#febc2e" stroke="rgba(0,0,0,.14)" stroke-width=".6" />
+              <circle cx="65" cy="25" r="6" fill="#28c840" stroke="rgba(0,0,0,.14)" stroke-width=".6" />
+            </svg>
+          </div>
+          <figcaption>
+            <p>
+              This chapter covers two beats in the outline, so what you planned for them sits beside it while you write. Focus mode hides
+              everything but the page.
+            </p>
+            <span class="seg" role="group" aria-label="Screenshot theme">
+              <button type="button" data-theme="light" aria-pressed="true">Light</button>
+              <button type="button" data-theme="dark" aria-pressed="false">Dark</button>
+            </span>
+          </figcaption>
+        </figure>
+
+        <div class="specimens">
+          <div class="spec">
+            <div class="spec-fig">
+              <div class="tree" id="chapters">
+                <div class="folder open">
+                  <button class="fold" type="button" aria-expanded="true"><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M1.5 4.5v8.5h13V5.5H8L6.5 3.5h-5z"/></svg><span class="t">The Island</span><span class="tag">Part</span></button>
+                  <div class="kids">
+                    <ul class="chapters">
+                      <li><span class="num">01</span><span class="t">The Ferry</span><button class="status" data-s="done" type="button">Done</button></li>
+                      <li><span class="num">02</span><span class="t">Low Tide</span><button class="status" data-s="revised" type="button">Revised</button></li>
+                      <li><span class="num">03</span><span class="t">The Gulls</span><button class="status" data-s="drafted" type="button">Drafted</button></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="folder open">
+                  <button class="fold" type="button" aria-expanded="true"><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M1.5 4.5v8.5h13V5.5H8L6.5 3.5h-5z"/></svg><span class="t">The Storm</span><span class="tag">Part</span></button>
+                  <div class="kids">
+                    <ul class="chapters">
+                      <li><span class="num">04</span><span class="t">The Keeper’s Ledger</span><button class="status" data-s="progress" type="button">In progress</button></li>
+                      <li><span class="num">05</span><span class="t">Night Crossing</span><button class="status" data-s="idea" type="button">Not started</button></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h3>Folders and book parts</h3>
+            <p>
+              File chapters in folders, as deep as you like; the numbers run straight through. A folder marked as a book part opens with a
+              “Part One” page in every export. Click a status to change it.
+            </p>
+          </div>
+
+          <div class="spec wide">
+            <div class="spec-fig">
+              <div class="struct">
+                <span class="seg" role="group" aria-label="Story structure" id="structs"></span>
+                <div class="acts" id="acts"></div>
+              </div>
+            </div>
+            <h3>An outline linked to the book</h3>
+            <p>
+              Start blank, or from one of five structures, each beat explained and ready to write over. Outline folders can appear in the
+              manuscript, and a chapter linked to its beats shows their notes as you write.
+            </p>
+          </div>
+
+          <div class="spec">
+            <div class="spec-fig">
+              <div class="noted" aria-hidden="true">
+                <p>Forty years of it, and not one word about the man who rowed out in the winter of 1961 <u>and never rowed back</u>.</p>
+                <div class="pop">Too on the nose? Maybe hold this back until the storm.</div>
+              </div>
+            </div>
+            <h3>Notes on the text</h3>
+            <p>Select a passage and leave yourself a note. It shows in the side panel and never ends up in your text.</p>
+          </div>
+
+          <div class="spec">
+            <div class="spec-fig">
+              <dl class="punct">
+                <dt>"Gran"</dt>
+                <dd>“Gran”</dd>
+                <dt>--</dt>
+                <dd>—</dd>
+                <dt>...</dt>
+                <dd>…</dd>
+                <dt>1/2</dt>
+                <dd>½</dd>
+                <dt>(c)</dt>
+                <dd>©</dd>
+              </dl>
+            </div>
+            <h3>Punctuation that fixes itself</h3>
+            <p>Quotes curl, two hyphens become an em dash and three dots an ellipsis. Fractions and symbols are offered as you type.</p>
+          </div>
+
+          <div class="spec">
+            <div class="spec-fig">
+              <ol class="scene-list" aria-hidden="true">
+                <li><span class="num">1</span><span class="t">Mara found the ledger on the third morning…</span><span class="w">1,204</span></li>
+                <li><span class="num">2</span><span class="t">Outside, the tide had gone out further…</span><span class="w">866</span></li>
+                <li><span class="num">3</span><span class="t">In the afternoon she climbed the tower.</span><span class="w">1,530</span></li>
+                <li><span class="num">4</span><span class="t">“Tuesdays,” she said aloud, to nobody…</span><span class="w">412</span></li>
+              </ol>
+            </div>
+            <h3>Scenes inside chapters</h3>
+            <p>Type three asterisks to break a chapter into scenes. Each one is listed with its opening words and length, a click away.</p>
+          </div>
+
+          <div class="spec full">
+            <div class="spec-fig">
+              <div class="kinds" aria-hidden="true">
+                <div>
+                  <p class="kind-label">Journal</p>
+                  <ul class="journal-list">
+                    <li class="month">October</li>
+                    <li><span class="day"><b>27</b>Tue</span>Walked out to the light</li>
+                    <li><span class="day"><b>24</b>Sat</span>First cold morning</li>
+                    <li class="month">September</li>
+                    <li><span class="day"><b>17</b>Thu</span>Notes from the ferry</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="kind-label">Notebook</p>
+                  <ul class="note-tree">
+                    <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M1.5 4.5v8.5h13V5.5H8L6.5 3.5h-5z"/></svg>Research</li>
+                    <li class="in"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3"/></svg>Lighthouses of the coast</li>
+                    <li class="in"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3"/></svg>Tide tables</li>
+                    <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M1.5 4.5v8.5h13V5.5H8L6.5 3.5h-5z"/></svg>Interviews</li>
+                    <li class="in"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3"/></svg>The harbourmaster</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <h3>Journals and notebooks, too</h3>
+            <p>
+              Keep a journal of dated entries, newest first, or a notebook of pages in folders for the research behind a book. The same quiet
+              editor, saved the same way.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="wrap next">
+        <a href="/story-bible"><span class="label">Next</span><span class="title">Your story bible →</span></a>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <a class="wordmark" href="/" aria-label="Quillier home">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1.5" y="2.5" width="13" height="15" rx="3.2" fill="currentColor" />
+            <rect x="8.5" y="6.5" width="14" height="16" rx="3.4" fill="currentColor" stroke="var(--paper)" stroke-width="2" />
+          </svg>
+          <span><b>quill</b><i>ier</i></span>
+        </a>
+        <nav aria-label="More">
+          <a href="/download">Download</a>
+          <a href="https://github.com/poetapps/quillier/releases">All releases</a>
+          <a href="https://github.com/poetapps/quillier/blob/main/LICENSE">MIT license</a>
+          <a href="https://github.com/poetapps/quillier">Source code</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="/site.js"></script>
+  </body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Drafts, takes and versions · Quillier</title>
+    <meta name="description" content="Save versions of a chapter, write other takes of it, and compare any two, marked up like a manuscript. Nothing is ever lost." />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="Drafts, takes and versions · Quillier" />
+    <meta property="og:description" content="Save versions of a chapter, write other takes of it, and compare any two, marked up like a manuscript. Nothing is ever lost." />
+    <meta property="og:image" content="https://quillier.com/app-light.png" />
+    <meta property="og:url" content="https://quillier.com/versions" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://quillier.com/versions" />
+    <link rel="icon" href="/icon.png" />
+    <link rel="preload" href="/fonts/literata-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/site.css" />
+  </head>
+  <body class="sub">
+    <header class="top">
+      <div class="wrap">
+        <a class="wordmark" href="/" aria-label="Quillier home">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1.5" y="2.5" width="13" height="15" rx="3.2" fill="currentColor" />
+            <rect x="8.5" y="6.5" width="14" height="16" rx="3.4" fill="currentColor" stroke="var(--paper)" stroke-width="2" />
+          </svg>
+          <span><b>quill</b><i>ier</i></span>
+        </a>
+        <nav class="pages" aria-label="Pages">
+          <a href="/writing">Writing</a>
+          <a href="/story-bible">Story bible</a>
+          <a href="/versions" aria-current="page">Versions</a>
+          <a href="/export">Export</a>
+        </nav>
+        <a class="mini always" data-mini href="/download">Download</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="wrap page-hero">
+        <p class="eyebrow">Versions</p>
+        <h1>Rewrite without losing a word</h1>
+        <p class="lede">Save a chapter before a big change, write another take beside the first, and see exactly what changed between any two, marked up the way an editor would.</p>
+      </section>
+
+      <section class="wrap sec first" aria-label="Compare">
+        <figure class="cmp-demo">
+          <div class="win">
+            <div class="win-bar">
+              <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="crumbs"><span>Salt and Lantern</span><span>02 Low Tide</span><span>Compare</span></span>
+            </div>
+            <div class="cmp" id="cmp">
+              <div class="cmp-head">
+                Comparing
+                <span class="chip">Before cutting the flashback <span>Oct 24</span></span>
+                →
+                <span class="chip">Now</span>
+              </div>
+              <div class="cmp-bar">
+                <p class="cmp-summary" id="cmp-summary"></p>
+                <span class="seg" role="group" aria-label="Layout">
+                  <button type="button" data-view="inline" aria-pressed="true">Inline</button>
+                  <button type="button" data-view="side" aria-pressed="false">Side by side</button>
+                </span>
+              </div>
+              <div class="cmp-body" id="cmp-body" aria-live="polite"></div>
+              <button class="linkish" id="cmp-reset" type="button" hidden>Start over</button>
+            </div>
+          </div>
+          <figcaption>
+            <p>
+              Try it: this chapter against the version saved before its flashback was cut. Struck-through words were there then, tinted
+              words are new. Take a change back or keep it from the margin.
+            </p>
+          </figcaption>
+        </figure>
+
+        <div class="specimens">
+          <div class="spec wide">
+            <div class="spec-fig">
+              <div class="takes" id="takes">
+                <div class="take-list">
+                  <button class="take" type="button" data-take="orig" aria-pressed="true"><b>Original</b><span class="where">In the book</span></button>
+                  <button class="take" type="button" data-take="dark" aria-pressed="false"><b>Darker ending</b><span class="where">Another take</span></button>
+                  <button class="take-put" id="take-put" type="button" hidden>Put in the book</button>
+                </div>
+                <div class="take-page" aria-live="polite"><p id="take-text"></p></div>
+              </div>
+            </div>
+            <h3>Another take, side by side</h3>
+            <p>
+              Write a darker ending or another point of view next to the first. Only the take in the book is exported, counted and read by
+              the story bible, and you can swap a different one in whenever you like.
+            </p>
+          </div>
+
+          <div class="spec">
+            <div class="spec-fig">
+              <ol class="timeline" aria-hidden="true">
+                <li class="now"><b>Now</b><span>206 words</span></li>
+                <li><b>Before cutting the flashback</b><span>Oct 24, 9:40 PM</span></li>
+                <li class="auto"><b>Evening session</b><span>Saved automatically · Oct 22</span></li>
+                <li class="auto"><b>Marked “Drafted”</b><span>Saved automatically · Oct 12</span></li>
+              </ol>
+            </div>
+            <h3>Saved as you go</h3>
+            <p>Save a version before a big change, named if you like. Quillier also keeps one each time you sit down to write.</p>
+          </div>
+
+          <div class="spec wide">
+            <div class="spec-fig">
+              <div class="toast-demo" aria-hidden="true"><span>Restored “Before cutting the flashback”. What you had is saved as “Before restoring”.</span><b>Undo</b></div>
+            </div>
+            <h3>Nothing is ever lost</h3>
+            <p>Restoring a version saves what you had first. Deleted takes go to the trash, and every step can be undone.</p>
+          </div>
+
+          <div class="spec">
+            <div class="spec-fig">
+              <svg class="branch" viewBox="0 0 300 150" aria-hidden="true">
+                <path class="d1" d="M20 100 H280" />
+                <path class="d2" d="M112 100 C140 100 140 52 168 52 H280" />
+                <circle class="d1" cx="38" cy="100" r="5" />
+                <circle class="d1" cx="75" cy="100" r="5" />
+                <circle class="d1" cx="112" cy="100" r="5" />
+                <circle class="d1" cx="190" cy="100" r="5" />
+                <circle class="d2" cx="196" cy="52" r="5" />
+                <circle class="d2" cx="236" cy="52" r="5" />
+                <text class="on" x="280" y="30" text-anchor="end">Draft 2</text>
+                <text x="280" y="126" text-anchor="end">Draft 1</text>
+                <text class="why" x="112" y="126" text-anchor="middle">before the rewrite</text>
+              </svg>
+            </div>
+            <h3>Drafts you can branch</h3>
+            <p>Copy the whole manuscript into a new draft before a big rewrite, and switch between drafts whenever you like.</p>
+          </div>
+        </div>
+
+        <div class="facts">
+          <div>
+            <h3>One change at a time</h3>
+            <p>Take back a single cut, or keep it, right from the margin, instead of restoring the whole chapter.</p>
+          </div>
+          <div>
+            <h3>Words, not lines</h3>
+            <p>Changes are marked word by word inside each paragraph, the way an editor would, and a moved paragraph shows as moved.</p>
+          </div>
+          <div>
+            <h3>Side by side, or only what changed</h3>
+            <p>Put the two texts next to each other, or fold away every paragraph that didn’t change.</p>
+          </div>
+          <div>
+            <h3>Takes compare too</h3>
+            <p>Any two takes of a chapter can be compared the same way, and either one put in the book.</p>
+          </div>
+          <div>
+            <h3>Tidy on its own</h3>
+            <p>Automatic versions older than a few days thin out to one a day. The ones you name stay until you delete them.</p>
+          </div>
+          <div>
+            <h3>In the same file</h3>
+            <p>Takes and versions are kept in the book’s .quill file, so they go wherever it goes.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="wrap next">
+        <a href="/export"><span class="label">Next</span><span class="title">Export and your files →</span></a>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <a class="wordmark" href="/" aria-label="Quillier home">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1.5" y="2.5" width="13" height="15" rx="3.2" fill="currentColor" />
+            <rect x="8.5" y="6.5" width="14" height="16" rx="3.4" fill="currentColor" stroke="var(--paper)" stroke-width="2" />
+          </svg>
+          <span><b>quill</b><i>ier</i></span>
+        </a>
+        <nav aria-label="More">
+          <a href="/download">Download</a>
+          <a href="https://github.com/poetapps/quillier/releases">All releases</a>
+          <a href="https://github.com/poetapps/quillier/blob/main/LICENSE">MIT license</a>
+          <a href="https://github.com/poetapps/quillier">Source code</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="/site.js"></script>
+  </body>
+</html>
