@@ -388,6 +388,7 @@ function buildMenu() {
         { label: `Import ${words.import}…`, click: cmd('import') },
         { label: `Export ${words.export}…`, accelerator: 'CmdOrCtrl+E', click: cmd('export') },
         { label: 'Save a Copy…', accelerator: 'CmdOrCtrl+Shift+S', click: cmd('save-copy') },
+        { label: `Save Version of ${words.page}…`, accelerator: 'CmdOrCtrl+Alt+S', click: cmd('save-version') },
         { label: 'Show Project in ' + (isMac ? 'Finder' : 'Folder'), click: cmd('reveal') },
         { type: 'separator' },
         { label: 'Close Project', accelerator: 'CmdOrCtrl+Shift+W', click: cmd('close-project') },

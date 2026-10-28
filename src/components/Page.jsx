@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, ListTree, Link2, Plus } from 'lucide-react';
+import { ChevronDown, Layers, ListTree, Link2, Plus } from 'lucide-react';
 import {
   useStore,
   getState,
@@ -16,6 +16,8 @@ import {
   setShowInManuscript,
   setEntryDate,
   addChapter,
+  openCompare,
+  putTakeInBook,
 } from '../store.js';
 import {
   findDoc,
@@ -41,6 +43,8 @@ import { Toggle } from './ui.jsx';
 import MarkdownEditor from './MarkdownEditor.jsx';
 import NotePeek from './NotePeek.jsx';
 import { nameHintsFor } from '../lib/nameHints.js';
+import { openText, takeText, takeIdOf, takeNameOf, hasTakes } from '../lib/versions.js';
+import { takeSwitcher } from './Versions.jsx';
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -126,6 +130,38 @@ function StatusPicker({ doc }) {
   );
 }
 
+// Which take of the chapter is on the page, when it has more than one.
+function TakeButton({ project, doc, text }) {
+  return (
+    <button
+      className="meta-btn"
+      title="This chapter’s takes"
+      onClick={(e) => openMenu(e.currentTarget.getBoundingClientRect(), takeSwitcher(project, doc), { width: 250 })}
+    >
+      <Layers size={14} strokeWidth={1.7} />
+      Take: {text.name}
+      <ChevronDown size={14} strokeWidth={1.7} />
+    </button>
+  );
+}
+
+// Writing in a take that isn't the one in the book.
+function TakeBanner({ doc, text }) {
+  return (
+    <div className="take-banner">
+      <span>
+        You’re writing in <b>{text.name}</b>. It isn’t in the book, so export and word counts still use <b>{takeNameOf(doc)}</b>.
+      </span>
+      <button className="btn small" onClick={() => openCompare(doc.id, `t:${takeIdOf(doc)}`)}>
+        Compare
+      </button>
+      <button className="btn small primary" onClick={() => putTakeInBook(doc.id, text.id)}>
+        Put this take in the book
+      </button>
+    </div>
+  );
+}
+
 // Which outline pages this chapter covers; click to change.
 function BeatsButton({ project, doc }) {
   if (!project.outline.some((s) => !isFolder(s))) return null;
@@ -181,6 +217,7 @@ export default function Page() {
   const bodyRef = useRef(null);
   const [editor, setEditor] = useState(null);
   const focusBodyId = useStore((s) => s.focusBodyId);
+  const textRev = useStore((s) => s.textRev);
   const pk = kindOf(project);
   const wording = wordsFor(project);
 
@@ -213,8 +250,9 @@ export default function Page() {
   const { doc, kind, area } = found;
   const book = pk === 'book';
   const entry = pk === 'journal' && kind === 'chapter';
-  const words = countWords(doc.content);
-  const scenes = sceneCount(doc.content);
+  const text = openText(project, doc);
+  const words = countWords(text.content);
+  const scenes = sceneCount(text.content);
   const outlineFolder = kind === 'folder' && area === 'outline';
   const bookFolder = kind === 'folder' && area === 'manuscript';
   const stats = kind === 'folder' ? folderStats(area === 'outline' ? project.outline : activeDraft(project).chapters, doc.id) : null;
@@ -252,6 +290,7 @@ export default function Page() {
           {book && kind === 'chapter' && (
             <span className="page-meta-left">
               <StatusPicker doc={doc} />
+              {hasTakes(doc) && <TakeButton project={project} doc={doc} text={text} />}
               <BeatsButton project={project} doc={doc} />
             </span>
           )}
@@ -307,12 +346,16 @@ export default function Page() {
             )}
           </span>
         </div>
+        {!text.inBook && <TakeBanner doc={doc} text={text} />}
         <div ref={bodyRef} className="page-body" onMouseDown={(e) => e.target === e.currentTarget && getMainEditor()?.commands.focus('end')}>
           <MarkdownEditor
-            key={`${doc.id}:${prefs.smartTypography}:${prefs.symbolHints}:${prefs.spellcheck}:${prefs.nameHints !== false}`}
-            value={doc.content}
-            onChange={(md, anchors) => updateDocContent(doc.id, md, anchors)}
-            getNotes={() => findDoc(getState().project, doc.id)?.doc.inlineNotes || []}
+            key={`${doc.id}:${text.id}:${textRev}:${prefs.smartTypography}:${prefs.symbolHints}:${prefs.spellcheck}:${prefs.nameHints !== false}`}
+            value={text.content}
+            onChange={(md, anchors) => updateDocContent(doc.id, md, anchors, text.id)}
+            getNotes={() => {
+              const d = findDoc(getState().project, doc.id)?.doc;
+              return (d && takeText(d, text.id)?.inlineNotes) || [];
+            }}
             onAddNote={addInlineNote}
             onActiveNote={(noteId) => getState().activeNoteId !== noteId && setState({ activeNoteId: noteId })}
             placeholder={placeholder}
@@ -327,7 +370,7 @@ export default function Page() {
               setEditor(ed);
             }}
           />
-          {editor && !editor.isDestroyed && <NotePeek key={doc.id} editor={editor} docId={doc.id} containerRef={bodyRef} />}
+          {editor && !editor.isDestroyed && <NotePeek key={`${doc.id}:${text.id}`} editor={editor} docId={doc.id} containerRef={bodyRef} />}
         </div>
       </article>
     </div>

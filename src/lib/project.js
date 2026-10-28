@@ -230,13 +230,19 @@ export function normalizeProject(data) {
   if (!data || typeof data !== 'object' || (data.format && !KNOWN_FORMATS.includes(data.format))) {
     throw new Error('This file is not a Quillier project.');
   }
+  const fixNotes = (list) => (Array.isArray(list) ? list.filter((n) => n && n.id) : []);
+  // A chapter's other takes and saved versions (see lib/versions.js).
+  const fixTexts = (list) =>
+    list.filter((t) => t && typeof t.content === 'string').map((t) => ({ ...t, id: t.id || uid(), inlineNotes: fixNotes(t.inlineNotes) }));
   const fixDoc = (d, kind) => ({
     ...newDoc(kind, 'Untitled'),
     ...d,
     id: d.id || uid(),
     content: typeof d.content === 'string' ? d.content : '',
     notes: typeof d.notes === 'string' ? d.notes : '',
-    inlineNotes: Array.isArray(d.inlineNotes) ? d.inlineNotes.filter((n) => n && n.id) : [],
+    inlineNotes: fixNotes(d.inlineNotes),
+    ...(Array.isArray(d.takes) ? { takes: fixTexts(d.takes) } : {}),
+    ...(Array.isArray(d.versions) ? { versions: fixTexts(d.versions) } : {}),
   });
   let drafts = Array.isArray(data.drafts) && data.drafts.length ? data.drafts : [{ id: uid(), name: 'Draft 1', chapters: [] }];
   drafts = drafts.map((dr) => ({

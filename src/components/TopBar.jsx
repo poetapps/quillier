@@ -31,6 +31,7 @@ export default function TopBar() {
   const sidebar = useStore((s) => s.sidebar);
   const panel = useStore((s) => s.panel);
   const series = useStore((s) => s.series);
+  const comparing = useStore((s) => s.view === 'page' && !!s.compare);
   const found = findDoc(project, project.ui.openId);
   const kind = kindOf(project);
 
@@ -46,8 +47,8 @@ export default function TopBar() {
 
   return (
     <header className="topbar drag">
-      {(!sidebar || focus) && <div className="traffic-space" />}
-      {!sidebar && !focus && <IconButton icon={PanelLeft} title="Show sidebar  ⌘\" className="no-drag" onClick={toggleSidebar} />}
+      {(!sidebar || focus || comparing) && <div className="traffic-space" />}
+      {!sidebar && !focus && !comparing && <IconButton icon={PanelLeft} title="Show sidebar  ⌘\" className="no-drag" onClick={toggleSidebar} />}
       <nav className="crumbs no-drag">
         <IconButton icon={Home} size={18} title="Library" onClick={closeProject} />
         <ChevronRight size={15} strokeWidth={1.6} className="crumb-sep" />
@@ -70,6 +71,12 @@ export default function TopBar() {
           <>
             <ChevronRight size={15} strokeWidth={1.6} className="crumb-sep" />
             <span className="crumb current">{crumb}</span>
+          </>
+        )}
+        {crumb && comparing && (
+          <>
+            <ChevronRight size={15} strokeWidth={1.6} className="crumb-sep" />
+            <span className="crumb">Compare</span>
           </>
         )}
       </nav>

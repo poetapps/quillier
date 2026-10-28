@@ -27,7 +27,20 @@ import {
   wordsFor,
   countOf,
   longDate,
+  statusLabel,
 } from './lib/project.js';
+import {
+  takeIdOf,
+  takeText,
+  openText,
+  openTakeId,
+  allTakes,
+  mapText,
+  withOpenTake,
+  putInBook,
+  addVersion,
+  sessionName,
+} from './lib/versions.js';
 import { createBook, mirrorFolders, unmirrorFolders, renameLinked, applyStructure, mirrorOf } from './lib/structure.js';
 import { exportMarkdown, exportChapterFiles, exportHtml, exportBookHtml, exportManuscriptHtml, buildEpub } from './lib/export.js';
 import { normalizeSeries, candidatePaths, relativePath, dirOf, SERIES_FILE } from './lib/series.js';
@@ -64,6 +77,9 @@ let state = {
   focusBodyId: null, // page whose text should take the cursor (a new journal entry)
   activeNoteId: null, // inline note under the cursor
   focusNoteId: null, // inline note whose text box should take focus
+  compare: null, // { docId, against: 'v:<version id>' | 't:<take id>' } while comparing a chapter
+  textRev: 0, // bumped when a page's text is replaced from outside its editor, so the editor reloads
+  versionForm: null, // set to open the "Save version" form in the panel
 };
 
 const listeners = new Set();
@@ -328,6 +344,7 @@ export async function openProjectAt(path, { quiet = false, view, bible } = {}) {
     menu: null,
     toast: null,
     focus: false,
+    compare: null,
   });
   if (series) fixSeriesLink(path, project, series.path);
   return true;
@@ -457,7 +474,7 @@ export async function closeProject() {
   await settle();
   dirty = false;
   seriesDirty = false;
-  setState({ path: null, project: null, series: null, view: 'page', modal: null, menu: null, toast: null, focus: false });
+  setState({ path: null, project: null, series: null, view: 'page', modal: null, menu: null, toast: null, focus: false, compare: null });
   api.projectClosed();
 }
 
@@ -482,7 +499,7 @@ export const revealProject = () => state.path && api.reveal(state.path);
 
 export function openDoc(id) {
   flushEditors();
-  setState({ view: 'page', renamingId: null, activeNoteId: null });
+  setState({ view: 'page', renamingId: null, activeNoteId: null, compare: null });
   if (state.project.ui.openId === id) return;
   commit((p) => ({ ...p, ui: { ...p.ui, openId: id } }), { touch: false });
 }
@@ -504,13 +521,21 @@ export function updateDocField(id, field, value) {
   });
 }
 
-// Page text changed. `anchors` (if given) is where each inline note's passage now sits.
-export function updateDocContent(id, md, anchors) {
+// A chapter's take is saved as an automatic version when you start writing in it after a break.
+const SESSION_GAP = 45 * 60 * 1000;
+const lastWrite = new Map(); // `${docId}:${takeId}` -> when its text last changed
+
+// Page text changed. `anchors` (if given) is where each inline note's passage now sits. `takeId` is
+// the take the editor was showing (by default the open one).
+export function updateDocContent(id, md, anchors, takeId) {
+  const now = Date.now();
+  let wrote = null;
   commit((p) => {
     const found = findDoc(p, id);
     if (!found) return p;
-    const doc = found.doc;
-    let inlineNotes = doc.inlineNotes || [];
+    const doc = takeText(found.doc, takeId || openText(p, found.doc).id);
+    if (!doc) return p;
+    let inlineNotes = doc.inlineNotes;
     if (anchors) {
       let changed = false;
       const synced = inlineNotes.map((n) => {
@@ -525,10 +550,18 @@ export function updateDocContent(id, md, anchors) {
       if (changed) inlineNotes = synced;
     }
     if (doc.content === md && inlineNotes === doc.inlineNotes) return p;
-    let next = mapDoc(p, id, (d) => ({ ...d, content: md, inlineNotes, updatedAt: new Date().toISOString() }));
-    if (found.kind === 'chapter') next = addDailyWords(next, countWords(md) - countWords(doc.content));
+    let next = mapText(p, id, doc.id, () => ({ content: md, inlineNotes, updatedAt: new Date(now).toISOString() }));
+    if (found.kind === 'chapter' && doc.content !== md) {
+      wrote = `${id}:${doc.id}`;
+      if (now - (lastWrite.get(wrote) || 0) > SESSION_GAP) {
+        const v = { takeId: doc.id, name: sessionName(new Date(now)), content: doc.content, inlineNotes: doc.inlineNotes, auto: true, at: new Date(now) };
+        next = mapDoc(next, id, (d) => addVersion(d, v));
+      }
+      next = addDailyWords(next, countWords(md) - countWords(doc.content));
+    }
     return next;
   });
+  if (wrote) lastWrite.set(wrote, now);
 }
 
 // ---------- notes on selected text ----------
@@ -545,7 +578,7 @@ export function addInlineNote() {
   const id = uid();
   const docId = p.ui.openId;
   const note = { id, text: '', quote: ed.state.doc.textBetween(from, to, '\n'), createdAt: new Date().toISOString() };
-  commit((proj) => mapDoc(proj, docId, (d) => ({ ...d, inlineNotes: [...(d.inlineNotes || []), note] })));
+  commit((proj) => mapText(proj, docId, null, (t) => ({ inlineNotes: [...t.inlineNotes, note] })));
   ed.chain().setMark('note', { id }).setTextSelection(to).run();
   editInlineNote(id);
 }
@@ -557,23 +590,22 @@ export function editInlineNote(noteId) {
 }
 
 export function updateInlineNote(docId, noteId, text) {
-  commit((p) => mapDoc(p, docId, (d) => ({ ...d, inlineNotes: d.inlineNotes.map((n) => (n.id === noteId ? { ...n, text } : n)) })));
+  commit((p) => mapText(p, docId, null, (t) => ({ inlineNotes: t.inlineNotes.map((n) => (n.id === noteId ? { ...n, text } : n)) })));
 }
 
 export function deleteInlineNote(docId, noteId) {
   const found = findDoc(state.project, docId);
-  const note = found?.doc.inlineNotes.find((n) => n.id === noteId);
+  const text = found && openText(state.project, found.doc);
+  const note = text?.inlineNotes.find((n) => n.id === noteId);
   if (!note) return;
-  const index = found.doc.inlineNotes.indexOf(note);
-  commit((p) => mapDoc(p, docId, (d) => ({ ...d, inlineNotes: d.inlineNotes.filter((n) => n.id !== noteId) })));
+  const index = text.inlineNotes.indexOf(note);
+  commit((p) => mapText(p, docId, text.id, (t) => ({ inlineNotes: t.inlineNotes.filter((n) => n.id !== noteId) })));
   const ed = getMainEditor();
   if (ed && state.project.ui.openId === docId) removeNoteMarks(ed, [noteId]);
   toast('Note deleted', {
     label: 'Undo',
     run: () => {
-      commit((p) =>
-        mapDoc(p, docId, (d) => ({ ...d, inlineNotes: [...d.inlineNotes.slice(0, index), note, ...d.inlineNotes.slice(index)] }))
-      );
+      commit((p) => mapText(p, docId, text.id, (t) => ({ inlineNotes: [...t.inlineNotes.slice(0, index), note, ...t.inlineNotes.slice(index)] })));
       const e = getMainEditor();
       if (e && state.project.ui.openId === docId && !note.detached) applyAnchors(e, [note]);
     },
@@ -767,6 +799,15 @@ export function restoreTrash(entryId) {
     if (entry.kind === 'draft') {
       return { ...next, drafts: [...next.drafts, entry.draft], activeDraftId: entry.draft.id, ui: { ...next.ui, openId: chaptersOf(entry.draft)[0]?.id || 'notes' } };
     }
+    // A take goes back to its chapter. If the chapter is gone too, it comes back as a chapter of its own.
+    if (entry.kind === 'take') {
+      const draft = next.drafts.find((d) => d.chapters.some((c) => c.id === entry.docId));
+      if (draft) {
+        next = { ...next, activeDraftId: draft.id };
+        next = withOpenTake(mapDoc(next, entry.docId, (d) => ({ ...d, takes: [...(d.takes || []), entry.take] })), entry.docId, entry.take.id);
+        return { ...next, ui: { ...next.ui, openId: entry.docId } };
+      }
+    }
     // The folder it was in may be gone too; then it comes back at the top level.
     const at = (list) => normalizeTree(revealIn([...list.slice(0, entry.index), ...(entry.docs || [entry.doc]), ...list.slice(entry.index)], entry.doc.id));
     if (entry.area === 'outline' || entry.kind === 'section') {
@@ -810,17 +851,186 @@ export async function emptyTrash() {
 
 export const showTrash = () => {
   flushEditors();
-  setState({ view: 'trash' });
+  setState({ view: 'trash', compare: null });
 };
 
 export function showBible(patch) {
   flushEditors();
-  setState({ view: 'bible', renamingId: null, ...(patch ? { bible: { ...state.bible, ...patch } } : {}) });
+  setState({ view: 'bible', renamingId: null, compare: null, ...(patch ? { bible: { ...state.bible, ...patch } } : {}) });
 }
 
 export const setBible = (patch) => setState({ bible: { ...state.bible, ...patch } });
 
-export const setStatus = (id, status) => updateDocField(id, 'status', status);
+// Marking a chapter Drafted, Revised or Done keeps a copy of it as it was then.
+export function setStatus(id, status) {
+  flushEditors();
+  const found = findDoc(state.project, id);
+  if (found?.kind === 'chapter' && found.doc.status !== status && ['drafted', 'revised', 'done'].includes(status)) {
+    commit((p) =>
+      mapDoc(p, id, (d) => {
+        const t = takeText(d);
+        return addVersion(d, { takeId: t.id, name: `Marked “${statusLabel(status)}”`, content: t.content, inlineNotes: t.inlineNotes, auto: true, keep: true });
+      })
+    );
+  }
+  updateDocField(id, 'status', status);
+}
+
+// ---------- takes and saved versions (see lib/versions.js) ----------
+
+const nowIso = () => new Date().toISOString();
+const freshNotes = (notes) => notes.map((n) => ({ ...n, id: uid() }));
+
+function chapterOf(docId) {
+  const found = findDoc(state.project, docId);
+  return found?.kind === 'chapter' ? found.doc : null;
+}
+
+// Replace a take's text from outside its editor (so the editor reloads it). Not counted as writing.
+function setText(docId, takeId, content, inlineNotes) {
+  commit((p) => mapText(p, docId, takeId, (t) => ({ content, inlineNotes: inlineNotes || t.inlineNotes, updatedAt: nowIso() })));
+  setState({ textRev: state.textRev + 1 });
+}
+
+export function openTake(docId, takeId) {
+  flushEditors();
+  const doc = chapterOf(docId);
+  if (doc && openTakeId(state.project, doc) === takeId) return setState({ view: 'page', compare: null });
+  commit((p) => withOpenTake(p, docId, takeId), { touch: false });
+  setState({ view: 'page', compare: null, activeNoteId: null, textRev: state.textRev + 1 });
+}
+
+export async function newTake(docId) {
+  flushEditors();
+  const doc = chapterOf(docId);
+  if (!doc) return;
+  const from = openText(state.project, doc);
+  const name = await prompt({ title: 'New take', label: `Starts as a copy of “${from.name}”`, value: `Take ${allTakes(doc).length + 1}`, confirm: 'Create take' });
+  if (!name || !name.trim()) return;
+  const take = { id: uid(), name: name.trim(), content: from.content, inlineNotes: freshNotes(from.inlineNotes), createdAt: nowIso(), updatedAt: nowIso() };
+  commit((p) => withOpenTake(mapDoc(p, docId, (d) => ({ ...d, takes: [...(d.takes || []), take] })), docId, take.id));
+  setState({ view: 'page', compare: null, activeNoteId: null, textRev: state.textRev + 1 });
+  toast(`Started “${take.name}”. The take in the book hasn’t changed.`);
+}
+
+export async function renameTake(docId, takeId) {
+  const doc = chapterOf(docId);
+  const t = doc && takeText(doc, takeId);
+  if (!t) return;
+  const name = await prompt({ title: 'Rename take', label: 'Take name', value: t.name, confirm: 'Rename' });
+  if (!name || !name.trim()) return;
+  commit((p) =>
+    mapDoc(p, docId, (d) =>
+      takeId === takeIdOf(d) ? { ...d, takeName: name.trim() } : { ...d, takes: d.takes.map((x) => (x.id === takeId ? { ...x, name: name.trim() } : x)) }
+    )
+  );
+}
+
+export function putTakeInBook(docId, takeId) {
+  flushEditors();
+  const doc = chapterOf(docId);
+  if (!doc || !doc.takes?.some((t) => t.id === takeId)) return;
+  const was = takeText(doc);
+  commit((p) => withOpenTake(mapDoc(p, docId, (d) => putInBook(d, takeId)), docId, takeId));
+  setState({ compare: null, textRev: state.textRev + 1 });
+  toast(`“${takeText(doc, takeId).name}” is now the take in the book`, { label: 'Undo', run: () => putTakeInBook(docId, was.id) });
+}
+
+// To the trash, so it can come back. (An older Quillier restores it as a chapter of its own.)
+export function deleteTake(docId, takeId) {
+  flushEditors();
+  const p0 = state.project;
+  const found = findDoc(p0, docId);
+  const take = found?.doc.takes?.find((t) => t.id === takeId);
+  if (!take) return;
+  const entry = {
+    id: uid(),
+    kind: 'take',
+    area: 'manuscript',
+    draftId: p0.activeDraftId,
+    index: found.index + 1,
+    docId,
+    take,
+    doc: { ...newDoc('chapter', `${found.doc.title || 'Untitled'} (${take.name})`), content: take.content, inlineNotes: take.inlineNotes || [] },
+    deletedAt: nowIso(),
+  };
+  commit((p) => ({ ...mapDoc(p, docId, (d) => ({ ...d, takes: d.takes.filter((t) => t.id !== takeId) })), trash: [entry, ...p.trash] }));
+  setState({ compare: null, textRev: state.textRev + 1 });
+  toast(`Moved “${take.name}” to trash`, { label: 'Undo', run: () => restoreTrash(entry.id) });
+}
+
+// Save the open take as it is now. A blank name gets a plain one.
+export function saveVersion(docId, name) {
+  flushEditors();
+  const doc = chapterOf(docId);
+  if (!doc) return;
+  const t = openText(state.project, doc);
+  const label = name?.trim() || 'Saved version';
+  commit((p) => mapDoc(p, docId, (d) => addVersion(d, { takeId: t.id, name: label, content: t.content, inlineNotes: t.inlineNotes })));
+  toast(`Saved “${label}”`);
+}
+
+// Open the panel's "Save version" form (⌥⌘S).
+export function startSaveVersion() {
+  const found = state.project && findDoc(state.project, state.project.ui.openId);
+  if (state.view !== 'page' || found?.kind !== 'chapter') return;
+  setState({ panel: true, panelTab: 'versions', versionForm: Date.now() });
+  setPrefs({ panel: true });
+}
+
+export async function renameVersion(docId, versionId) {
+  const v = chapterOf(docId)?.versions?.find((x) => x.id === versionId);
+  if (!v) return;
+  const name = await prompt({ title: 'Rename version', label: 'Version name', value: v.name, confirm: 'Rename' });
+  if (!name || !name.trim()) return;
+  commit((p) => mapDoc(p, docId, (d) => ({ ...d, versions: d.versions.map((x) => (x.id === versionId ? { ...x, name: name.trim(), auto: false } : x)) })));
+}
+
+export function deleteVersion(docId, versionId) {
+  const doc = chapterOf(docId);
+  const index = doc?.versions?.findIndex((x) => x.id === versionId) ?? -1;
+  if (index < 0) return;
+  const v = doc.versions[index];
+  commit((p) => mapDoc(p, docId, (d) => ({ ...d, versions: d.versions.filter((x) => x.id !== versionId) })));
+  if (state.compare?.against === `v:${versionId}`) setState({ compare: null });
+  toast(`Deleted “${v.name}”`, {
+    label: 'Undo',
+    run: () => commit((p) => mapDoc(p, docId, (d) => ({ ...d, versions: [...d.versions.slice(0, index), v, ...d.versions.slice(index)] }))),
+  });
+}
+
+// Put a saved version back. What was there is kept as a version first, so nothing is lost.
+export function restoreVersion(docId, versionId) {
+  flushEditors();
+  const doc = chapterOf(docId);
+  const v = doc?.versions?.find((x) => x.id === versionId);
+  if (!v) return;
+  const target = takeText(doc, v.takeId) || openText(state.project, doc);
+  const latest = (doc.versions || []).find((x) => (x.takeId || 'main') === target.id);
+  const kept = latest?.content === target.content ? latest.name : 'Before restoring';
+  commit((p) => {
+    const saved = mapDoc(p, docId, (d) => addVersion(d, { takeId: target.id, name: 'Before restoring', content: target.content, inlineNotes: target.inlineNotes, auto: true, keep: true }));
+    return withOpenTake(mapText(saved, docId, target.id, () => ({ content: v.content, inlineNotes: v.inlineNotes, updatedAt: nowIso() })), docId, target.id);
+  });
+  setState({ compare: null, textRev: state.textRev + 1 });
+  toast(`Restored “${v.name}”. What you had is saved as “${kept}”.`, { label: 'Undo', run: () => setText(docId, target.id, target.content, target.inlineNotes) });
+}
+
+// From the compare view: the open take's text with some changes taken back.
+export function takeOlderWording(docId, takeId, content, message) {
+  const doc = chapterOf(docId);
+  const before = doc && takeText(doc, takeId);
+  if (!before) return;
+  setText(docId, takeId, content);
+  toast(message, { label: 'Undo', run: () => setText(docId, takeId, before.content, before.inlineNotes) });
+}
+
+export function openCompare(docId, against) {
+  flushEditors();
+  setState({ view: 'page', compare: { docId, against }, panel: true, panelTab: 'versions', menu: null });
+}
+
+export const closeCompare = () => setState({ compare: null });
 
 // ---------- drafts ----------
 
@@ -1006,6 +1216,7 @@ const commands = {
   'format-italic': () => getMainEditor()?.chain().focus().toggleItalic().run(),
   'scene-break': () => getMainEditor()?.chain().focus().setHorizontalRule().run(),
   'add-note': addInlineNote,
+  'save-version': () => state.project && startSaveVersion(),
 };
 
 export function registerCommand(name, fn) {

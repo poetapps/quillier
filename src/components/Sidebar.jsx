@@ -363,6 +363,11 @@ function TreeRow({ area, list, doc, depth, number, twisty, active, renaming, mar
       {number && <span className="sb-num">{number}</span>}
       {renaming ? <RenameInput value={doc.title} onDone={onDone} /> : <span className="sb-label">{doc.title || 'Untitled'}</span>}
       {!renaming && doc.part && <span className="sb-tag">Part</span>}
+      {!renaming && !folder && doc.takes?.length > 0 && (
+        <span className="sb-linked" title={`${doc.takes.length + 1} takes`}>
+          <Layers size={13} strokeWidth={1.8} />
+        </span>
+      )}
       {!renaming && linked && (
         <span className="sb-linked" title={area === 'outline' ? 'Shows in the manuscript' : 'Linked to the outline'}>
           <Link2 size={13} strokeWidth={1.8} />

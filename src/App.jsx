@@ -3,6 +3,7 @@ import { useStore, getState, setState } from './store.js';
 import Sidebar from './components/Sidebar.jsx';
 import TopBar from './components/TopBar.jsx';
 import Page from './components/Page.jsx';
+import Compare from './components/Compare.jsx';
 import RightPanel from './components/RightPanel.jsx';
 import Modals from './components/Modals.jsx';
 import { TrashView, StatusBar } from './components/Views.jsx';
@@ -41,6 +42,7 @@ export default function App() {
   const panel = useStore((s) => s.panel);
   const focus = useStore((s) => s.focus);
   const view = useStore((s) => s.view);
+  const compare = useStore((s) => (s.view === 'page' ? s.compare : null));
   const title = project?.title;
   const kind = project ? kindOf(project) : 'book';
 
@@ -56,7 +58,10 @@ export default function App() {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape' && getState().focus && !getState().modal && !getState().menu) setState({ focus: false });
+      const s = getState();
+      if (e.key !== 'Escape' || s.modal || s.menu) return;
+      if (s.focus) setState({ focus: false });
+      else if (s.compare && s.view === 'page' && !e.defaultPrevented && !/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName)) setState({ compare: null });
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -70,10 +75,10 @@ export default function App() {
         <Library />
       ) : (
         <div className={`app ${focus ? 'focus' : ''}`}>
-          {sidebar && !focus && <Sidebar />}
+          {sidebar && !focus && !compare && <Sidebar />}
           <main className="main">
             <TopBar />
-            {view === 'trash' ? <TrashView /> : view === 'bible' ? <Bible /> : <Page />}
+            {view === 'trash' ? <TrashView /> : view === 'bible' ? <Bible /> : compare ? <Compare key={`${compare.docId}:${compare.against}`} /> : <Page />}
             {!focus && <StatusBar />}
           </main>
           {panel && !focus && view !== 'bible' && <RightPanel />}

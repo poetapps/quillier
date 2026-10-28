@@ -20,7 +20,9 @@ import {
   wordsFor,
 } from '../lib/project.js';
 import { beatsOf, linkedOutline, outlinePath } from '../lib/structure.js';
+import { openText } from '../lib/versions.js';
 import MarkdownEditor from './MarkdownEditor.jsx';
+import Versions from './Versions.jsx';
 import { Toggle } from './ui.jsx';
 
 function scrollToScene(i) {
@@ -176,8 +178,9 @@ function FolderDetails({ project, found }) {
 function Details({ project, found }) {
   const prefs = useStore((s) => s.prefs);
   const { doc, kind } = found;
-  const words = countWords(doc.content);
-  const scenes = kind === 'chapter' ? splitScenes(doc.content).filter(Boolean) : [];
+  const text = openText(project, doc).content;
+  const words = countWords(text);
+  const scenes = kind === 'chapter' ? splitScenes(text).filter(Boolean) : [];
   const total = manuscriptWords(project);
   const today = project.stats.daily[todayKey()] || 0;
   const goal = prefs.dailyGoal || 0;
@@ -366,7 +369,7 @@ function InlineNotes({ doc, kind }) {
   const project = useStore((s) => s.project);
   const showAll = useStore((s) => s.prefs.notesShowAll === true);
   const activeId = useStore((s) => s.activeNoteId);
-  const all = [...(doc.inlineNotes || [])].sort((a, b) => !!a.detached - !!b.detached || (a.offset || 0) - (b.offset || 0));
+  const all = [...openText(project, doc).inlineNotes].sort((a, b) => !!a.detached - !!b.detached || (a.offset || 0) - (b.offset || 0));
   const inView = useNotesInView(doc.id, !showAll && all.length > 0);
   const notes = showAll || !inView ? all : all.filter((n) => inView.has(n.id) || n.id === activeId);
   const elsewhere = all.length - notes.length;
@@ -419,6 +422,9 @@ export default function RightPanel() {
           <button className={tab === 'details' ? 'on' : ''} onClick={() => setState({ panelTab: 'details' })}>
             Details
           </button>
+          <button className={tab === 'versions' ? 'on' : ''} onClick={() => setState({ panelTab: 'versions' })}>
+            Versions
+          </button>
         </div>
         <button className="icon-btn no-drag" title="Close panel" onClick={() => togglePanel()}>
           <X size={17} strokeWidth={1.7} />
@@ -446,6 +452,8 @@ export default function RightPanel() {
           </div>
           <InlineNotes doc={found.doc} kind={found.kind} />
         </div>
+      ) : tab === 'versions' ? (
+        <Versions key={found.doc.id} project={project} found={found} />
       ) : (
         <Details project={project} found={found} />
       )}

@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import { useStore, editInlineNote } from '../store.js';
 import { findDoc } from '../lib/project.js';
+import { openText } from '../lib/versions.js';
 import { noteIdsAtCursor } from '../lib/inlineNotes.js';
 
 // Shows the note for a noted passage, just below the line, when you hover it or put the cursor in it.
@@ -14,7 +15,10 @@ const LEAVE_GRACE = 180;
 const sameIds = (a, b) => a && b && a.length === b.length && a.every((x, i) => x === b[i]);
 
 export default function NotePeek({ editor, docId, containerRef }) {
-  const notes = useStore((s) => findDoc(s.project, docId)?.doc.inlineNotes);
+  const notes = useStore((s) => {
+    const d = findDoc(s.project, docId)?.doc;
+    return d && openText(s.project, d).inlineNotes;
+  });
   const [cursorPeek, setCursorPeek] = useState(null); // { ids, rect }
   const [hoverPeek, setHoverPeek] = useState(null);
   const ref = useRef(null);
