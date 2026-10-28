@@ -2,6 +2,7 @@ import { Home, ChevronRight, Maximize2, Minimize2, PanelRight, PanelLeft, CheckC
 import { useStore, closeProject, toggleFocus, togglePanel, toggleSidebar, saveNow, openDoc, showBible } from '../store.js';
 import { findDoc, chapterNumber, kindOf, shortDate } from '../lib/project.js';
 import { IconButton } from './ui.jsx';
+import { DictationButton } from './Dictation.jsx';
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -81,6 +82,7 @@ export default function TopBar() {
         )}
       </nav>
       <div className="topbar-right no-drag">
+        <DictationButton />
         <IconButton icon={focus ? Minimize2 : Maximize2} title={focus ? 'Exit focus mode  Esc' : 'Focus mode  ⇧⌘F'} onClick={toggleFocus} />
         <SaveStatus />
         {!focus && view !== 'bible' && (

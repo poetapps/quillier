@@ -1794,6 +1794,129 @@ h1.page-title.static {
   }
 }
 
+/* ---------- dictation ---------- */
+
+.topbar-right .icon-btn.dictate-btn.on {
+  color: var(--danger);
+}
+
+.dictation-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 54px;
+  transform: translateX(-50%);
+  z-index: 55;
+  width: min(560px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px 12px 14px;
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  animation: toast-in 0.18s ease-out;
+}
+.dictation-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.dictation-level {
+  --level: 0;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  margin-top: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  box-shadow: 0 0 0 calc(var(--level) * 7px) color-mix(in srgb, var(--danger) 16%, transparent);
+  transition: box-shadow 0.09s linear;
+}
+.dictation-bar.finishing .dictation-level {
+  color: var(--muted);
+  background: var(--surface);
+  box-shadow: none;
+}
+.dictation-text {
+  flex: 1;
+  min-width: 0;
+  max-height: calc(1.55em * 5);
+  overflow-y: auto;
+  padding-top: 5px;
+  font-family: var(--editor-font);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.dictation-text p {
+  margin: 0;
+}
+.dictation-text p + p,
+.dictation-hr + p,
+.dictation-text p + .dictation-hr {
+  margin-top: 0.5em;
+}
+.dictation-hr {
+  text-align: center;
+  color: var(--muted);
+}
+.dictation-placeholder {
+  color: var(--muted);
+}
+.dictation-dots::after {
+  content: '…';
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--muted);
+  animation: dictation-blink 1s ease-in-out infinite;
+}
+@keyframes dictation-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+.dictation-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.dictation-status {
+  flex: 1;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dictation-body {
+  padding: 2px 2px 0;
+}
+.dictation-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.dictation-note {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.dictation-dl {
+  margin-top: 10px;
+}
+.dictation-body .smart-error {
+  margin: 8px 0 0;
+}
+
 /* ---------- modals ---------- */
 
 .modal-backdrop {
@@ -5023,4 +5146,7 @@ button.ver-btn:hover {
     grid-template-columns: minmax(0, 1fr) 210px;
     gap: 0 24px;
   }
+}
+.dictation-dl .smart-dl-bar {
+  width: 220px;
 }

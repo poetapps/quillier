@@ -1,0 +1,1487 @@
+[
+  {
+    "kind": "tag after",
+    "said": "Let's go to the movies, John said.",
+    "want": "\"Let's go to the movies,\" John said.",
+    "voice": "system",
+    "out": {
+      "plain": "Let's go to the movies, Jon said.",
+      "dialogue": "\"Let's go to the movies,\" Jon said.",
+      "pronouns": "\"Let's go to the movies,\" Jon said."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Let's go to the movies, John said.",
+    "want": "\"Let's go to the movies,\" John said.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Let's go to the movies, Jon said.",
+      "dialogue": "\"Let's go to the movies,\" Jon said.",
+      "pronouns": "\"Let's go to the movies,\" Jon said."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Let's go to the movies, John said.",
+    "want": "\"Let's go to the movies,\" John said.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Let's go to the movies, Jon said.",
+      "dialogue": "\"Let's go to the movies,\" Jon said.",
+      "pronouns": "\"Let's go to the movies,\" Jon said."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "I don't know if I want to, she replied.",
+    "want": "\"I don't know if I want to,\" she replied.",
+    "voice": "system",
+    "out": {
+      "plain": "\"I don't know if I want to,\" she replied.",
+      "dialogue": "\"I don't know if I want to,\" she replied.",
+      "pronouns": "\"I don't know if I want to,\" she replied."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "I don't know if I want to, she replied.",
+    "want": "\"I don't know if I want to,\" she replied.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "\"I don't know if I want to, Voth,\" she replied.",
+      "dialogue": "\"I don't know if I want to, Voth,\" she replied.",
+      "pronouns": "\"I don't know if I want to, Voth,\" she replied."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "I don't know if I want to, she replied.",
+    "want": "\"I don't know if I want to,\" she replied.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "\"I don't know if I want to,\" she replied.",
+      "dialogue": "\"I don't know if I want to,\" she replied.",
+      "pronouns": "\"I don't know if I want to,\" she replied."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Get down, he shouted.",
+    "want": "\"Get down,\" he shouted.",
+    "voice": "system",
+    "out": {
+      "plain": "\"Get down,\" he shouted.",
+      "dialogue": "\"Get down,\" he shouted.",
+      "pronouns": "\"Get down,\" he shouted."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Get down, he shouted.",
+    "want": "\"Get down,\" he shouted.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "\"Get down,\" he shouted.",
+      "dialogue": "\"Get down,\" he shouted.",
+      "pronouns": "\"Get down,\" he shouted."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Get down, he shouted.",
+    "want": "\"Get down,\" he shouted.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Get down, he shouted.",
+      "dialogue": "\"Get down,\" he shouted.",
+      "pronouns": "\"Get down,\" he shouted."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "We should leave now, said the old man.",
+    "want": "\"We should leave now,\" said the old man.",
+    "voice": "system",
+    "out": {
+      "plain": "We should leave now, said the old man.",
+      "dialogue": "\"We should leave now,\" said the old man.",
+      "pronouns": "\"We should leave now,\" said the old man."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "We should leave now, said the old man.",
+    "want": "\"We should leave now,\" said the old man.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "We should leave now, said the old man.",
+      "dialogue": "\"We should leave now,\" said the old man.",
+      "pronouns": "\"We should leave now,\" said the old man."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "We should leave now, said the old man.",
+    "want": "\"We should leave now,\" said the old man.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "We should leave now, said the old man.",
+      "dialogue": "\"We should leave now,\" said the old man.",
+      "pronouns": "\"We should leave now,\" said the old man."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Let's go, John said with an excited smile.",
+    "want": "\"Let's go,\" John said with an excited smile.",
+    "voice": "system",
+    "out": {
+      "plain": "\"Let's go,\" Jon said with an excited smile.",
+      "dialogue": "\"Let's go,\" Jon said with an excited smile.",
+      "pronouns": "\"Let's go,\" Jon said with an excited smile."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Let's go, John said with an excited smile.",
+    "want": "\"Let's go,\" John said with an excited smile.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "\"Let's go,\" Jon said with an excited smile.",
+      "dialogue": "\"Let's go,\" Jon said with an excited smile.",
+      "pronouns": "\"Let's go,\" Jon said with an excited smile."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Let's go, John said with an excited smile.",
+    "want": "\"Let's go,\" John said with an excited smile.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Let's go, Jon said with an excited smile.",
+      "dialogue": "\"Let's go,\" Jon said with an excited smile.",
+      "pronouns": "\"Let's go,\" Jon said with an excited smile."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "The tide turns at midnight, Brannoc said.",
+    "want": "\"The tide turns at midnight,\" Brannoc said.",
+    "voice": "system",
+    "out": {
+      "plain": "The tide turns at midnight, Brannoc said.",
+      "dialogue": "The tide turns at midnight, Brannoc said.",
+      "pronouns": "The tide turns at midnight, Brannoc said."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "The tide turns at midnight, Brannoc said.",
+    "want": "\"The tide turns at midnight,\" Brannoc said.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "The tide turns at midnight, Brannoc said.",
+      "dialogue": "The tide turns at midnight, Brannoc said.",
+      "pronouns": "The tide turns at midnight, Brannoc said."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "The tide turns at midnight, Brannoc said.",
+    "want": "\"The tide turns at midnight,\" Brannoc said.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "The tide turns at midnight, Brannoc said.",
+      "dialogue": "\"The tide turns at midnight,\" Brannoc said.",
+      "pronouns": "\"The tide turns at midnight,\" Brannoc said."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "I never asked for any of this, Mara whispered.",
+    "want": "\"I never asked for any of this,\" Mara whispered.",
+    "voice": "system",
+    "out": {
+      "plain": "I never asked for any of this, Mara whispered.",
+      "dialogue": "\"I never asked for any of this,\" Mara whispered.",
+      "pronouns": "\"I never asked for any of this,\" Mara whispered."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "I never asked for any of this, Mara whispered.",
+    "want": "\"I never asked for any of this,\" Mara whispered.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "I never asked for any of this, Mara whispered.",
+      "dialogue": "\"I never asked for any of this,\" Mara whispered.",
+      "pronouns": "\"I never asked for any of this,\" Mara whispered."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "I never asked for any of this, Mara whispered.",
+    "want": "\"I never asked for any of this,\" Mara whispered.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "I never asked for any of this. Mara whispered.",
+      "dialogue": "\"I never asked for any of this,\" Mara whispered.",
+      "pronouns": "\"I never asked for any of this,\" Mara whispered."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "You're late, Aelwyn said, not looking up from the map.",
+    "want": "\"You're late,\" Aelwyn said, not looking up from the map.",
+    "voice": "system",
+    "out": {
+      "plain": "You're late,\" Aelwyn said, not looking up from the map.",
+      "dialogue": "\"You're late,\" Aelwyn said, not looking up from the map.",
+      "pronouns": "\"You're late,\" Aelwyn said, not looking up from the map."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "You're late, Aelwyn said, not looking up from the map.",
+    "want": "\"You're late,\" Aelwyn said, not looking up from the map.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "\"You're late,\" Aelwyn said, not looking up from the map.",
+      "dialogue": "\"You're late,\" Aelwyn said, not looking up from the map.",
+      "pronouns": "\"You're late,\" Aelwyn said, not looking up from the map."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "You're late, Aelwyn said, not looking up from the map.",
+    "want": "\"You're late,\" Aelwyn said, not looking up from the map.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "\"Dear Leech,\" Aelwyn said, not looking up from the map.",
+      "dialogue": "\"You're late,\" Aelwyn said, not looking up from the map.",
+      "pronouns": "\"You're late,\" Aelwyn said, not looking up from the map."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Put the kettle on, his mother called from the kitchen.",
+    "want": "\"Put the kettle on,\" his mother called from the kitchen.",
+    "voice": "system",
+    "out": {
+      "plain": "Put the kettle on, his mother called from the kitchen.",
+      "dialogue": "\"Put the kettle on,\" his mother called from the kitchen.",
+      "pronouns": "\"Put the kettle on,\" his mother called from the kitchen."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Put the kettle on, his mother called from the kitchen.",
+    "want": "\"Put the kettle on,\" his mother called from the kitchen.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Put the kettle on. His mother cooled from the kitchen.",
+      "dialogue": "\"Put the kettle on,\" his mother called from the kitchen.",
+      "pronouns": "\"Put the kettle on,\" his mother called from the kitchen."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "Put the kettle on, his mother called from the kitchen.",
+    "want": "\"Put the kettle on,\" his mother called from the kitchen.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Put the kettle on, his mother calls from the kitchen.",
+      "dialogue": "\"Put the kettle on,\" his mother called from the kitchen.",
+      "pronouns": "\"Put the kettle on,\" his mother called from the kitchen."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "That isn't funny, Tom muttered.",
+    "want": "\"That isn't funny,\" Tom muttered.",
+    "voice": "system",
+    "out": {
+      "plain": "That isn't funny, Tom muttered.",
+      "dialogue": "\"That isn't funny,\" Tom muttered.",
+      "pronouns": "\"That isn't funny,\" Tom muttered."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "That isn't funny, Tom muttered.",
+    "want": "\"That isn't funny,\" Tom muttered.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "That isn't funny, Tom muttered.",
+      "dialogue": "\"That isn't funny,\" Tom muttered.",
+      "pronouns": "\"That isn't funny,\" Tom muttered."
+    }
+  },
+  {
+    "kind": "tag after",
+    "said": "That isn't funny, Tom muttered.",
+    "want": "\"That isn't funny,\" Tom muttered.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "That isn't funny, Tom muttered.",
+      "dialogue": "\"That isn't funny,\" Tom muttered.",
+      "pronouns": "\"That isn't funny,\" Tom muttered."
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "John said, let's go to the movies.",
+    "want": "John said, \"Let's go to the movies.\"",
+    "voice": "system",
+    "out": {
+      "plain": "Jon said, \"Let's go to the movies.\"",
+      "dialogue": "Jon said, \"Let's go to the movies.\"",
+      "pronouns": "Jon said, \"Let's go to the movies.\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "John said, let's go to the movies.",
+    "want": "John said, \"Let's go to the movies.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Jon said, \"Let's go to the movies.\"",
+      "dialogue": "Jon said, \"Let's go to the movies.\"",
+      "pronouns": "Jon said, \"Let's go to the movies.\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "John said, let's go to the movies.",
+    "want": "John said, \"Let's go to the movies.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Jon said, \"Let's go to the movies.\"",
+      "dialogue": "Jon said, \"Let's go to the movies.\"",
+      "pronouns": "Jon said, \"Let's go to the movies.\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "She whispered, are you awake?",
+    "want": "She whispered, \"Are you awake?\"",
+    "voice": "system",
+    "out": {
+      "plain": "She whispered, \"Are you awake?\"",
+      "dialogue": "She whispered, \"Are you awake?\"",
+      "pronouns": "She whispered, \"Are you awake?\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "She whispered, are you awake?",
+    "want": "She whispered, \"Are you awake?\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "She whispered, \"Are you awake?\"",
+      "dialogue": "She whispered, \"Are you awake?\"",
+      "pronouns": "She whispered, \"Are you awake?\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "She whispered, are you awake?",
+    "want": "She whispered, \"Are you awake?\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "She whispered, \"Are you awake?\"",
+      "dialogue": "She whispered, \"Are you awake?\"",
+      "pronouns": "She whispered, \"Are you awake?\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "Brannoc turned to her and said, we leave at dawn.",
+    "want": "Brannoc turned to her and said, \"We leave at dawn.\"",
+    "voice": "system",
+    "out": {
+      "plain": "Brannoc turned to her and said, \"We leave at dawn.\"",
+      "dialogue": "Brannoc turned to her and said, \"We leave at dawn.\"",
+      "pronouns": "Brannoc turned to her and said, \"We leave at dawn.\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "Brannoc turned to her and said, we leave at dawn.",
+    "want": "Brannoc turned to her and said, \"We leave at dawn.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Brannoc turned to her and said, \"We leave at dawn.\"",
+      "dialogue": "Brannoc turned to her and said, \"We leave at dawn.\"",
+      "pronouns": "Brannoc turned to her and said, \"We leave at dawn.\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "Brannoc turned to her and said, we leave at dawn.",
+    "want": "Brannoc turned to her and said, \"We leave at dawn.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Brannoc turned to her and said, \"We leave with Dawn.\"",
+      "dialogue": "Brannoc turned to her and said, \"We leave with Dawn.\"",
+      "pronouns": "Brannoc turned to her and said, \"We leave with Dawn.\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "Mara asked, where did you find it?",
+    "want": "Mara asked, \"Where did you find it?\"",
+    "voice": "system",
+    "out": {
+      "plain": "Mara asked, \"Where did you find it?\"",
+      "dialogue": "Mara asked, \"Where did you find it?\"",
+      "pronouns": "Mara asked, \"Where did you find it?\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "Mara asked, where did you find it?",
+    "want": "Mara asked, \"Where did you find it?\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Mara asked, \"Where did you find it?\"",
+      "dialogue": "Mara asked, \"Where did you find it?\"",
+      "pronouns": "Mara asked, \"Where did you find it?\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "Mara asked, where did you find it?",
+    "want": "Mara asked, \"Where did you find it?\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Mara asks, \"Where did you find it?\"",
+      "dialogue": "Mara asked, \"Where did you find it?\"",
+      "pronouns": "Mara asked, \"Where did you find it?\""
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "John said, let's go to the movies, with an excited smile.",
+    "want": "John said, \"Let's go to the movies,\" with an excited smile.",
+    "voice": "system",
+    "out": {
+      "plain": "Jon said, \"Let's go to the movies,\" with an excited smile.",
+      "dialogue": "Jon said, \"Let's go to the movies,\" with an excited smile.",
+      "pronouns": "Jon said, \"Let's go to the movies,\" with an excited smile."
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "John said, let's go to the movies, with an excited smile.",
+    "want": "John said, \"Let's go to the movies,\" with an excited smile.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Jon said, \"Let's go to the movies,\" with an excited smile.",
+      "dialogue": "Jon said, \"Let's go to the movies,\" with an excited smile.",
+      "pronouns": "Jon said, \"Let's go to the movies,\" with an excited smile."
+    }
+  },
+  {
+    "kind": "tag before",
+    "said": "John said, let's go to the movies, with an excited smile.",
+    "want": "John said, \"Let's go to the movies,\" with an excited smile.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Jon said, \"Let's go to the movies with an excited smile.\"",
+      "dialogue": "Jon said, \"Let's go to the movies with an excited smile.\"",
+      "pronouns": "Jon said, \"Let's go to the movies with an excited smile.\""
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "Maybe, she said, we could try again tomorrow.",
+    "want": "\"Maybe,\" she said, \"we could try again tomorrow.\"",
+    "voice": "system",
+    "out": {
+      "plain": "Maybe, she said, we could try again tomorrow.",
+      "dialogue": "Maybe, she said, we could try again tomorrow.",
+      "pronouns": "Maybe, she said, we could try again tomorrow."
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "Maybe, she said, we could try again tomorrow.",
+    "want": "\"Maybe,\" she said, \"we could try again tomorrow.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Maybe, she said, we could try again tomorrow.",
+      "dialogue": "Maybe, she said, we could try again tomorrow.",
+      "pronouns": "\"Maybe,\" she said, \"we could try again tomorrow.\""
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "Maybe, she said, we could try again tomorrow.",
+    "want": "\"Maybe,\" she said, \"we could try again tomorrow.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Maybe, she said, we could try again tomorrow.",
+      "dialogue": "\"Maybe,\" she said, \"we could try again tomorrow.\"",
+      "pronouns": "\"Maybe,\" she said, \"we could try again tomorrow.\""
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "If you go, Aelwyn said quietly, you can't come back.",
+    "want": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\"",
+    "voice": "system",
+    "out": {
+      "plain": "If you go, Aelwyn said quietly, you can't come back.",
+      "dialogue": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\"",
+      "pronouns": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\""
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "If you go, Aelwyn said quietly, you can't come back.",
+    "want": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\"",
+      "dialogue": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\"",
+      "pronouns": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\""
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "If you go, Aelwyn said quietly, you can't come back.",
+    "want": "\"If you go,\" Aelwyn said quietly, \"you can't come back.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "If you go, Aelwyn said quietly, you can't come back.",
+      "dialogue": "\"If you go, Aelwyn said quietly, you can't come back.\"",
+      "pronouns": "\"If you go, Aelwyn said quietly, you can't come back.\""
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "The problem, Tom said, is that nobody listens.",
+    "want": "\"The problem,\" Tom said, \"is that nobody listens.\"",
+    "voice": "system",
+    "out": {
+      "plain": "The problem, Tom said, is that nobody listens.",
+      "dialogue": "The problem, Tom said, is that nobody listens.",
+      "pronouns": "The problem, Tom said, is that nobody listens."
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "The problem, Tom said, is that nobody listens.",
+    "want": "\"The problem,\" Tom said, \"is that nobody listens.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "The problem, Tom said, is that nobody listens.",
+      "dialogue": "The problem, Tom said, is that nobody listens.",
+      "pronouns": "The problem, Tom said, is that nobody listens."
+    }
+  },
+  {
+    "kind": "interrupted",
+    "said": "The problem, Tom said, is that nobody listens.",
+    "want": "\"The problem,\" Tom said, \"is that nobody listens.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "The problem, Tom said, is that nobody listens.",
+      "dialogue": "\"The problem,\" Tom said, \"is that nobody listens.\"",
+      "pronouns": "\"The problem,\" Tom said, \"is that nobody listens.\""
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "I'm not hungry, Tom said. I ate before I came.",
+    "want": "\"I'm not hungry,\" Tom said. \"I ate before I came.\"",
+    "voice": "system",
+    "out": {
+      "plain": "\"I'm not hungry,\" Tom said. \"I ate before I came.\"",
+      "dialogue": "\"I'm not hungry,\" Tom said. \"I ate before I came.\"",
+      "pronouns": "\"I'm not hungry,\" Tom said. \"I ate before I came.\""
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "I'm not hungry, Tom said. I ate before I came.",
+    "want": "\"I'm not hungry,\" Tom said. \"I ate before I came.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "I'm not hungry, Tom said. I ate before I came.",
+      "dialogue": "\"I'm not hungry,\" Tom said. \"I ate before I came.\"",
+      "pronouns": "\"I'm not hungry,\" Tom said. \"I ate before I came.\""
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "I'm not hungry, Tom said. I ate before I came.",
+    "want": "\"I'm not hungry,\" Tom said. \"I ate before I came.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "\"I'm not hungry,\" Tom said. \"I ate before I came.\"",
+      "dialogue": "\"I'm not hungry,\" Sam said. \"I ate before I came.\"",
+      "pronouns": "\"I'm not hungry,\" Tom said. \"I ate before I came.\""
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "Okay, fine. I'll go, Ben muttered, and grabbed his coat.",
+    "want": "\"Okay, fine. I'll go,\" Ben muttered, and grabbed his coat.",
+    "voice": "system",
+    "out": {
+      "plain": "\"Okay, fine, I'll go,\" Ben muttered and grabbed his coat.",
+      "dialogue": "\"Okay, fine, I'll go,\" Ben muttered, and grabbed his coat.",
+      "pronouns": "\"Okay, fine, I'll go,\" Ben muttered, and grabbed his coat."
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "Okay, fine. I'll go, Ben muttered, and grabbed his coat.",
+    "want": "\"Okay, fine. I'll go,\" Ben muttered, and grabbed his coat.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Okay, fine. I'll go, Ben muttered, and grabbed his coat.",
+      "dialogue": "\"Okay, fine. I'll go,\" Ben muttered, and grabbed his coat.",
+      "pronouns": "\"Okay, fine. I'll go,\" Ben muttered, and grabbed his coat."
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "Okay, fine. I'll go, Ben muttered, and grabbed his coat.",
+    "want": "\"Okay, fine. I'll go,\" Ben muttered, and grabbed his coat.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Okay, fine. I'll go, Ben Mudderts, and wrap his coat.",
+      "dialogue": "\"Okay, fine. I'll go, Ben Mudderts, and wrap his coat.\"",
+      "pronouns": "\"Okay, fine. I'll go, Ben Mudderts, and wrap his coat.\""
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "Don't move. Don't even breathe, Mara said.",
+    "want": "\"Don't move. Don't even breathe,\" Mara said.",
+    "voice": "system",
+    "out": {
+      "plain": "\"Don't move, don't even breathe,\" Mara said.",
+      "dialogue": "\"Don't move, don't even breathe,\" Mara said.",
+      "pronouns": "\"Don't move, don't even breathe,\" Mara said."
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "Don't move. Don't even breathe, Mara said.",
+    "want": "\"Don't move. Don't even breathe,\" Mara said.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "\"Don't move. Don't even breathe,\" Mara said.",
+      "dialogue": "\"Don't move. Don't even breathe,\" Mara said.",
+      "pronouns": "\"Don't move. Don't even breathe,\" Mara said."
+    }
+  },
+  {
+    "kind": "several sentences",
+    "said": "Don't move. Don't even breathe, Mara said.",
+    "want": "\"Don't move. Don't even breathe,\" Mara said.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Don't move. Don't even breathe, Mara said.",
+      "dialogue": "\"Don't move. Don't even breathe,\" Mara said.",
+      "pronouns": "\"Don't move. Don't even breathe,\" Mara said."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Where are you going? Mara asked.",
+    "want": "\"Where are you going?\" Mara asked.",
+    "voice": "system",
+    "out": {
+      "plain": "\"Where are you going?\" Mara asked.",
+      "dialogue": "\"Where are you going?\" Mara asked.",
+      "pronouns": "\"Where are you going?\" Mara asked."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Where are you going? Mara asked.",
+    "want": "\"Where are you going?\" Mara asked.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "\"Where are you going?\" Mara asked.",
+      "dialogue": "\"Where are you going?\" Mara asked.",
+      "pronouns": "\"Where are you going?\" Mara asked."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Where are you going? Mara asked.",
+    "want": "\"Where are you going?\" Mara asked.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "\"Where are you going?\" Mara asked.",
+      "dialogue": "\"Where are you going?\" Mara asked.",
+      "pronouns": "\"Where are you going?\" Mara asked."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Are you sure? he asked.",
+    "want": "\"Are you sure?\" he asked.",
+    "voice": "system",
+    "out": {
+      "plain": "Are you sure? he asked.",
+      "dialogue": "Are you sure? he asked.",
+      "pronouns": "\"Are you sure?\" he asked."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Are you sure? he asked.",
+    "want": "\"Are you sure?\" he asked.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Are you sure he asked?",
+      "dialogue": "\"Are you sure?\" he asked.",
+      "pronouns": "\"Are you sure?\" he asked."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Are you sure? he asked.",
+    "want": "\"Are you sure?\" he asked.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Are you sure, he asked?",
+      "dialogue": "\"Are you sure?\" he asked.",
+      "pronouns": "\"Are you sure?\" he asked."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Who's there? Anna called.",
+    "want": "\"Who's there?\" Anna called.",
+    "voice": "system",
+    "out": {
+      "plain": "Who's there? Anna called.",
+      "dialogue": "\"Who's there?\" Anna called.",
+      "pronouns": "\"Who's there?\" Anna called."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Who's there? Anna called.",
+    "want": "\"Who's there?\" Anna called.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Who's there? Anna called.",
+      "dialogue": "\"Who's there?\" Anna called.",
+      "pronouns": "\"Who's there?\" Anna called."
+    }
+  },
+  {
+    "kind": "question",
+    "said": "Who's there? Anna called.",
+    "want": "\"Who's there?\" Anna called.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Who's there? Anna called.",
+      "dialogue": "\"Who's there?\" Anna called.",
+      "pronouns": "\"Who's there?\" Anna called."
+    }
+  },
+  {
+    "kind": "exclamation",
+    "said": "Run! Brannoc shouted.",
+    "want": "\"Run!\" Brannoc shouted.",
+    "voice": "system",
+    "out": {
+      "plain": "Run, Brannoc shouted.",
+      "dialogue": "\"Run,\" Brannoc shouted.",
+      "pronouns": "\"Run,\" Brannoc shouted."
+    }
+  },
+  {
+    "kind": "exclamation",
+    "said": "Run! Brannoc shouted.",
+    "want": "\"Run!\" Brannoc shouted.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Run, Brannoc shouted.",
+      "dialogue": "\"Run,\" Brannoc shouted.",
+      "pronouns": "\"Run,\" Brannoc shouted."
+    }
+  },
+  {
+    "kind": "exclamation",
+    "said": "Run! Brannoc shouted.",
+    "want": "\"Run!\" Brannoc shouted.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Mara, Brannoc shouted.",
+      "dialogue": "\"Ruz,\" Brannoc shouted.",
+      "pronouns": "\"Ruz,\" Brannoc shouted."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "The door creaked open. Who's there? Anna called.",
+    "want": "The door creaked open. \"Who's there?\" Anna called.",
+    "voice": "system",
+    "out": {
+      "plain": "The door creaked open. Who's there? Anna called.",
+      "dialogue": "The door creaked open. \"Who's there?\" Anna called.",
+      "pronouns": "The door creaked open. \"Who's there?\" Anna called."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "The door creaked open. Who's there? Anna called.",
+    "want": "The door creaked open. \"Who's there?\" Anna called.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "The door creaked open. Who's there? Anna called.",
+      "dialogue": "The door creaked open. \"Who's there?\" Anna called.",
+      "pronouns": "The door creaked open. \"Who's there?\" Anna called."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "The door creaked open. Who's there? Anna called.",
+    "want": "The door creaked open. \"Who's there?\" Anna called.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "The door creaked open. Who's there? Anna called.",
+      "dialogue": "The door creaked open. \"Who's there?\" Anna called.",
+      "pronouns": "The door creaked open. \"Who's there?\" Anna called."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "Rain hammered the roof. We can't stay here, Aelwyn said. Brannoc nodded and reached for his pack.",
+    "want": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+    "voice": "system",
+    "out": {
+      "plain": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+      "dialogue": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+      "pronouns": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "Rain hammered the roof. We can't stay here, Aelwyn said. Brannoc nodded and reached for his pack.",
+    "want": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+      "dialogue": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+      "pronouns": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "Rain hammered the roof. We can't stay here, Aelwyn said. Brannoc nodded and reached for his pack.",
+    "want": "Rain hammered the roof. \"We can't stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Rain hammer the roof. We can stay here, Aelwyn said. Brannoc nodded and reached for his pack.",
+      "dialogue": "\"The rain hammered the roof. We can stay here,\" Aelwyn said. Brannoc nodded and reached for his pack.",
+      "pronouns": "\"The rain hammered the roof. We can stay here,\" Aelwyn said. Brannoc nodded and reached for his pack."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "She set down her cup. I knew you'd come back, she said.",
+    "want": "She set down her cup. \"I knew you'd come back,\" she said.",
+    "voice": "system",
+    "out": {
+      "plain": "She set down her cup, I knew you'd come back, she said.",
+      "dialogue": "She set down her cup. \"I knew you'd come back,\" she said.",
+      "pronouns": "She set down her cup. \"I knew you'd come back,\" she said."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "She set down her cup. I knew you'd come back, she said.",
+    "want": "She set down her cup. \"I knew you'd come back,\" she said.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "She set down her cup. I knew you'd come back, she said.",
+      "dialogue": "She set down her cup. \"I knew you'd come back,\" she said.",
+      "pronouns": "She set down her cup. \"I knew you'd come back,\" she said."
+    }
+  },
+  {
+    "kind": "mixed",
+    "said": "She set down her cup. I knew you'd come back, she said.",
+    "want": "She set down her cup. \"I knew you'd come back,\" she said.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "She sent down her cup. \"I knew you'd come back,\" she said.",
+      "dialogue": "She sent down her cup. \"I knew you'd come back,\" she said.",
+      "pronouns": "She sent down her cup. \"I knew you'd come back,\" she said."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The rain had not stopped for three days.",
+    "want": "The rain had not stopped for three days.",
+    "voice": "system",
+    "out": {
+      "plain": "The rain had not stopped for three days.",
+      "dialogue": "The rain had not stopped for three days.",
+      "pronouns": "The rain had not stopped for three days."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The rain had not stopped for three days.",
+    "want": "The rain had not stopped for three days.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "The rain had not stopped for three days.",
+      "dialogue": "The rain had not stopped for three days.",
+      "pronouns": "The rain had not stopped for three days."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The rain had not stopped for three days.",
+    "want": "The rain had not stopped for three days.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "The rain did not stop for three days.",
+      "dialogue": "The rain did not stop for three days.",
+      "pronouns": "The rain did not stop for three days."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Brannoc drew his sword and stepped into the hall.",
+    "want": "Brannoc drew his sword and stepped into the hall.",
+    "voice": "system",
+    "out": {
+      "plain": "Brannoc drew his sword and stepped into the hall.",
+      "dialogue": "Brannoc drew his sword and stepped into the hall.",
+      "pronouns": "Brannoc drew his sword and stepped into the hall."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Brannoc drew his sword and stepped into the hall.",
+    "want": "Brannoc drew his sword and stepped into the hall.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Brannoc drew his sword and stepped into the hole.",
+      "dialogue": "Brannoc drew his sword and stepped into the hole.",
+      "pronouns": "Brannoc drew his sword and stepped into the hole."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Brannoc drew his sword and stepped into the hall.",
+    "want": "Brannoc drew his sword and stepped into the hall.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Brannoc threw his sword and stepped into the hall.",
+      "dialogue": "Brannoc threw his sword and stepped into the hall.",
+      "pronouns": "Brannoc threw his sword and stepped into the hall."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The town was quiet, and the lamps along the harbor had all gone out.",
+    "want": "The town was quiet, and the lamps along the harbor had all gone out.",
+    "voice": "system",
+    "out": {
+      "plain": "The town was quiet, and the lamps along the harbor had all gone out.",
+      "dialogue": "The town was quiet, and the lamps along the harbor had all gone out.",
+      "pronouns": "The town was quiet, and the lamps along the harbor had all gone out."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The town was quiet, and the lamps along the harbor had all gone out.",
+    "want": "The town was quiet, and the lamps along the harbor had all gone out.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "The town was quiet, and the lamps along the harbour had all gone out.",
+      "dialogue": "The town was quiet, and the lamps along the harbor had all gone out.",
+      "pronouns": "The town was quiet, and the lamps along the harbor had all gone out."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The town was quiet, and the lamps along the harbor had all gone out.",
+    "want": "The town was quiet, and the lamps along the harbor had all gone out.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "The town was quiet, and the lambs along the harbor had all gone out.",
+      "dialogue": "The town was quiet, and the lambs along the harbor had all gone out.",
+      "pronouns": "The town was quiet, and the lambs along the harbor had all gone out."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "She remembered the summer they spent by the lake, before everything changed.",
+    "want": "She remembered the summer they spent by the lake, before everything changed.",
+    "voice": "system",
+    "out": {
+      "plain": "She remembered the summer they spent by the lake, before everything changed.",
+      "dialogue": "She remembered the summer they spent by the lake, before everything changed.",
+      "pronouns": "She remembered the summer they spent by the lake, before everything changed."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "She remembered the summer they spent by the lake, before everything changed.",
+    "want": "She remembered the summer they spent by the lake, before everything changed.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "She remembered the summer they spent by the lake, before everything changed.",
+      "dialogue": "She remembered the summer they spent by the lake, before everything changed.",
+      "pronouns": "She remembered the summer they spent by the lake, before everything changed."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "She remembered the summer they spent by the lake, before everything changed.",
+    "want": "She remembered the summer they spent by the lake, before everything changed.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "She remembers the summer they spent by the lake before everything changed.",
+      "dialogue": "She remembered the summer they spent by the lake before everything changed.",
+      "pronouns": "She remembered the summer they spent by the lake before everything changed."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Nobody in the village said a word about the fire.",
+    "want": "Nobody in the village said a word about the fire.",
+    "voice": "system",
+    "out": {
+      "plain": "Nobody in the village said a word about the fire.",
+      "dialogue": "Nobody in the village said a word about the fire.",
+      "pronouns": "Nobody in the village said a word about the fire."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Nobody in the village said a word about the fire.",
+    "want": "Nobody in the village said a word about the fire.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Nobody in the village said a word about the fire.",
+      "dialogue": "Nobody in the village said a word about the fire.",
+      "pronouns": "Nobody in the village said a word about the fire."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Nobody in the village said a word about the fire.",
+    "want": "Nobody in the village said a word about the fire.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Nobody in the village said a word about the fire.",
+      "dialogue": "Nobody in the village said a word about the fire.",
+      "pronouns": "Nobody in the village said a word about the fire."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "John said that he wanted to go to the movies.",
+    "want": "John said that he wanted to go to the movies.",
+    "voice": "system",
+    "out": {
+      "plain": "Jon said that he wanted to go to the movies.",
+      "dialogue": "Jon said that he wanted to go to the movies.",
+      "pronouns": "Jon said that he wanted to go to the movies."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "John said that he wanted to go to the movies.",
+    "want": "John said that he wanted to go to the movies.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Jon said that he wanted to go to the movies.",
+      "dialogue": "Jon said that he wanted to go to the movies.",
+      "pronouns": "Jon said that he wanted to go to the movies."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "John said that he wanted to go to the movies.",
+    "want": "John said that he wanted to go to the movies.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Jon said that he wanted to go to the movies.",
+      "dialogue": "Jon said that he wanted to go to the movies.",
+      "pronouns": "Jon said that he wanted to go to the movies."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "He asked her whether she had seen the letter.",
+    "want": "He asked her whether she had seen the letter.",
+    "voice": "system",
+    "out": {
+      "plain": "He asked her whether she had seen the letter.",
+      "dialogue": "He asked her whether she had seen the letter.",
+      "pronouns": "He asked her whether she had seen the letter."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "He asked her whether she had seen the letter.",
+    "want": "He asked her whether she had seen the letter.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "He asked her whether she had seen the letter.",
+      "dialogue": "He asked her whether she had seen the letter.",
+      "pronouns": "He asked her whether she had seen the letter."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "He asked her whether she had seen the letter.",
+    "want": "He asked her whether she had seen the letter.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "He asked her whether she had seen the litter.",
+      "dialogue": "He asked her whether she had seen the letter.",
+      "pronouns": "He asked her whether she had seen the letter."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "Mara told them she would be back before dark.",
+    "want": "Mara told them she would be back before dark.",
+    "voice": "system",
+    "out": {
+      "plain": "Mara told them she would be back before dark.",
+      "dialogue": "Mara told them she would be back before dark.",
+      "pronouns": "Mara told them she would be back before dark."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "Mara told them she would be back before dark.",
+    "want": "Mara told them she would be back before dark.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Mara told them she would be back before dark.",
+      "dialogue": "Mara told them she would be back before dark.",
+      "pronouns": "Mara told them she would be back before dark."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "Mara told them she would be back before dark.",
+    "want": "Mara told them she would be back before dark.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Mara told him she would be back before dark.",
+      "dialogue": "Mara told him she would be back before dark.",
+      "pronouns": "Mara told him she would be back before dark."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "Everyone said the bridge was safe.",
+    "want": "Everyone said the bridge was safe.",
+    "voice": "system",
+    "out": {
+      "plain": "Everyone said the bridge was safe.",
+      "dialogue": "Everyone said the bridge was safe.",
+      "pronouns": "Everyone said the bridge was safe."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "Everyone said the bridge was safe.",
+    "want": "Everyone said the bridge was safe.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Everyone said the bridge was safe.",
+      "dialogue": "Everyone said the bridge was safe.",
+      "pronouns": "Everyone said the bridge was safe."
+    }
+  },
+  {
+    "kind": "reported speech",
+    "said": "Everyone said the bridge was safe.",
+    "want": "Everyone said the bridge was safe.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Everyone says the bridge was safe.",
+      "dialogue": "Everyone said the bridge was safe.",
+      "pronouns": "Everyone said the bridge was safe."
+    }
+  },
+  {
+    "kind": "action beat (ambiguous)",
+    "said": "Brannoc grinned. Not bad for an old man.",
+    "want": "Brannoc grinned. \"Not bad for an old man.\"",
+    "voice": "system",
+    "out": {
+      "plain": "Branok Grind, Not Bad for an Old Man.",
+      "dialogue": "Branok grinned, \"Not bad for an old man.\"",
+      "pronouns": "Branok grinned, \"Not bad for an old man.\""
+    }
+  },
+  {
+    "kind": "action beat (ambiguous)",
+    "said": "Brannoc grinned. Not bad for an old man.",
+    "want": "Brannoc grinned. \"Not bad for an old man.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Bran of Gryn, not bad for an old man.",
+      "dialogue": "Bran of Gryn, not bad for an old man.",
+      "pronouns": "Bran of Gryn, not bad for an old man."
+    }
+  },
+  {
+    "kind": "action beat (ambiguous)",
+    "said": "Brannoc grinned. Not bad for an old man.",
+    "want": "Brannoc grinned. \"Not bad for an old man.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Brannoc, Crenn. Not bad for an old man.",
+      "dialogue": "\"Brannoc,\" grinned. \"Not bad for an old man.\"",
+      "pronouns": "\"Brannoc,\" grinned. \"Not bad for an old man.\""
+    }
+  },
+  {
+    "kind": "action beat (ambiguous)",
+    "said": "She shook her head. I can't do this anymore.",
+    "want": "She shook her head. \"I can't do this anymore.\"",
+    "voice": "system",
+    "out": {
+      "plain": "She shook her head, \"I can't do this anymore.\"",
+      "dialogue": "She shook her head, \"I can't do this anymore.\"",
+      "pronouns": "She shook her head, \"I can't do this anymore.\""
+    }
+  },
+  {
+    "kind": "action beat (ambiguous)",
+    "said": "She shook her head. I can't do this anymore.",
+    "want": "She shook her head. \"I can't do this anymore.\"",
+    "voice": "Daniel",
+    "out": {
+      "plain": "She shook her head. I can't do this anymore.",
+      "dialogue": "She shook her head. \"I can't do this anymore.\"",
+      "pronouns": "She shook her head. \"I can't do this anymore.\""
+    }
+  },
+  {
+    "kind": "action beat (ambiguous)",
+    "said": "She shook her head. I can't do this anymore.",
+    "want": "She shook her head. \"I can't do this anymore.\"",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "She shook her head. I can't do this anymore.",
+      "dialogue": "She shook her head. \"I can't do this anymore.\"",
+      "pronouns": "She shook her head. \"I can't do this anymore.\""
+    }
+  },
+  {
+    "kind": "first person",
+    "said": "I said nothing and kept walking.",
+    "want": "I said nothing and kept walking.",
+    "voice": "system",
+    "out": {
+      "plain": "I said nothing and kept walking.",
+      "dialogue": "I said nothing and kept walking.",
+      "pronouns": "I said nothing and kept walking."
+    }
+  },
+  {
+    "kind": "first person",
+    "said": "I said nothing and kept walking.",
+    "want": "I said nothing and kept walking.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "I said nothing and kept walking.",
+      "dialogue": "I said nothing and kept walking.",
+      "pronouns": "I said nothing and kept walking."
+    }
+  },
+  {
+    "kind": "first person",
+    "said": "I said nothing and kept walking.",
+    "want": "I said nothing and kept walking.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "I said nothing and kept walking.",
+      "dialogue": "I said nothing and kept walking.",
+      "pronouns": "I said nothing and kept walking."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "She shook her head. She couldn't do this anymore.",
+    "want": "She shook her head. She couldn't do this anymore.",
+    "voice": "system",
+    "out": {
+      "plain": "She shook her head. She couldn't do this anymore.",
+      "dialogue": "She shook her head. She couldn't do this anymore.",
+      "pronouns": "She shook her head. She couldn't do this anymore."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "She shook her head. She couldn't do this anymore.",
+    "want": "She shook her head. She couldn't do this anymore.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "She shook her head. She couldn't do this anymore.",
+      "dialogue": "She shook her head. She couldn't do this anymore.",
+      "pronouns": "She shook her head. She couldn't do this anymore."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "She shook her head. She couldn't do this anymore.",
+    "want": "She shook her head. She couldn't do this anymore.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "She shook her head. She couldn't do this anymore.",
+      "dialogue": "She shook her head. She couldn't do this anymore.",
+      "pronouns": "She shook her head. She couldn't do this anymore."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Brannoc grinned. It wasn't bad for an old man.",
+    "want": "Brannoc grinned. It wasn't bad for an old man.",
+    "voice": "system",
+    "out": {
+      "plain": "Branok Grind, it wasn't bad for an old man.",
+      "dialogue": "Branok grinned, \"It wasn't bad for an old man.\"",
+      "pronouns": "Branok grinned, \"It wasn't bad for an old man.\""
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Brannoc grinned. It wasn't bad for an old man.",
+    "want": "Brannoc grinned. It wasn't bad for an old man.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "Branok grinned. It wasn't bad for an old man.",
+      "dialogue": "Branok grinned. \"It wasn't bad for an old man.\"",
+      "pronouns": "Branok grinned. \"It wasn't bad for an old man.\""
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "Brannoc grinned. It wasn't bad for an old man.",
+    "want": "Brannoc grinned. It wasn't bad for an old man.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "Brannoc grinned. It wasn't bad for an old man.",
+      "dialogue": "Brannoc grinned. \"It wasn't bad for an old man.\"",
+      "pronouns": "Brannoc grinned. \"It wasn't bad for an old man.\""
+    }
+  },
+  {
+    "kind": "first person",
+    "said": "I shook my head. I couldn't do this anymore.",
+    "want": "I shook my head. I couldn't do this anymore.",
+    "voice": "system",
+    "out": {
+      "plain": "I shook my head. I couldn't do this anymore.",
+      "dialogue": "I shook my head. I couldn't do this anymore.",
+      "pronouns": "I shook my head. I couldn't do this anymore."
+    }
+  },
+  {
+    "kind": "first person",
+    "said": "I shook my head. I couldn't do this anymore.",
+    "want": "I shook my head. I couldn't do this anymore.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "I shook my head. I couldn't do this anymore.",
+      "dialogue": "I shook my head. I couldn't do this anymore.",
+      "pronouns": "I shook my head. I couldn't do this anymore."
+    }
+  },
+  {
+    "kind": "first person",
+    "said": "I shook my head. I couldn't do this anymore.",
+    "want": "I shook my head. I couldn't do this anymore.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "I shook my head. I couldn't do this anymore.",
+      "dialogue": "I shook my head. I couldn't do this anymore.",
+      "pronouns": "I shook my head. I couldn't do this anymore."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The phone rang twice. Nobody answered.",
+    "want": "The phone rang twice. Nobody answered.",
+    "voice": "system",
+    "out": {
+      "plain": "The phone rang twice, nobody answered.",
+      "dialogue": "The phone rang twice, nobody answered.",
+      "pronouns": "The phone rang twice, nobody answered."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The phone rang twice. Nobody answered.",
+    "want": "The phone rang twice. Nobody answered.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "The phone rang twice. Nobody answered.",
+      "dialogue": "The phone rang twice. Nobody answered.",
+      "pronouns": "The phone rang twice. Nobody answered."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "The phone rang twice. Nobody answered.",
+    "want": "The phone rang twice. Nobody answered.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "The phone rang twice. Nobody answered.",
+      "dialogue": "The phone rang twice. Nobody answered.",
+      "pronouns": "The phone rang twice. Nobody answered."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "He told the story again, the way he always did.",
+    "want": "He told the story again, the way he always did.",
+    "voice": "system",
+    "out": {
+      "plain": "He told the story again, the way he always did.",
+      "dialogue": "He told the story again, the way he always did.",
+      "pronouns": "He told the story again, the way he always did."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "He told the story again, the way he always did.",
+    "want": "He told the story again, the way he always did.",
+    "voice": "Daniel",
+    "out": {
+      "plain": "He told the story again, the way he always did.",
+      "dialogue": "He told the story again, the way he always did.",
+      "pronouns": "He told the story again, the way he always did."
+    }
+  },
+  {
+    "kind": "narration",
+    "said": "He told the story again, the way he always did.",
+    "want": "He told the story again, the way he always did.",
+    "voice": "Flo (English (US))",
+    "out": {
+      "plain": "He told the story again, the way he always did.",
+      "dialogue": "He told the story again, the way he always did.",
+      "pronouns": "He told the story again, the way he always did."
+    }
+  }
+]

@@ -5,6 +5,7 @@ const fsp = fs.promises;
 const { zip } = require('./zip.js');
 const updates = require('./updater.js');
 const registerSmartIpc = require('./smart/ipc.js');
+const registerDictationIpc = require('./dictation/ipc.js');
 
 const isMac = process.platform === 'darwin';
 const EXT = 'quill';
@@ -62,6 +63,9 @@ const DEFAULT_PREFS = {
   smartEnabled: false,
   smartModel: null,
   smartHintDismissed: false,
+  dictationModel: null,
+  dictationButton: true,
+  dictationDialogue: true,
   pureBlack: false,
   spellcheck: true,
   dailyGoal: 0,
@@ -215,6 +219,8 @@ function sendToRenderer(channel, ...args) {
 
 // Optional smart features: a local model in its own process (see electron/smart).
 registerSmartIpc({ ipcMain, app, send: sendToRenderer });
+// Optional dictation: a local speech model, also in its own process (see electron/dictation).
+registerDictationIpc({ ipcMain, app, send: sendToRenderer });
 
 function openPath(filePath) {
   if (!filePath) return;
@@ -395,7 +401,23 @@ function buildMenu() {
         ...(isMac ? [] : [{ label: 'Settings…', accelerator: 'Ctrl+,', click: cmd('settings') }, { role: 'quit' }]),
       ],
     },
-    { role: 'editMenu' },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        ...(isMac ? [{ role: 'pasteAndMatchStyle' }] : []),
+        { role: 'delete' },
+        { role: 'selectAll' },
+        { type: 'separator' },
+        { label: 'Dictate', accelerator: 'CmdOrCtrl+Shift+D', click: cmd('dictate') },
+        ...(isMac ? [{ label: 'Speech', submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }] }] : []),
+      ],
+    },
     {
       label: 'Format',
       submenu: [
@@ -942,7 +964,10 @@ if (!app.requestSingleInstanceLock()) {
     });
   });
 
-  app.on('before-quit', () => registerSmartIpc.shutdown());
+  app.on('before-quit', () => {
+    registerSmartIpc.shutdown();
+    registerDictationIpc.shutdown();
+  });
 
   app.on('window-all-closed', () => {
     if (!isMac) app.quit();

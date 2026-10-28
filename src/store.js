@@ -64,6 +64,7 @@ let state = {
   libraryNonce: 0,
   bible: { tab: 'characters', scope: 'book', selected: null, noteTab: 'all', graphSel: null, graphMode: 'graph', focusName: null },
   smart: { status: null, verdicts: {}, presence: {}, relations: {}, progress: null },
+  dictation: { status: null, session: null }, // see src/dictation.js
   sidebar: true,
   panel: true,
   panelTab: 'notes',

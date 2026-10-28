@@ -8,6 +8,7 @@ import { Modal, Segmented, Toggle } from './ui.jsx';
 import { readBookForMerge, readSeriesForMerge, chooseNewSeriesFor, confirmAddToSeries } from '../bibleActions.js';
 import { planMerge, matchReason, numberedCount, bookLabels } from '../lib/series.js';
 import { SmartSettings } from './Smart.jsx';
+import { DictationSettings } from './Dictation.jsx';
 
 function PromptModal({ modal }) {
   const [value, setValue] = useState(modal.value);
@@ -174,6 +175,8 @@ function SettingsModal({ modal }) {
           onChange={(e) => setPrefs({ dailyGoal: Math.max(0, parseInt(e.target.value || '0', 10)) })}
         />
       </Row>
+
+      <DictationSettings scrollTo={modal.section === 'dictation'} />
 
       <div className="panel-label">Safety</div>
       <Row label="Backups" hint="A copy of each project is kept every 10 minutes while you write, and whenever it’s opened.">

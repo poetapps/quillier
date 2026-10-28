@@ -9,10 +9,12 @@ import './styles.css';
 import App from './App.jsx';
 import { init } from './store.js';
 import { initSmart } from './smart.js';
+import { initDictation } from './dictation.js';
 
 document.documentElement.dataset.platform = window.api.platform;
 
 init().then(() => {
   createRoot(document.getElementById('root')).render(<App />);
   initSmart();
+  initDictation();
 });

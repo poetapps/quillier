@@ -45,6 +45,17 @@ contextBridge.exposeInMainWorld('api', {
   smartCacheSave: (key, obj) => ipcRenderer.invoke('smart:cache-save', key, obj),
   onSmartStatus: (fn) => on('smart-status', fn),
 
+  dictationStatus: () => ipcRenderer.invoke('dictation:status'),
+  dictationDownload: (id) => ipcRenderer.invoke('dictation:download', id),
+  dictationCancel: () => ipcRenderer.invoke('dictation:cancel'),
+  dictationRemove: (id) => ipcRenderer.invoke('dictation:remove', id),
+  dictationWarm: (id) => ipcRenderer.invoke('dictation:warm', id),
+  dictationTranscribe: (req) => ipcRenderer.invoke('dictation:transcribe', req),
+  dictationUnload: () => ipcRenderer.invoke('dictation:unload'),
+  dictationMic: () => ipcRenderer.invoke('dictation:mic'),
+  dictationMicSettings: () => ipcRenderer.invoke('dictation:mic-settings'),
+  onDictationStatus: (fn) => on('dictation-status', fn),
+
   recent: () => ipcRenderer.invoke('recent:list'),
   removeRecent: (path) => ipcRenderer.invoke('recent:remove', path),
 

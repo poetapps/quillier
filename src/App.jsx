@@ -10,6 +10,7 @@ import { TrashView, StatusBar } from './components/Views.jsx';
 import Library from './components/Library.jsx';
 import Bible from './components/Bible.jsx';
 import { MenuLayer, Toast } from './components/ui.jsx';
+import { DictationBar } from './components/Dictation.jsx';
 import { kindOf } from './lib/project.js';
 
 const FONTS = {
@@ -84,6 +85,7 @@ export default function App() {
           {panel && !focus && view !== 'bible' && <RightPanel />}
         </div>
       )}
+      <DictationBar />
       <Modals />
       <MenuLayer />
       <Toast />

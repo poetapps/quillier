@@ -29,7 +29,13 @@
       "package.json",
       "!node_modules/node-llama-cpp/llama/gitRelease.bundle",
       "!node_modules/@node-llama-cpp/*-cuda/**",
-      "!node_modules/@node-llama-cpp/*-cuda-ext/**"
+      "!node_modules/@node-llama-cpp/*-cuda-ext/**",
+      "!node_modules/@fugood/whisper.node/{src,whisper.cpp,scripts,CMakeLists.txt}",
+      "!node_modules/@fugood/whisper.node/**/*.ts",
+      "!node_modules/@fugood/node-whisper-wasm/**",
+      "!node_modules/@fugood/*-cuda/**",
+      "!node_modules/@fugood/*-vulkan/**",
+      "!node_modules/@fugood/*-snapdragon/**"
     ],
     "fileAssociations": [
       {
@@ -75,7 +81,12 @@
       "electronLanguages": [
         "en",
         "en_GB"
-      ]
+      ],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Quillier listens only while you dictate, and what you say never leaves this computer."
+      }
     },
     "win": {
       "target": [
@@ -108,7 +119,9 @@
     "asarUnpack": [
       "node_modules/node-llama-cpp/bins/**",
       "node_modules/node-llama-cpp/llama/localBuilds/**",
-      "node_modules/@node-llama-cpp/**"
+      "node_modules/@node-llama-cpp/**",
+      "node_modules/@fugood/**",
+      "electron/dictation/*.bin"
     ]
   },
   "devDependencies": {
@@ -135,6 +148,7 @@
     "vite": "^8.3.2"
   },
   "dependencies": {
+    "@fugood/whisper.node": "1.1.3",
     "electron-updater": "^6.8.9",
     "node-llama-cpp": "3.22.1"
   }

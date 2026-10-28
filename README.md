@@ -41,6 +41,7 @@ Shipping a new version, the website, and auto-updates are covered in [RELEASING.
   - **Saved versions**: **Save version** (⌥⌘S, or the Versions tab) keeps a copy of a chapter as it is, with an optional name. One is also saved automatically each time you sit down to write (after a break of 45 minutes or more) and when you mark a chapter Drafted, Revised or Done. Automatic ones older than three days thin out to the last of each day. Click a version to **compare** it with what's on the page: cut words are struck through, new words are tinted, and each change has **Use old** and **Keep** in the margin. **Side by side** puts the two texts next to each other, and **Only changed paragraphs** folds away the rest. **Restore this version** saves what you have first, so nothing is lost. Takes can be compared with each other the same way.
   - **Scenes**: type `***` on its own line and press Enter (or ⌘↵) to add a scene break.
 - **Smart typing**: quotes curl, `--` becomes an em dash, `...` becomes an ellipsis. For anything else (`1/2`, `(c)`, `->`, `+/-`, `!=`, `<<`), a small popover offers the symbol. **Tab** takes it, **Space** keeps what you typed. Both can be turned off in Settings.
+- **Dictation** (⇧⌘D, or the microphone in the top bar): talk, and the words show up in a small bar a sentence at a time; **Finish** (↵) puts them at the cursor as one undoable change, **Discard** (Esc) drops them. Say "new paragraph", "new line", "scene break", or "open quote" … "close quote". With **Put dialogue in quotation marks** on (the default), dialogue is quoted as it's written down: "Let's go to the movies, John said" becomes “Let’s go to the movies,” John said. Story bible names are passed along so they're spelled right. It needs a one-time download of an OpenAI Whisper model (Standard, 574 MB, or Light, 190 MB) and runs entirely on your computer, in its own process. Models and settings are in **Settings → Dictation**; `research/dictation-eval` has the measurements.
 - **Notes panel** (right side, ⇧⌘\\): side notes for whatever page you're on, plus a **Details** tab with word counts, who and what from the story bible is in this chapter, a scene list, and your writing history.
 - **Notes on text**: select a passage and press ⌥⌘M (or the note button in the formatting bar). The passage gets a faint dotted underline, and the note shows under "On the page" in the notes panel. Hover a noted passage, or click into it, and the note pops up just below the line; click the note to edit it. The pop-up never shows while text is selected, so it can't get in the formatting bar's way. In the panel, click the quoted text to jump back to the passage, or press Esc while typing a note. If you delete the passage, its note stays and is marked as detached. Notes are stored next to the chapter, never inside its Markdown, so exports stay clean. By default the panel lists only the notes on text you can see, following you as you scroll; **Show all** lists every note on the page.
 - **Trash**: deleted chapters, takes, sections, folders (with everything in them), and drafts go here so you can restore them.
@@ -84,6 +85,7 @@ Unfinished features stay hidden until you turn on **Settings → Alpha features*
 | Bold / italic | ⌘B / ⌘I |
 | Scene break | ⌘↵ |
 | Note on selected text | ⌥⌘M |
+| Dictate | ⇧⌘D (↵ to finish, Esc to discard) |
 | Export | ⌘E |
 
 ## Code map
@@ -96,5 +98,6 @@ Unfinished features stay hidden until you turn on **Settings → Alpha features*
 - `src/lib/structure.js`: how the outline and the manuscript link up, and starting from a structure
 - `src/lib/templates.js`: the five story structures and their guidance text
 - `src/lib/export.js`: Markdown/HTML/manuscript/EPUB export
+- `src/dictation.js`, `src/lib/dictation*.js`, `electron/dictation/`: dictation (microphone and pauses, text rules, the whisper.cpp worker)
 - `src/components/`: the UI (TipTap editor with Markdown in/out)
 - `site/`: the quillier.com landing page (plain HTML, deployed by Vercel on every push to main)
