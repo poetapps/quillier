@@ -46,7 +46,7 @@ fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
   .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
   .then((rel) => {
     const v = String(rel.tag_name || '').replace(/^v/, '');
-    if (v) for (const el of document.querySelectorAll('[data-version]')) el.textContent = `Version ${v}.`;
+    if (v) for (const el of document.querySelectorAll('[data-version]')) el.replaceChildren(Object.assign(document.createElement('a'), { href: '/changelog', textContent: `Version ${v}` }), '.');
     // The download page lists each file's size.
     for (const el of document.querySelectorAll('[data-size]')) {
       const a = (rel.assets || []).find((x) => x.name === el.dataset.size);
@@ -556,4 +556,84 @@ if (takes) {
     show();
   });
   show();
+}
+
+// ---------- changelog ----------
+// Each release's notes as GitHub renders them, under its version and date. The notes' "Full
+// Changelog" line becomes the link to that release's commits.
+
+const releases = document.getElementById('releases');
+if (releases) {
+  const day = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  // Shortcuts written as symbols (⇧⌘D, ⌘N, ↵, Esc in brackets) become keys.
+  const KEYS = /[⌃⌥⇧⌘]+[^\s),.;:]+|↵|(?<=\()Esc(?=\))/gu;
+
+  const notes = (html) => {
+    const t = document.createElement('template');
+    t.innerHTML = html || '';
+    const page = t.content;
+    let changes = null;
+    for (const p of page.querySelectorAll('p')) {
+      if (!/^Full Changelog/.test(p.textContent.trim())) continue;
+      changes = p.querySelector('a')?.href || null;
+      p.remove();
+    }
+    // The page's own headings are the versions, so the notes' headings step down one.
+    for (const h of page.querySelectorAll('h2, h3')) {
+      const to = document.createElement(h.tagName === 'H2' ? 'h3' : 'h4');
+      to.append(...h.childNodes);
+      h.replaceWith(to);
+    }
+    const walk = document.createTreeWalker(page, NodeFilter.SHOW_TEXT, {
+      acceptNode: (n) => (n.parentElement?.closest('code, pre, a') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
+    });
+    const texts = [];
+    while (walk.nextNode()) texts.push(walk.currentNode);
+    for (const n of texts) {
+      const parts = n.data.split(KEYS);
+      const keys = n.data.match(KEYS);
+      if (!keys) continue;
+      n.replaceWith(...parts.flatMap((s, i) => (i < keys.length ? [s, Object.assign(document.createElement('kbd'), { textContent: keys[i] })] : [s])));
+    }
+    // A shortcut that was in bold on its own is just the key.
+    for (const b of page.querySelectorAll('strong')) {
+      if (b.childNodes.length === 1 && b.firstChild.nodeName === 'KBD') b.replaceWith(b.firstChild);
+    }
+    return { page, changes };
+  };
+
+  const show = (list) => {
+    const latest = list.find((r) => !r.prerelease);
+    releases.replaceChildren(
+      ...list.map((r, i) => {
+        const v = r.tag_name.replace(/^v/, '');
+        const { page, changes } = notes(r.body_html);
+        const empty = !page.children.length;
+        const el = document.createElement('article');
+        el.className = `release${empty ? ' quiet' : ''}`;
+        el.id = r.tag_name;
+        const label = r === latest ? '<span class="pill">Latest</span>' : r.prerelease ? '<span class="pill pre">Pre-release</span>' : '';
+        el.innerHTML =
+          `<div class="release-head"><h2><a href="#${esc(r.tag_name)}"><span>Version</span> ${esc(v)}</a></h2>` +
+          `<p class="release-date"><time datetime="${esc(r.published_at)}">${day.format(new Date(r.published_at))}</time>${label}</p></div>` +
+          '<div class="notes"></div>';
+        const body = el.querySelector('.notes');
+        if (empty) body.innerHTML = `<p class="none">${i === list.length - 1 ? 'The first release.' : 'No notes for this update.'}</p>`;
+        else body.append(page);
+        const more = [changes && `<a href="${esc(changes)}">Every change in ${esc(v)}</a>`, `<a href="${esc(r.html_url)}">Downloads</a>`];
+        body.insertAdjacentHTML('beforeend', `<p class="release-more">${more.filter(Boolean).join('<span aria-hidden="true">·</span>')}</p>`);
+        return el;
+      })
+    );
+    // The browser looked for #v0.6.0 before the releases were here.
+    if (location.hash) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
+  };
+
+  fetch(`https://api.github.com/repos/${REPO}/releases?per_page=100`, { headers: { Accept: 'application/vnd.github.html+json' } })
+    .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+    .then((list) => show(list.filter((r) => !r.draft)))
+    .catch(() => {
+      releases.innerHTML = `<p class="releases-note">The notes didn’t load just now. Every release and its notes are also on <a href="https://github.com/${REPO}/releases">GitHub</a>.</p>`;
+    });
 }

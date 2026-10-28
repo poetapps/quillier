@@ -2554,3 +2554,193 @@ footer nav a:hover {
     --s: 0.27;
   }
 }
+
+/* ---------- changelog ---------- */
+
+/* One release per row: its version stays in view beside notes as long as they run. */
+.releases {
+  margin-top: 96px;
+  min-height: 50vh;
+}
+.releases-note {
+  font: 400 15px/1.5 var(--sans);
+  color: var(--quiet);
+}
+.release {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  column-gap: 48px;
+  padding: 56px 0 72px;
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: 48px;
+}
+.release.quiet {
+  padding-bottom: 48px;
+}
+.release-head {
+  align-self: start;
+  position: sticky;
+  top: 104px;
+}
+.release h2 {
+  font-weight: 360;
+  font-size: clamp(36px, 3.8vw, 50px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: lining-nums;
+}
+.release h2 a {
+  text-decoration: none;
+}
+.release h2 span {
+  display: block;
+  margin-bottom: 10px;
+  font: 500 14px/1.4 var(--sans);
+  letter-spacing: 0;
+  color: var(--quiet);
+}
+.release-date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 14px 0 0;
+  font: 400 14px/1.5 var(--sans);
+  color: var(--quiet);
+}
+.pill {
+  padding: 1px 9px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 12px/1.6 var(--sans);
+}
+.pill.pre {
+  background: var(--surface);
+  color: var(--ink-2);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.notes {
+  max-width: 34em;
+}
+.notes > :first-child {
+  margin-top: 0;
+}
+.notes h3 {
+  margin: 0 0 18px;
+  font: 400 clamp(27px, 2.7vw, 34px) / 1.15 var(--serif);
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.notes * + h3 {
+  margin-top: 64px;
+}
+.notes h4 {
+  margin: 40px 0 12px;
+}
+.notes p {
+  margin: 0 0 1em;
+}
+.notes ul,
+.notes ol {
+  margin: 1.5em 0;
+  padding: 0;
+  list-style: none;
+}
+.notes li {
+  position: relative;
+  padding-left: 28px;
+}
+.notes li + li {
+  margin-top: 0.85em;
+}
+.notes ul > li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0.82em;
+  width: 10px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--faint);
+}
+.notes ol {
+  counter-reset: item;
+}
+.notes ol > li::before {
+  counter-increment: item;
+  content: counter(item);
+  position: absolute;
+  left: 2px;
+  font: 500 14px/2.1 var(--sans);
+  color: var(--quiet);
+}
+.notes li ul,
+.notes li ol {
+  margin: 0.6em 0 0;
+}
+.notes strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.notes code {
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+  background: var(--surface);
+  font: 0.8em var(--mono);
+  color: var(--ink);
+}
+.notes kbd {
+  display: inline-block;
+  min-width: 1.9em;
+  padding: 0 0.45em;
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow:
+    inset 0 0 0 1px var(--rule),
+    inset 0 -1.5px 0 var(--rule);
+  font: 500 0.74em/1.75 var(--sans);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--ink);
+  vertical-align: 0.1em;
+}
+.notes img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.notes .none {
+  font-style: italic;
+  color: var(--quiet);
+}
+.notes .release-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 36px 0 0;
+  font: 500 14px/1.5 var(--sans);
+  color: var(--quiet);
+}
+.release-more a {
+  color: var(--ink-2);
+}
+
+@media (max-width: 899px) {
+  .releases {
+    margin-top: 64px;
+  }
+  .release {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 28px;
+    padding: 40px 0 56px;
+    scroll-margin-top: 72px;
+  }
+  .release-head {
+    position: static;
+  }
+  .notes * + h3 {
+    margin-top: 48px;
+  }
+}
