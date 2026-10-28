@@ -3,6 +3,7 @@
 // Every page's text is stored as Markdown.
 
 import { normalizeFace } from './face.js';
+import { normalizePlace } from './place.js';
 
 export const FORMAT = 'quillier';
 const KNOWN_FORMATS = [FORMAT, 'libredraft'];
@@ -153,6 +154,16 @@ export const AGES = [
   { id: 'middle', label: 'Middle-aged', sub: '50–64' },
   { id: 'older', label: 'Older', sub: '65 and up' },
 ];
+export const PLACE_KINDS = [
+  { id: 'city', label: 'City' },
+  { id: 'town', label: 'Town or village' },
+  { id: 'building', label: 'Building' },
+  { id: 'home', label: 'Home' },
+  { id: 'countryside', label: 'Countryside' },
+  { id: 'wilderness', label: 'Wilderness' },
+  { id: 'coast', label: 'Coast or water' },
+  { id: 'room', label: 'Room', sub: 'Inside a building' },
+];
 const pickId = (list, v) => (list.some((x) => x.id === v) ? v : '');
 
 export function newEntry(type, name = '') {
@@ -168,6 +179,8 @@ export function newEntry(type, name = '') {
     gender: '',
     age: '',
     face: null,
+    kind: '',
+    postcard: null,
     born: '',
     createdAt: nowIso(),
     updatedAt: nowIso(),
@@ -191,6 +204,8 @@ function normalizeEntry(e) {
     gender: pickId(GENDERS, e.gender),
     age: pickId(AGES, e.age),
     face: normalizeFace(e.face),
+    kind: pickId(PLACE_KINDS, e.kind),
+    postcard: normalizePlace(e.postcard),
     born: typeof e.born === 'string' ? e.born : '',
   };
 }

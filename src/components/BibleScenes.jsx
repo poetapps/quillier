@@ -5,6 +5,7 @@ import { setSceneMeta } from '../bibleActions.js';
 import { presenceKey } from '../lib/bible.js';
 import { bookScenes, storyOrder, timelineMode } from '../lib/timeline.js';
 import { fmt, plural, shortName } from './bibleUi.jsx';
+import Avatar from './Avatar.jsx';
 import { WhenChip, PovChip } from './SceneTime.jsx';
 
 function NoteEditor({ value, onDone }) {
@@ -104,7 +105,7 @@ export function SceneRow({ ctx, view, book, s, prev, chapterScenes, presence, sm
       <div className="bs-cell">
         {where ? (
           <button className={`place-chip ${cast.pinned ? 'pinned' : ''}`} disabled={!editable} onClick={whereMenu} title={cast.pinned ? 'Pinned by you' : 'Found by name'}>
-            <span className="place-dot" />
+            {where.postcard ? <Avatar entry={where} size={21} /> : <span className="place-dot" />}
             {where.name}
           </button>
         ) : editable && places.length ? (

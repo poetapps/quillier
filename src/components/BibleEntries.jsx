@@ -16,11 +16,10 @@ import {
 import { renamePairs, namesIn, countNames } from '../lib/find.js';
 import { timelineMode } from '../lib/timeline.js';
 import { relLabel, sceneCast, needsCheck } from '../lib/bible.js';
-import { presetFace } from '../lib/face.js';
-import { GENDERS, AGES } from '../lib/project.js';
+import { GENDERS, AGES, PLACE_KINDS } from '../lib/project.js';
 import MarkdownEditor from './MarkdownEditor.jsx';
 import Avatar from './Avatar.jsx';
-import FaceEditor from './FaceEditor.jsx';
+import PictureEditor, { KITS } from './PictureEditor.jsx';
 import { IconButton } from './ui.jsx';
 import { OwnerBadge, Strip, fmt, plural, shortName } from './bibleUi.jsx';
 
@@ -60,8 +59,8 @@ export default function BibleEntries({ ctx, analysis, view, scope, type }) {
         </div>
         <div className="be-items">
           {list.map((e) => (
-            <button key={e.id} className={`be-item ${type === 'character' ? 'with-avatar' : ''} ${sel?.id === e.id ? 'on' : ''}`} onClick={() => setBible({ selected: e.id, noteTab: 'all' })}>
-              {type === 'character' && <Avatar entry={e} size={30} />}
+            <button key={e.id} className={`be-item with-avatar ${sel?.id === e.id ? 'on' : ''}`} onClick={() => setBible({ selected: e.id, noteTab: 'all' })}>
+              <Avatar entry={e} size={type === 'place' ? 42 : 30} />
               <span className="be-item-body">
                 <span className="be-item-top">
                   <span className="be-item-name">{e.name || 'Untitled'}</span>
@@ -176,26 +175,30 @@ function Highlight({ sentence, word, nth }) {
   );
 }
 
-// The portrait beside a character's name. The first click starts them off with a ready-made face
-// that fits their gender and age, when those are set.
-function PortraitButton({ e, readOnly }) {
+// The portrait beside a character's name, or the postcard beside a place's. The first click starts
+// it off with a ready-made one that fits the character's gender and age, or the place's kind.
+function PictureButton({ e, readOnly }) {
   const [anchor, setAnchor] = useState(null);
-  if (readOnly) return <Avatar entry={e} size={64} className="be-portrait-art" />;
+  const kit = KITS[e.type];
+  const size = kit.wide ? 96 : 64;
+  if (readOnly) return <Avatar entry={e} size={size} className="be-portrait-art" />;
+  const has = !!e[kit.field];
   const open = (ev) => {
     const r = ev.currentTarget.getBoundingClientRect();
     const header = ev.currentTarget.closest('.be-ident').getBoundingClientRect();
-    if (!e.face) updateEntry(e.id, { face: presetFace(e) });
+    if (!has) updateEntry(e.id, { [kit.field]: kit.preset(e) });
     setAnchor({ left: r.left, bottom: header.bottom });
   };
+  const label = has ? `Edit ${kit.name}` : `Make a ${kit.name}`;
   return (
     <>
-      <button className="be-portrait" onClick={open} title={e.face ? 'Edit portrait' : 'Make a portrait'} aria-label={e.face ? 'Edit portrait' : 'Make a portrait'}>
-        <Avatar entry={e} size={64} className="be-portrait-art" />
+      <button className={`be-portrait ${kit.wide ? 'wide' : ''}`} onClick={open} title={label} aria-label={label}>
+        <Avatar entry={e} size={size} className="be-portrait-art" />
         <span className="be-portrait-badge">
           <Pencil size={11} strokeWidth={2} />
         </span>
       </button>
-      {anchor && <FaceEditor entry={e} anchor={anchor} onClose={() => setAnchor(null)} />}
+      {anchor && <PictureEditor entry={e} anchor={anchor} onClose={() => setAnchor(null)} />}
     </>
   );
 }
@@ -244,9 +247,15 @@ function Traits({ e, readOnly }) {
   };
   return (
     <div className="be-traits">
-      {chip('gender', GENDERS, 'Gender')}
-      {chip('age', AGES, 'Age')}
-      {dates && <Born e={e} readOnly={readOnly} />}
+      {e.type === 'place' ? (
+        chip('kind', PLACE_KINDS, 'Kind')
+      ) : (
+        <>
+          {chip('gender', GENDERS, 'Gender')}
+          {chip('age', AGES, 'Age')}
+          {dates && <Born e={e} readOnly={readOnly} />}
+        </>
+      )}
     </div>
   );
 }
@@ -380,7 +389,7 @@ function EntryDetail({ e, ctx, analysis, view, scope }) {
         <IconButton icon={MoreHorizontal} title="More" onClick={(ev) => entryMenu(ev, e, ctx)} />
       </div>
       <div className="be-ident">
-        {e.type === 'character' && <PortraitButton e={e} readOnly={readOnly} />}
+        <PictureButton e={e} readOnly={readOnly} />
         <div className="be-ident-text">
           <input
             ref={nameRef}
@@ -401,7 +410,7 @@ function EntryDetail({ e, ctx, analysis, view, scope }) {
             placeholder={e.type === 'place' ? 'What kind of place, in a few words' : 'Who they are, in a few words'}
             onChange={(ev) => updateEntry(e.id, { role: ev.target.value })}
           />
-          {e.type === 'character' && <Traits e={e} readOnly={readOnly} />}
+          <Traits e={e} readOnly={readOnly} />
         </div>
       </div>
       {offer && <RenameOffer offer={offer} onDone={() => setOffer(null)} />}

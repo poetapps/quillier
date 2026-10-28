@@ -3224,6 +3224,9 @@ input[type='range']::-webkit-slider-thumb {
   flex: none;
   border-radius: 50%;
 }
+.be-portrait.wide {
+  border-radius: 7px;
+}
 .be-portrait-badge {
   position: absolute;
   right: -2px;
@@ -3245,7 +3248,7 @@ input[type='range']::-webkit-slider-thumb {
   opacity: 1;
 }
 
-/* Portraits */
+/* Portraits and postcards */
 .avatar {
   flex: none;
   display: inline-flex;
@@ -3258,13 +3261,18 @@ input[type='range']::-webkit-slider-thumb {
   font-weight: 620;
   letter-spacing: 0.02em;
 }
-.avatar.has-face {
+.avatar.has-face,
+.avatar.postcard.has-art {
   background: none;
+}
+.avatar.postcard {
+  background: color-mix(in srgb, var(--place) 14%, transparent);
+  color: var(--place);
 }
 .avatar svg {
   display: block;
 }
-.face-editor {
+.picture-editor {
   position: fixed;
   display: flex;
   gap: 20px;
@@ -3276,6 +3284,9 @@ input[type='range']::-webkit-slider-thumb {
   border-radius: 14px;
   box-shadow: var(--shadow);
   animation: pop 0.1s ease-out;
+}
+.picture-editor.wide {
+  width: 640px;
 }
 .fe-side {
   display: flex;
@@ -3315,6 +3326,11 @@ input[type='range']::-webkit-slider-thumb {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 0 0 1px var(--line-2);
+}
+.fe-tile.wide {
+  width: 60px;
+  height: 40px;
+  border-radius: 7px;
 }
 .fe-tile span,
 .fe-tile svg {
@@ -3738,6 +3754,9 @@ button.bs-num:hover:not(:disabled) {
 }
 button.place-chip:hover:not(:disabled) {
   color: var(--text);
+}
+.place-chip .avatar.postcard {
+  margin-left: -3px;
 }
 .place-dot {
   width: 6px;
