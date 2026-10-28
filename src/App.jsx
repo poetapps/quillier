@@ -9,6 +9,7 @@ import Modals from './components/Modals.jsx';
 import { TrashView, StatusBar } from './components/Views.jsx';
 import Library from './components/Library.jsx';
 import Bible from './components/Bible.jsx';
+import MatterView from './components/Matter.jsx';
 import { MenuLayer, Toast } from './components/ui.jsx';
 import { DictationBar } from './components/Dictation.jsx';
 import { kindOf } from './lib/project.js';
@@ -78,10 +79,10 @@ export default function App() {
           {sidebar && !focus && !compare && <Sidebar />}
           <main className="main">
             <TopBar />
-            {view === 'trash' ? <TrashView /> : view === 'bible' ? <Bible /> : compare ? <Compare key={`${compare.docId}:${compare.against}`} /> : <Page />}
+            {view === 'trash' ? <TrashView /> : view === 'bible' ? <Bible /> : view === 'matter' ? <MatterView /> : compare ? <Compare key={`${compare.docId}:${compare.against}`} /> : <Page />}
             {!focus && <StatusBar />}
           </main>
-          {panel && !focus && view !== 'bible' && <RightPanel />}
+          {panel && !focus && view !== 'bible' && view !== 'matter' && <RightPanel />}
         </div>
       )}
       <DictationBar />

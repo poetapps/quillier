@@ -23,6 +23,9 @@ import { beatsOf, linkedOutline, outlinePath } from '../lib/structure.js';
 import { openText } from '../lib/versions.js';
 import MarkdownEditor from './MarkdownEditor.jsx';
 import Versions from './Versions.jsx';
+import FindPanel from './FindPanel.jsx';
+import { BookGoal } from './Goal.jsx';
+import { todayTarget } from '../lib/goal.js';
 import { Toggle } from './ui.jsx';
 
 function scrollToScene(i) {
@@ -183,8 +186,9 @@ function Details({ project, found }) {
   const scenes = kind === 'chapter' ? splitScenes(text).filter(Boolean) : [];
   const total = manuscriptWords(project);
   const today = project.stats.daily[todayKey()] || 0;
-  const goal = prefs.dailyGoal || 0;
   const book = isBook(project);
+  const goal = todayTarget(project, prefs);
+  const paced = book && goal > 0 && goal !== (prefs.dailyGoal || 0);
 
   return (
     <div className="panel-scroll">
@@ -230,6 +234,13 @@ function Details({ project, found }) {
         </>
       )}
 
+      {book && (
+        <>
+          <div className="panel-label">Book goal</div>
+          <BookGoal project={project} />
+        </>
+      )}
+
       <div className="panel-label">Writing</div>
       <div className="kv">
         <span>Today</span>
@@ -245,6 +256,7 @@ function Details({ project, found }) {
           </div>
           <span>
             {Math.min(100, Math.round((Math.max(0, today) / goal) * 100))}% of {goal.toLocaleString()}
+            {paced ? ' for the deadline' : ''}
           </span>
         </div>
       )}
@@ -425,12 +437,17 @@ export default function RightPanel() {
           <button className={tab === 'versions' ? 'on' : ''} onClick={() => setState({ panelTab: 'versions' })}>
             Versions
           </button>
+          <button className={tab === 'find' ? 'on' : ''} onClick={() => setState({ panelTab: 'find', findFocus: Date.now() })} title="Find and replace  ⌘F">
+            Find
+          </button>
         </div>
         <button className="icon-btn no-drag" title="Close panel" onClick={() => togglePanel()}>
           <X size={17} strokeWidth={1.7} />
         </button>
       </div>
-      {!found ? (
+      {tab === 'find' ? (
+        <FindPanel />
+      ) : !found ? (
         <div className="panel-scroll panel-empty">Open a page to see its notes.</div>
       ) : tab === 'notes' ? (
         <div className="panel-scroll panel-notes">

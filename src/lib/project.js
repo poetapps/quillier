@@ -168,6 +168,7 @@ export function newEntry(type, name = '') {
     gender: '',
     age: '',
     face: null,
+    born: '',
     createdAt: nowIso(),
     updatedAt: nowIso(),
   };
@@ -190,6 +191,7 @@ function normalizeEntry(e) {
     gender: pickId(GENDERS, e.gender),
     age: pickId(AGES, e.age),
     face: normalizeFace(e.face),
+    born: typeof e.born === 'string' ? e.born : '',
   };
 }
 

@@ -422,6 +422,8 @@ function buildMenu() {
         { role: 'delete' },
         { role: 'selectAll' },
         { type: 'separator' },
+        { label: 'Find and Replace…', accelerator: 'CmdOrCtrl+F', click: cmd('find') },
+        { type: 'separator' },
         { label: 'Dictate', accelerator: 'CmdOrCtrl+Shift+D', click: cmd('dictate') },
         ...(isMac ? [{ label: 'Speech', submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }] }] : []),
       ],
@@ -923,6 +925,19 @@ ipcMain.handle('export:epub', async (_e, { suggested, files }) => {
     ...files.map((f) => ({ name: f.name, data: Buffer.from(f.data), store: /\.(jpe?g|png)$/i.test(f.name) })),
   ];
   await fsp.writeFile(filePath, zip(entries));
+  shell.showItemInFolder(filePath);
+  return filePath;
+});
+
+// files: [{ name, data: string }], the parts of a Word document (see src/lib/docx.js).
+ipcMain.handle('export:docx', async (_e, { suggested, files }) => {
+  const { canceled, filePath } = await dialog.showSaveDialog(win, {
+    title: 'Export Word Document',
+    defaultPath: path.join(app.getPath('documents'), `${safeName(suggested)}.docx`),
+    filters: [{ name: 'Word Document', extensions: ['docx'] }],
+  });
+  if (canceled || !filePath) return null;
+  await fsp.writeFile(filePath, zip(files.map((f) => ({ name: f.name, data: Buffer.from(f.data) }))));
   shell.showItemInFolder(filePath);
   return filePath;
 });

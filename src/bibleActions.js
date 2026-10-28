@@ -16,11 +16,13 @@ import {
   chooseStart,
   focusNewBook,
   suggestedName,
+  renameInBook,
 } from './store.js';
 import { newEntry, newRelationship, normalizeProject, defaultAliases } from './lib/project.js';
 import { createBook } from './lib/structure.js';
 import { createSeries, normalizeSeries, mergeIntoSeries, removeFromSeries, numberedCount, baseName, dirOf, SERIES_FILE } from './lib/series.js';
 import { buildContext, analyze } from './lib/bible.js';
+import { renameChanges, applyChanges, renameIn } from './lib/find.js';
 
 const api = window.api;
 const nowIso = () => new Date().toISOString();
@@ -135,6 +137,38 @@ export function renameEntry(id, name) {
 }
 
 export const setAliases = (id, aliases) => updateEntry(id, { aliases, autoAlias: false });
+
+// After an entry is renamed: put its new name in place of the old ones ([{ from, to }], see
+// renamePairs in lib/find.js) in the open book's text and, for a series entry, in `books` (other
+// books of the series: [{ path, title }]), whose files are backed up first. Every chapter changed
+// keeps a saved version from before.
+export async function renameInText(pairs, { label, books = [] }) {
+  const here = renameInBook(pairs, label);
+  let elsewhere = 0;
+  const writes = [];
+  for (const b of books) {
+    const res = await api.peekProject(b.path);
+    if (!res.ok) continue;
+    let book;
+    try {
+      book = normalizeProject(res.data);
+    } catch {
+      continue;
+    }
+    const changes = renameChanges(book, pairs);
+    if (!changes.length) continue;
+    elsewhere += changes.reduce((n, c) => n + c.n, 0);
+    writes.push({ path: b.path, data: { ...applyChanges(book, changes, `Before renaming ${label}`, (t) => renameIn(t, pairs)), updatedAt: nowIso() } });
+  }
+  if (writes.length && (await writeAll(writes, 'before-change'))) await reloadSeries();
+  const times = (n) => `${n.toLocaleString('en-US')} ${n === 1 ? 'time' : 'times'}`;
+  if (!writes.length) {
+    if (here) toast(`Renamed ${times(here.n)} in ${here.pages}`, { label: 'Undo', run: here.undo });
+    return;
+  }
+  const others = `${writes.length} other ${writes.length === 1 ? 'book' : 'books'}`;
+  toast(here ? `Renamed ${times(here.n)} in this book and ${times(elsewhere)} in ${others}. Each was backed up first.` : `Renamed ${times(elsewhere)} in ${others}. Each was backed up first.`);
+}
 
 // notes for 'all' books (the overview) or one book of the series.
 export function setEntryNotes(id, book, text) {
@@ -253,6 +287,24 @@ export function setSceneMeta(chapterId, index, opens, patch) {
     return { ...b, scenes: { ...b.scenes, [chapterId]: list } };
   });
 }
+
+// The same change to several scenes at once ([{ chapterId, index, opens }]), as one undo step.
+export function setScenesMeta(scenes, patch) {
+  editBible('book', (b) => {
+    const all = { ...b.scenes };
+    for (const { chapterId, index, opens } of scenes) {
+      const list = [...(all[chapterId] || [])];
+      const at = list[index] && list[index].opens === opens ? index : list.findIndex((x) => x && x.opens === opens);
+      const i = at >= 0 ? at : index;
+      list[i] = { ...(at >= 0 ? list[at] : {}), opens, ...patch };
+      all[chapterId] = list;
+    }
+    return { ...b, scenes: all };
+  });
+}
+
+// Story days ("Day 3") or calendar dates, for this book's timeline.
+export const setTimelineMode = (mode) => editBible('book', (b) => ({ ...b, timeline: { ...(b.timeline || {}), mode } }));
 
 export function setDecision(key, value) {
   editBible('book', (b) => {

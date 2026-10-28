@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { ChevronDown, MapPin, Plus, Pencil } from 'lucide-react';
 import { useStore, openMenu, openDoc, smartActive } from '../store.js';
 import { setSceneMeta } from '../bibleActions.js';
-import { sceneCast, presenceKey } from '../lib/bible.js';
+import { presenceKey } from '../lib/bible.js';
+import { bookScenes, storyOrder, timelineMode } from '../lib/timeline.js';
 import { fmt, plural, shortName } from './bibleUi.jsx';
+import { WhenChip, PovChip } from './SceneTime.jsx';
 
 function NoteEditor({ value, onDone }) {
   const [text, setText] = useState(value || '');
@@ -23,10 +25,12 @@ function NoteEditor({ value, onDone }) {
   );
 }
 
-function SceneRow({ ctx, view, book, ch, sc, presence, smartOn }) {
+// One scene: where it opens, when it happens, where it's set, whose point of view, who's in it.
+// `s` is the scene as lib/timeline.js's bookScenes() sees it; `prev` the one read before it.
+export function SceneRow({ ctx, view, book, s, prev, chapterScenes, presence, smartOn, mode }) {
   const [editing, setEditing] = useState(false);
   const editable = book.current;
-  const cast = sceneCast(sc, ch.id, book.bible, ctx.byId);
+  const { ch, sc, cast } = s;
   const meta = cast.meta || {};
   const detected = Object.entries(sc.counts)
     .filter(([id, n]) => n > 0 && ctx.byId[id]?.type === 'character')
@@ -95,6 +99,9 @@ function SceneRow({ ctx, view, book, ch, sc, presence, smartOn }) {
         )}
       </div>
       <div className="bs-cell">
+        <WhenChip s={s} prev={prev} mode={mode} editable={editable} />
+      </div>
+      <div className="bs-cell">
         {where ? (
           <button className={`place-chip ${cast.pinned ? 'pinned' : ''}`} disabled={!editable} onClick={whereMenu} title={cast.pinned ? 'Pinned by you' : 'Found by name'}>
             <span className="place-dot" />
@@ -107,6 +114,9 @@ function SceneRow({ ctx, view, book, ch, sc, presence, smartOn }) {
         ) : (
           <span className="muted">—</span>
         )}
+      </div>
+      <div className="bs-cell">
+        <PovChip s={s} ctx={ctx} view={view} chapterScenes={chapterScenes} editable={editable} />
       </div>
       <div className="bs-cell bs-who">
         {cast.who.map((id) => {
@@ -140,6 +150,9 @@ export default function BibleScenes({ ctx, analysis, view }) {
         const chapters = analysis.books[b.uuid]?.chapters || [];
         const n = chapters.reduce((m, c) => m + c.scenes.length, 0);
         const isOpen = open[b.uuid] ?? b.current;
+        const scenes = bookScenes(b, chapters, ctx.byId);
+        storyOrder(scenes);
+        const mode = timelineMode(b.bible);
         return (
           <section key={b.uuid} className="bs-book">
             <button className="bs-book-head" onClick={() => setOpen({ ...open, [b.uuid]: !isOpen })}>
@@ -155,13 +168,26 @@ export default function BibleScenes({ ctx, analysis, view }) {
                   <div className="bs-row bs-head-row">
                     <span>Scene</span>
                     <span>Opens with</span>
+                    <span>When</span>
                     <span>Where</span>
+                    <span>Point of view</span>
                     <span>Who</span>
                     <span className="bs-words">Words</span>
                   </div>
-                  {chapters.flatMap((ch) =>
-                    ch.scenes.map((sc) => <SceneRow key={`${ch.id}:${sc.index}`} ctx={ctx} view={view} book={b} ch={ch} sc={sc} presence={presence} smartOn={smartOn} />)
-                  )}
+                  {scenes.map((s, i) => (
+                    <SceneRow
+                      key={`${s.ch.id}:${s.sc.index}`}
+                      ctx={ctx}
+                      view={view}
+                      book={b}
+                      s={s}
+                      prev={scenes[i - 1]}
+                      chapterScenes={scenes.filter((x) => x.ch === s.ch)}
+                      presence={presence}
+                      smartOn={smartOn}
+                      mode={mode}
+                    />
+                  ))}
                 </div>
               ) : (
                 <div className="bs-empty">{b.missing ? 'This book’s file couldn’t be found.' : 'No scenes yet. Write a chapter and they show up here.'}</div>
@@ -170,7 +196,8 @@ export default function BibleScenes({ ctx, analysis, view }) {
         );
       })}
       <p className="bs-foot">
-        Scenes come from the *** breaks in each chapter. Where and who are found by name, and you can pin them by hand when a scene needs it.
+        Scenes come from the *** breaks in each chapter. Where and who are found by name, and you can pin them by hand when a scene needs it. When and point
+        of view are yours to set; the Timeline puts the scenes in story order.
         {smartOn && ' Faded names are only mentioned, not there.'}
       </p>
     </div>

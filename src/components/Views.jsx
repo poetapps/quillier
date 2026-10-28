@@ -12,6 +12,7 @@ import {
 } from '../store.js';
 import { countWords, todayKey, chaptersOf, isFolder, isBook, wordsFor, docName } from '../lib/project.js';
 import { openText } from '../lib/versions.js';
+import { todayTarget } from '../lib/goal.js';
 import { IconButton, Wordmark } from './ui.jsx';
 import { ThemeButton } from './ThemePicker.jsx';
 
@@ -139,12 +140,14 @@ export function TrashView() {
 export function StatusBar() {
   const project = useStore((s) => s.project);
   const view = useStore((s) => s.view);
-  const goal = useStore((s) => s.prefs.dailyGoal) || 0;
+  const prefs = useStore((s) => s.prefs);
+  const goal = todayTarget(project, prefs);
   const id = project.ui.openId;
   let words = 0;
   let where = '';
   if (view === 'trash') where = 'Trash';
   else if (view === 'bible') where = 'Story bible';
+  else if (view === 'matter') where = 'Front & back matter';
   else if (id === 'notes') {
     words = countWords(project.notes.content);
     where = 'Notes';

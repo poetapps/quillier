@@ -4,6 +4,7 @@ import { useStore, setBible, smartActive } from '../store.js';
 import { dismissNote } from '../bibleActions.js';
 import { heatLevel, pairs, suggestionsFrom, chapterColumns, relLabel, pairKey, needsCheck } from '../lib/bible.js';
 import { RELATION_LABELS } from '../lib/smartTasks.js';
+import { bookScenes, povShares, timelineChecks, timelineMode } from '../lib/timeline.js';
 import { SmartHint } from './Smart.jsx';
 import { fmt, plural } from './bibleUi.jsx';
 
@@ -12,8 +13,33 @@ const GAP = 3;
 
 const openEntry = (e) => () => setBible({ tab: e.type === 'place' ? 'places' : 'characters', selected: e.id, noteTab: 'all' });
 
-function buildNotes({ ctx, view, analysis, cols, suggestions, dismissed, smartOn, guesses }) {
+const colLabel = (view, c) => `${view.series ? `${c.book.label}, ` : ''}Ch. ${c.ch.index + 1}`;
+
+function buildNotes({ ctx, view, analysis, cols, suggestions, dismissed, smartOn, guesses, scenes, povs, colOf }) {
   const out = [];
+
+  // The timeline (only the open book's, which is the one that can be fixed from here).
+  const mine = scenes.filter((s) => s.book.current);
+  for (const c of timelineChecks(mine, ctx.byId, timelineMode(ctx.currentBook.bible))) {
+    out.push({ ...c, tone: 'gap', action: 'Timeline', run: () => setBible({ tab: 'timeline' }) });
+  }
+
+  // A point-of-view character who hasn't had a scene for a while.
+  const lastPov = Math.max(-1, ...povs.map((r) => r.last));
+  for (const r of povs) {
+    if (r.scenes < 2 || lastPov - r.last < 5) continue;
+    const e = ctx.byId[r.id];
+    const c = cols[r.last];
+    out.push({
+      key: `pov:${r.id}:${c.ch.id}`,
+      tone: 'gap',
+      text: `${e.name} hasn’t had a point-of-view scene since ${colLabel(view, c)}.`,
+      sub: `Other points of view have carried the last ${plural(lastPov - r.last, 'chapter')}.`,
+      action: 'Scenes',
+      run: () => setBible({ tab: 'scenes' }),
+    });
+  }
+
   const total = (e) => view.uuids.reduce((n, b) => n + (analysis.totals[e.id]?.[b] || 0), 0);
   const chars = view.entries.filter((e) => e.type === 'character');
 
@@ -124,6 +150,49 @@ function HeatRow({ e, view, analysis }) {
   );
 }
 
+// Who tells the story: each point-of-view character's share of the words, and where they last had a turn.
+function PovCard({ ctx, view, cols, scenes, povs }) {
+  const told = povs.reduce((n, r) => n + r.words, 0);
+  const set = scenes.filter((s) => s.pov).length;
+  return (
+    <section className="bd-card">
+      <div className="bd-card-head">
+        <div>
+          <div className="bd-card-title">Point of view</div>
+          <div className="bd-card-sub">
+            {set ? `Set for ${set} of ${plural(scenes.length, 'scene')}. Share of the words in those scenes.` : 'Whose eyes each scene is seen through, set on the Scenes tab.'}
+          </div>
+        </div>
+        <button className="btn small" onClick={() => setBible({ tab: 'scenes' })}>
+          {set ? 'Scenes' : 'Set points of view'}
+        </button>
+      </div>
+      {povs.length > 0 && (
+        <div className="bd-pov">
+          {povs.map((r) => {
+            const e = ctx.byId[r.id];
+            const pct = Math.round((r.words / Math.max(1, told)) * 100);
+            return (
+              <div key={r.id} className="bd-pov-row">
+                <button className="bd-heat-name" onClick={openEntry(e)}>
+                  {e.name}
+                </button>
+                <div className="bd-bar">
+                  <div style={{ width: `${pct}%` }} />
+                </div>
+                <span className="bd-pov-n">{pct}%</span>
+                <span className="bd-pair-sub">
+                  {plural(r.scenes, 'scene')} · {plural(r.chapters.size, 'chapter')} · last {colLabel(view, cols[r.last])}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function BibleDashboard({ ctx, analysis, view, scope }) {
   const dismissedList = useStore((s) => s.project.bible.dismissed);
   const smartOn = useStore((s) => smartActive(s.prefs));
@@ -132,12 +201,17 @@ export default function BibleDashboard({ ctx, analysis, view, scope }) {
   const places = view.entries.filter((e) => e.type === 'place');
   const cols = useMemo(() => chapterColumns(view, analysis), [view, analysis]);
   const pairList = useMemo(() => pairs(view, analysis), [view, analysis]);
+  const { scenes, povs, colOf } = useMemo(() => {
+    const at = new Map(cols.map((c, k) => [`${c.book.uuid}:${c.ch.id}`, k]));
+    const colOf = (s) => at.get(`${s.book.uuid}:${s.ch.id}`) ?? -1;
+    const scenes = view.books.flatMap((b) => bookScenes(b, analysis.books[b.uuid]?.chapters || [], ctx.byId));
+    return { scenes, povs: povShares(scenes, colOf), colOf };
+  }, [view, analysis, cols, ctx.byId]);
   const suggestions = useMemo(() => suggestionsFrom(pairList), [pairList]);
   const notes = useMemo(
-    () => buildNotes({ ctx, view, analysis, cols, suggestions, dismissed: new Set(dismissedList), smartOn, guesses }),
-    [ctx, view, analysis, cols, suggestions, dismissedList, smartOn, guesses]
+    () => buildNotes({ ctx, view, analysis, cols, suggestions, dismissed: new Set(dismissedList), smartOn, guesses, scenes, povs, colOf }),
+    [ctx, view, analysis, cols, suggestions, dismissedList, smartOn, guesses, scenes, povs, colOf]
   );
-  const scenes = view.books.reduce((n, b) => n + (analysis.books[b.uuid]?.chapters || []).reduce((m, c) => m + c.scenes.length, 0), 0);
   const top = pairList.slice(0, 5);
   const maxN = top[0]?.n || 1;
 
@@ -154,7 +228,7 @@ export default function BibleDashboard({ ctx, analysis, view, scope }) {
         {[
           [chars.length, 'Characters'],
           [places.length, 'Places'],
-          [scenes, 'Scenes'],
+          [scenes.length, 'Scenes'],
           [view.rels.length, 'Relationships'],
         ].map(([v, label]) => (
           <div key={label} className="bd-stat">
@@ -245,6 +319,8 @@ export default function BibleDashboard({ ctx, analysis, view, scope }) {
           {!top.length && <div className="bd-pair muted">Characters who share chapters show up here.</div>}
         </section>
       </div>
+
+      {chars.length > 0 && <PovCard ctx={ctx} view={view} cols={cols} scenes={scenes} povs={povs} />}
     </div>
   );
 }

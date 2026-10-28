@@ -10,6 +10,7 @@ import { Bold, Italic, Strikethrough, Heading1, Heading2, Quote, List, Asterisk,
 import { registerFlusher } from '../store.js';
 import { SymbolHints } from '../lib/symbolHints.js';
 import { NameHints } from '../lib/nameHints.js';
+import { FindHighlight } from '../lib/findHighlight.js';
 import '../lib/markdownFix.js';
 import { NoteMark, applyAnchors, readAnchors, removeNoteMarks, noteIdsAtCursor } from '../lib/inlineNotes.js';
 
@@ -100,6 +101,7 @@ export default function MarkdownEditor({
   typography = true,
   symbolHints = true,
   getNames, // enables name suggestions from the story bible
+  getFind, // enables highlighting the Find tab's matches: () => its search, or null
   spellcheck = true,
   className = '',
   formatBar = false,
@@ -114,6 +116,8 @@ export default function MarkdownEditor({
   getNotesRef.current = getNotes;
   const getNamesRef = useRef(getNames);
   getNamesRef.current = getNames;
+  const getFindRef = useRef(getFind);
+  getFindRef.current = getFind;
   const onAddNoteRef = useRef(onAddNote);
   onAddNoteRef.current = onAddNote;
   const onActiveNoteRef = useRef(onActiveNote);
@@ -156,6 +160,7 @@ export default function MarkdownEditor({
       ...(typography ? [ProseTypography] : []),
       ...(symbolHints ? [SymbolHints] : []),
       ...(getNames ? [NameHints.configure({ getNames: () => getNamesRef.current?.() || [] })] : []),
+      ...(getFind ? [FindHighlight.configure({ getRegex: () => getFindRef.current?.() || null })] : []),
       SceneBreakKey,
       ...(withNotes ? [NoteMark.configure({ onAdd: () => onAddNoteRef.current?.() })] : []),
     ],

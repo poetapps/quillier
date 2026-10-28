@@ -43,8 +43,11 @@ import {
 } from './lib/versions.js';
 import { createBook, mirrorFolders, unmirrorFolders, renameLinked, applyStructure, mirrorOf } from './lib/structure.js';
 import { exportMarkdown, exportChapterFiles, exportHtml, exportBookHtml, exportManuscriptHtml, buildEpub } from './lib/export.js';
+import { buildDocx } from './lib/docx.js';
 import { normalizeSeries, candidatePaths, relativePath, dirOf, SERIES_FILE } from './lib/series.js';
 import { noteRange, removeNoteMarks, applyAnchors } from './lib/inlineNotes.js';
+import { matterOf } from './lib/matter.js';
+import { findRegex, searchProject, replaceMatches, replaceAll, renameIn, renameChanges, applyChanges } from './lib/find.js';
 
 const api = window.api;
 
@@ -81,6 +84,9 @@ let state = {
   compare: null, // { docId, against: 'v:<version id>' | 't:<take id>' } while comparing a chapter
   textRev: 0, // bumped when a page's text is replaced from outside its editor, so the editor reloads
   versionForm: null, // set to open the "Save version" form in the panel
+  find: { query: '', replace: '', matchCase: false, wholeWord: false }, // the Find tab in the panel
+  findFocus: 0, // bumped to put the cursor in the Find box
+  findJump: null, // { docId, takeId, index } while the page opens on a match
 };
 
 const listeners = new Set();
@@ -684,6 +690,85 @@ export function jumpToNote(noteId) {
   });
 }
 
+// ---------- find and replace (see lib/find.js) ----------
+
+export const setFind = (patch) => setState({ find: { ...state.find, ...patch } });
+
+// ⌘F: the panel's Find tab, starting from the selected words if there are a few.
+export function openFind() {
+  if (!state.project) return;
+  flushEditors();
+  const ed = getMainEditor();
+  let query = state.find.query;
+  if (ed && state.view === 'page') {
+    const { from, to, empty } = ed.state.selection;
+    const picked = empty ? '' : ed.state.doc.textBetween(from, to, '\n');
+    if (picked.trim() && picked.length <= 80 && !picked.includes('\n')) query = picked;
+  }
+  setState({ view: 'page', compare: null, panel: true, panelTab: 'find', find: { ...state.find, query }, findFocus: Date.now(), menu: null });
+  setPrefs({ panel: true });
+}
+
+// Open the page a match is on (in the take it's in) and show that match.
+export function jumpToMatch(docId, takeId, index) {
+  flushEditors();
+  const found = findDoc(state.project, docId);
+  if (!found) return;
+  if (found.kind === 'chapter' && openTakeId(state.project, found.doc) !== takeId) {
+    commit((p) => withOpenTake(p, docId, takeId), { touch: false });
+    setState({ textRev: state.textRev + 1 });
+  }
+  openDoc(docId);
+  setState({ findJump: { docId, takeId, index, at: Date.now() } });
+}
+
+// Change the text of every page in `changes` (see applyChanges in lib/find.js). Not counted as
+// writing. Returns what was there, for restorePages.
+function rewritePages(changes, versionName, fixNotes) {
+  const before = changes.map((c) => ({ docId: c.docId, takeId: c.takeId, content: c.was, inlineNotes: c.inlineNotes }));
+  commit((p) => applyChanges(p, changes, versionName, fixNotes));
+  setState({ textRev: state.textRev + 1 });
+  return before;
+}
+
+function restorePages(before) {
+  flushEditors();
+  commit((p) => before.reduce((next, b) => mapText(next, b.docId, b.takeId, () => ({ content: b.content, inlineNotes: b.inlineNotes, updatedAt: nowIso() })), p));
+  setState({ textRev: state.textRev + 1 });
+}
+
+const pagesLabel = (p, changes) => {
+  const ids = new Set(changes.map((c) => c.docId));
+  const chapters = new Set(changes.filter((c) => c.chapter).map((c) => c.docId)).size;
+  return chapters === ids.size ? countOf(p, chapters) : `${ids.size} ${ids.size === 1 ? 'page' : 'pages'}`;
+};
+
+// Replace every match of the Find tab's search, except the ones in `skip` ("<target key>:<start>").
+export function replaceInBook(skip = new Set()) {
+  flushEditors();
+  const { query, replace, matchCase, wholeWord } = state.find;
+  const re = findRegex(query, { matchCase, wholeWord });
+  const changes = searchProject(state.project, re)
+    .map((g) => {
+      const use = g.matches.filter((m) => !skip.has(`${g.key}:${m.start}`));
+      return use.length ? { ...g, n: use.length, was: g.content, content: replaceMatches(g.content, use, replace) } : null;
+    })
+    .filter(Boolean);
+  if (!changes.length) return;
+  const n = changes.reduce((sum, c) => sum + c.n, 0);
+  const before = rewritePages(changes, `Before replacing “${query}”`, (s) => replaceAll(s, re, replace));
+  toast(`Replaced ${n.toLocaleString('en-US')} ${n === 1 ? 'match' : 'matches'} in ${pagesLabel(state.project, changes)}`, { label: 'Undo', run: () => restorePages(before) });
+}
+
+// Write a renamed entry's new name in place of its old ones ([{ from, to }]) all through the open book.
+export function renameInBook(pairs, label) {
+  flushEditors();
+  const changes = renameChanges(state.project, pairs);
+  if (!changes.length) return null;
+  const before = rewritePages(changes, `Before renaming ${label}`, (s) => renameIn(s, pairs));
+  return { n: changes.reduce((sum, c) => sum + c.n, 0), pages: pagesLabel(state.project, changes), undo: () => restorePages(before) };
+}
+
 // ---------- outline and manuscript lists (with folders) ----------
 
 const listOf = (p, area) => (area === 'outline' ? p.outline : activeDraft(p).chapters);
@@ -912,6 +997,19 @@ export function showBible(patch) {
 }
 
 export const setBible = (patch) => setState({ bible: { ...state.bible, ...patch } });
+
+export function showMatter() {
+  flushEditors();
+  setState({ view: 'matter', renamingId: null, compare: null });
+}
+
+// Front and back matter (lib/matter.js): change one page, `id`, of p.matter.
+export function setMatter(id, patch) {
+  commit((p) => {
+    const m = matterOf(p);
+    return { ...p, matter: { ...m, [id]: { ...m[id], ...patch } } };
+  });
+}
 
 // Marking a chapter Drafted, Revised or Done keeps a copy of it as it was then.
 export function setStatus(id, status) {
@@ -1218,9 +1316,18 @@ function exportable(p) {
   return mapActiveChapters(p, (cs) => cs.map((c) => (isFolder(c) ? c : { ...c, title: title(c) })));
 }
 
-export async function exportManuscript(format, opts) {
+// The rest of the series, for an "Also by" page: { title, books: [title] }, in series order.
+export function otherBooksInSeries() {
+  const sr = state.series;
+  if (!sr) return null;
+  const uuid = state.project.meta.uuid;
+  return { title: sr.data.title, books: sr.data.books.filter((b) => b.uuid !== uuid).map((b) => sr.siblings?.[b.uuid]?.title || b.title) };
+}
+
+export async function exportManuscript(format, options) {
   await settle();
   const p = exportable(state.project);
+  const opts = { ...options, series: otherBooksInSeries() };
   let where = null;
   if (format === 'md') where = await api.exportFile({ suggested: p.title, ext: 'md', content: exportMarkdown(p, opts) });
   if (format === 'folder') where = await api.exportFolder({ suggested: p.title, files: exportChapterFiles(p, opts) });
@@ -1230,6 +1337,7 @@ export async function exportManuscript(format, opts) {
     where = await api.exportPdf({ suggested: p.title, html: exportBookHtml(p, opts, widths) });
   }
   if (format === 'manuscript') where = await api.exportPdf({ suggested: `${p.title} (manuscript)`, html: exportManuscriptHtml(p, opts) });
+  if (format === 'docx') where = await api.exportDocx({ suggested: `${p.title} (manuscript)`, files: buildDocx(p, opts) });
   if (format === 'epub') where = await api.exportEpub({ suggested: p.title, files: await buildEpub(p, opts) });
   if (where) toast(`Exported ${wordsFor(p).whole.toLowerCase()}`);
   return where;
@@ -1269,6 +1377,7 @@ const commands = {
   'scene-break': () => getMainEditor()?.chain().focus().setHorizontalRule().run(),
   'add-note': addInlineNote,
   'save-version': () => state.project && startSaveVersion(),
+  find: openFind,
 };
 
 export function registerCommand(name, fn) {

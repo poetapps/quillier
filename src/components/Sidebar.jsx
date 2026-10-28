@@ -30,6 +30,7 @@ import {
   Unlink,
   NotebookPen,
   NotebookText,
+  BookMarked,
 } from 'lucide-react';
 import {
   useStore,
@@ -70,6 +71,7 @@ import {
   revealProject,
   closeProject,
   showBible,
+  showMatter,
   toggleMonth,
 } from '../store.js';
 import { startAddToSeries, takeOutOfSeries, renameSeries } from '../bibleActions.js';
@@ -655,6 +657,12 @@ export default function Sidebar() {
             <Trash2 className="sb-icon" size={16} strokeWidth={1.6} />
             <span className="sb-label">Trash</span>
             <span className="sb-count">{project.trash.length}</span>
+          </button>
+        )}
+        {kind === 'book' && (
+          <button className={`sb-item small ${view === 'matter' ? 'active' : ''}`} onClick={showMatter}>
+            <BookMarked className="sb-icon" size={16} strokeWidth={1.6} />
+            <span className="sb-label">Front &amp; back matter</span>
           </button>
         )}
         <button className="sb-item small" onClick={() => openModal('export')}>

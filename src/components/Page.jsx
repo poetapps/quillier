@@ -44,9 +44,17 @@ import MarkdownEditor from './MarkdownEditor.jsx';
 import NotePeek from './NotePeek.jsx';
 import { nameHintsFor } from '../lib/nameHints.js';
 import { openText, takeText, takeIdOf, takeNameOf, hasTakes } from '../lib/versions.js';
+import { findRegex } from '../lib/find.js';
+import { refreshFind, findHits } from '../lib/findHighlight.js';
 import { takeSwitcher } from './Versions.jsx';
 
 const pad = (n) => String(n).padStart(2, '0');
+
+// The Find tab's search while it's open, for highlighting on the page.
+const findOnPage = () => {
+  const s = getState();
+  return s.panel && s.panelTab === 'find' && !s.focus ? findRegex(s.find.query, s.find) : null;
+};
 
 // A journal entry's date, above its title. Click to move the entry to another day.
 function EntryDate({ doc }) {
@@ -218,6 +226,8 @@ export default function Page() {
   const [editor, setEditor] = useState(null);
   const focusBodyId = useStore((s) => s.focusBodyId);
   const textRev = useStore((s) => s.textRev);
+  const findKey = useStore((s) => (s.panel && s.panelTab === 'find' && !s.focus ? `${s.find.query}\u0001${s.find.matchCase}\u0001${s.find.wholeWord}` : ''));
+  const findJump = useStore((s) => s.findJump);
   const pk = kindOf(project);
   const wording = wordsFor(project);
 
@@ -233,6 +243,24 @@ export default function Page() {
       setState({ focusBodyId: null });
     }
   }, [editor, focusBodyId, found?.doc.id]);
+
+  useEffect(() => {
+    if (editor && !editor.isDestroyed) refreshFind(editor);
+  }, [editor, findKey]);
+
+  // Opened from the Find tab: show the match it was opened on. The editor has to be this page's
+  // (the last one's is destroyed a little later), so it's checked by the page it was made for.
+  const pageKey = found && `${found.doc.id}:${openText(project, found.doc).id}`;
+  useEffect(() => {
+    if (!editor || editor.isDestroyed || !findJump || editor.pageKey !== pageKey || pageKey !== `${findJump.docId}:${findJump.takeId}`) return;
+    refreshFind(editor, findJump.index);
+    const hit = findHits(editor)[findJump.index];
+    if (hit) {
+      editor.commands.setTextSelection(hit);
+      requestAnimationFrame(() => scrollRef.current?.querySelector('.find-hit.current')?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+    }
+    setState({ findJump: null });
+  }, [editor, findJump, pageKey]);
 
   if (!found) {
     if (pk === 'book') return <div className="page-scroll" />;
@@ -362,10 +390,12 @@ export default function Page() {
             typography={prefs.smartTypography}
             symbolHints={prefs.symbolHints}
             getNames={book && prefs.nameHints !== false ? () => nameHintsFor(getState().project, getState().series) : null}
+            getFind={findOnPage}
             spellcheck={prefs.spellcheck}
             className="page-editor"
             formatBar
             onReady={(ed) => {
+              ed.pageKey = `${doc.id}:${text.id}`;
               setMainEditor(ed);
               setEditor(ed);
             }}

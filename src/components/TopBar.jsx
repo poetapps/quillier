@@ -39,6 +39,7 @@ export default function TopBar() {
   let crumb = '';
   if (view === 'trash') crumb = 'Trash';
   else if (view === 'bible') crumb = 'Story bible';
+  else if (view === 'matter') crumb = 'Front & back matter';
   else if (found?.kind === 'chapter' && kind === 'journal') crumb = [shortDate(found.doc.date), found.doc.title.trim()].filter(Boolean).join(' · ');
   else if (found?.kind === 'chapter' && kind === 'notebook') crumb = found.doc.title || 'Untitled';
   else if (found?.kind === 'chapter') crumb = `${pad(chapterNumber(project, found.doc.id))} ${found.doc.title || 'Untitled'}`;
@@ -85,7 +86,7 @@ export default function TopBar() {
         <DictationButton />
         <IconButton icon={focus ? Minimize2 : Maximize2} title={focus ? 'Exit focus mode  Esc' : 'Focus mode  ⇧⌘F'} onClick={toggleFocus} />
         <SaveStatus />
-        {!focus && view !== 'bible' && (
+        {!focus && view !== 'bible' && view !== 'matter' && (
           <IconButton icon={PanelRight} title={panel ? 'Hide notes panel  ⇧⌘\\' : 'Show notes panel  ⇧⌘\\'} onClick={() => togglePanel()} className={panel ? 'on' : ''} />
         )}
       </div>

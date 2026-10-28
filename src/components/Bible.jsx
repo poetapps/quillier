@@ -6,6 +6,7 @@ import { useBible } from '../lib/useBible.js';
 import { Segmented } from './ui.jsx';
 import BibleEntries from './BibleEntries.jsx';
 import BibleScenes from './BibleScenes.jsx';
+import BibleTimeline from './BibleTimeline.jsx';
 import BibleGraph from './BibleGraph.jsx';
 import BibleDashboard from './BibleDashboard.jsx';
 
@@ -13,6 +14,7 @@ const TABS = [
   ['characters', 'Characters'],
   ['places', 'Places'],
   ['scenes', 'Scenes'],
+  ['timeline', 'Timeline'],
   ['relationships', 'Relationships'],
   ['dashboard', 'Dashboard'],
 ];
@@ -38,6 +40,7 @@ export default function Bible() {
     characters: view.entries.filter((e) => e.type === 'character').length,
     places: view.entries.filter((e) => e.type === 'place').length,
     scenes: view.books.reduce((n, b) => n + (analysis.books[b.uuid]?.chapters || []).reduce((m, c) => m + c.scenes.length, 0), 0),
+    timeline: '',
     relationships: view.rels.length,
     dashboard: '',
   };
@@ -99,6 +102,7 @@ export default function Bible() {
 
         {(tab === 'characters' || tab === 'places') && <BibleEntries {...bible} type={tab === 'places' ? 'place' : 'character'} />}
         {tab === 'scenes' && <BibleScenes {...bible} />}
+        {tab === 'timeline' && <BibleTimeline {...bible} />}
         {tab === 'relationships' && <BibleGraph {...bible} />}
         {tab === 'dashboard' && <BibleDashboard {...bible} />}
       </div>

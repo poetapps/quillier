@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { FileText, Folder, Globe, FileDown, FileType2, BookOpen, Layers, Check, ArrowRight, FilePlus, LayoutTemplate, NotebookPen, NotebookText } from 'lucide-react';
-import { useStore, closeModal, setPrefs, setTheme, exportManuscript, setProjectMeta, checkForUpdates } from '../store.js';
+import { FileText, Folder, Globe, FileDown, FileType2, FileSignature, BookOpen, Layers, Check, ArrowRight, FilePlus, LayoutTemplate, NotebookPen, NotebookText } from 'lucide-react';
+import { useStore, closeModal, setPrefs, setTheme, exportManuscript, setProjectMeta, checkForUpdates, showMatter, otherBooksInSeries } from '../store.js';
 import { activeDraft, chaptersOf, isBook, wordsFor, countOf, todayKey, dayOf, monthLabel } from '../lib/project.js';
 import { STRUCTURES } from '../lib/templates.js';
 import { TRIMS, DEFAULT_TRIM } from '../lib/export.js';
+import { matterItems } from '../lib/matter.js';
 import { Modal, Segmented, Toggle } from './ui.jsx';
 import { readBookForMerge, readSeriesForMerge, chooseNewSeriesFor, confirmAddToSeries } from '../bibleActions.js';
 import { planMerge, matchReason, numberedCount, bookLabels } from '../lib/series.js';
@@ -217,6 +218,7 @@ function SettingsModal({ modal }) {
 
 const FORMATS = [
   { id: 'manuscript', icon: FileType2, label: 'Manuscript', sub: 'Submission format: 8.5×11, Courier, double-spaced' },
+  { id: 'docx', icon: FileSignature, label: 'Word manuscript', sub: 'The same format as a .docx, for agents and editors' },
   { id: 'epub', icon: BookOpen, label: 'EPUB ebook', sub: 'For Apple Books, Kobo, Kindle, any e-reader' },
   { id: 'pdf', icon: FileDown, label: 'Book PDF', sub: 'Print-ready at 5×8, 5.5×8.5 or 6×9' },
   { id: 'html', icon: Globe, label: 'HTML', sub: 'A clean web page, book styling' },
@@ -240,15 +242,43 @@ function AuthorRow({ project }) {
   );
 }
 
+// Which front and back matter pages an export will have, with a way to the page that edits them.
+function MatterRow({ project, on, onChange }) {
+  useStore((s) => s.series);
+  const { front, back } = matterItems(project, otherBooksInSeries());
+  const names = [...front, ...back].map((it) => (it.type === 'alsoBy' ? 'Also by' : it.title));
+  const edit = () => {
+    closeModal(null);
+    showMatter();
+  };
+  return (
+    <Row
+      label="Front & back matter"
+      hint={
+        <>
+          {names.length ? names.join(', ') : 'None yet: dedication, copyright page, acknowledgments…'}{' '}
+          <button className="text-link" onClick={edit}>
+            {names.length ? 'Edit' : 'Add'}
+          </button>
+        </>
+      }
+    >
+      <Toggle checked={on && names.length > 0} onChange={onChange} />
+    </Row>
+  );
+}
+
 function ExportModal() {
   const project = useStore((s) => s.project);
-  const formats = FORMATS.filter((f) => isBook(project) || f.id !== 'manuscript');
+  const formats = FORMATS.filter((f) => isBook(project) || (f.id !== 'manuscript' && f.id !== 'docx'));
   const [format, setFormatState] = useState(formats.some((f) => f.id === lastFormat) ? lastFormat : 'pdf');
   const words = wordsFor(project);
   const titlesLabel = { book: 'Chapter titles', journal: 'Dates and titles', notebook: 'Page titles' }[project.kind] || 'Chapter titles';
   const [titles, setTitles] = useState(true);
   const [titlePage, setTitlePage] = useState(true);
   const [underlineItalics, setUnderlineItalics] = useState(false);
+  const [matter, setMatterOn] = useState(true);
+  const [docFont, setDocFont] = useState('courier');
   const [cover, setCover] = useState(null);
   const [busy, setBusy] = useState(false);
   const draft = activeDraft(project);
@@ -259,7 +289,7 @@ function ExportModal() {
   const run = async () => {
     setBusy(true);
     try {
-      const where = await exportManuscript(format, { titles, titlePage, underlineItalics, cover });
+      const where = await exportManuscript(format, { titles, titlePage, underlineItalics, cover, matter: matter && isBook(project), font: docFont });
       if (where) closeModal(where);
     } finally {
       setBusy(false);
@@ -296,7 +326,7 @@ function ExportModal() {
         ))}
       </div>
 
-      {format === 'manuscript' && (
+      {(format === 'manuscript' || format === 'docx') && (
         <>
           <AuthorRow project={project} />
           <div className="setting-row stacked">
@@ -312,6 +342,18 @@ function ExportModal() {
               onChange={(e) => setProjectMeta({ contact: e.target.value })}
             />
           </div>
+          {format === 'docx' && (
+            <Row label="Font" hint="12 point. Check what the agent or publisher asks for.">
+              <Segmented
+                value={docFont}
+                onChange={setDocFont}
+                options={[
+                  { value: 'courier', label: 'Courier New' },
+                  { value: 'times', label: 'Times New Roman' },
+                ]}
+              />
+            </Row>
+          )}
           <Row label="Underline italics" hint="Old typewriter convention. Most editors now prefer real italics.">
             <Toggle checked={underlineItalics} onChange={setUnderlineItalics} />
           </Row>
@@ -356,6 +398,7 @@ function ExportModal() {
           <Toggle checked={titlePage} onChange={setTitlePage} />
         </Row>
       )}
+      {isBook(project) && ['pdf', 'epub', 'html', 'md'].includes(format) && <MatterRow project={project} on={matter} onChange={setMatterOn} />}
     </Modal>
   );
 }

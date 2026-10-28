@@ -71,6 +71,7 @@ contextBridge.exposeInMainWorld('api', {
   exportPdf: (opts) => ipcRenderer.invoke('export:pdf', opts),
   pdfPageWidths: (opts) => ipcRenderer.invoke('export:pdf-page-widths', opts),
   exportEpub: (opts) => ipcRenderer.invoke('export:epub', opts),
+  exportDocx: (opts) => ipcRenderer.invoke('export:docx', opts),
   chooseCover: () => ipcRenderer.invoke('export:choose-cover'),
 
   updateStatus: () => ipcRenderer.invoke('update:status'),

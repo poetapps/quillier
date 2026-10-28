@@ -23,13 +23,18 @@ Shipping a new version, the website, and auto-updates are covered in [RELEASING.
   - A **notebook** (research and study notes) is unnumbered pages in folders, as deep as you like. Each page shows the folders it sits in above its title.
 - **Story bible**: characters and places, the relationships between them, and where they all show up.
   - **Characters** and **Places**: name, a few words on who or what they are, aliases (“Maren” for “Maren Holt”), and notes. In a series, an entry has an Overview plus a tab per book for what's true as of that book, and entries are either shared by the series or kept to one book (**Move to series bible** shares one).
+  - **Renaming** a character or place offers to change the old name in the text too ("Maren Holt" and its alias "Maren" become "Mara Holt" and "Mara"), in this book or, for a series entry, in every book of the series. Other books' files are backed up first, and every chapter changed keeps a saved version from before.
   - Mentions are found by name and alias, whole words and case-sensitive. Nothing is ever added to your text, so exports stay clean and pasted or imported chapters count too. Names that are also everyday words (Will, May, Hope) are checked with a few simple rules, and any that don't count can be confirmed by hand.
-  - **Scenes**: every scene (the parts between *** breaks) with its opening words, where it's set and who's in it. Where and who are found by name and can be pinned by hand; scenes can have a note.
+  - **Scenes**: every scene (the parts between *** breaks) with its opening words, when it happens, where it's set, whose point of view it's in, and who's in it. Where and who are found by name and can be pinned by hand; when and point of view are set by hand (**…for the whole chapter** sets one point of view on every scene in it). Scenes can have a note.
+  - **Timeline**: the scenes in story order, by day, in story days (Day 1, Day 2…, backstory at 0 or less) or calendar dates. It points out someone in two places at the same time (counting the point of view, anyone added by hand and anyone named more than once, not passing mentions) and a scene that happens earlier than the one read before it, in case it isn't meant as a flashback. With calendar dates, characters can have a birth year, and a character in a scene from before they were born, or whose age band doesn't fit their age in their first scene, is pointed out too.
   - **Relationships**: a graph (drag the characters around) or a grid. A relationship can be labeled differently in each book of a series (“Betrothed” in Book 1, “Estranged” in Book 2), and characters who keep sharing chapters without a relationship show as a dashed suggestion.
-  - **Dashboard**: who and what shows up in every chapter, characters who haven't appeared in a while, names that could mean two people, and who's often together.
+  - **Dashboard**: who and what shows up in every chapter, characters who haven't appeared in a while, names that could mean two people, who's often together, each point-of-view character's share of the words (and anyone who hasn't had a point-of-view scene in five chapters or more), and what the timeline found.
   - A **This book / Whole series** switch shows one book or the whole series.
 - **Name suggestions**: after a capital and two letters, a name from the story bible finishes itself in grey. **Tab** takes it, anything else keeps typing; when two names fit, a short list shows (↑/↓, Tab). Can be turned off in Settings.
 - **Notes**: one free-form page for the whole project (characters, places, research).
+- **Find and replace** (⌘F, or the **Find** tab in the notes panel): searches every chapter and take, the outline and the notes, in the draft that's open. Matches are tinted on the page, Enter steps through them (⇧Enter goes back) and clicking one opens it. **Match case** and **Whole words** narrow it down; straight and curly quotes count as the same, so `Maren's` finds `Maren’s`. Untick any match to leave it out of **Replace all**. Each chapter changed keeps a saved version from before, the toast has Undo, link targets are never touched, and notes on text follow the change.
+- **Front & back matter** (books, in the sidebar): a copyright page (filled in from the author, year, ISBN, edition and publisher, with an optional fiction notice, or written by hand), dedication, epigraph, acknowledgments, about the author, and **Also by**, which lists the rest of the series in order plus any other titles. A page with nothing on it is left out, and none of them count toward the word count. The Book PDF, EPUB, HTML and Markdown exports include them (a switch in Export turns them off); the submission manuscript never does. In the Book PDF the copyright page sits on the back of the title page and the dedication and epigraph start on rectos.
+- **Book goal** (Details tab): a word count to reach, and optionally a day to reach it by. It shows how far along the book is, the words a day that make the deadline (worked out from where the book stood this morning, so it holds still while you write), and when you'd finish at your pace over the last two weeks. With a deadline, today's bar and the status bar follow its pace instead of the daily goal in Settings.
 - **Starting a book**: New project first asks how to start: blank, or from one of five story structures (Three-Act, Save the Cat!, The Hero’s Journey, Seven-Point, Story Circle). A structure fills the Outline with a folder per act and a page per beat, each holding a short explanation of what should happen there, meant to be written over. Optionally the acts get matching folders in the manuscript, and every beat gets an empty chapter.
 - **Outline**: planning sections, in folders as deep as you like (say, Part One → Act I → beats). Add with `+` on hover or ⌥⌘N; right-click a folder to add a structure inside it.
   - **Show in manuscript**: a toggle on an outline folder's page (or its right-click menu) gives the manuscript a matching folder, plus one for every folder inside it. The two share a name; the manuscript folder keeps its own notes, and its notes panel shows what the outline says about it. Turning it off removes the manuscript folder only if nothing's been written in it, and turning it back on links the same one again.
@@ -63,6 +68,7 @@ Double-clicking a `.quill` file opens it in the packaged app. Projects from when
 **Export** (⌘E) to:
 
 - **Manuscript**: standard submission format as a PDF. 8.5×11, 1" margins, 12pt Courier Prime, double-spaced, ½" indents. The title page has your contact details top-left, a rounded word count top-right, and the title and byline centered. Every page after it carries a "Surname / TITLE / page" header, each chapter starts a third of the way down a new page, scene breaks print as `#`, and the book ends with END. Author and contact details are saved with the project.
+- **Word manuscript**: the same submission format as a `.docx`, which most agents and editors ask for, in Courier New or Times New Roman. Formatting is written onto every paragraph as well as into named styles, so apps that skip styles still lay it out, and each chapter opens with a fixed-height empty paragraph, since Word drops the space above a paragraph that starts a page.
 - **EPUB ebook**: EPUB 3 (with EPUB 2 navigation for older readers). It validates cleanly with W3C epubcheck. Use your own cover image, or let it generate a simple typographic one.
 - **Book PDF**: a print-ready paperback interior at 5×8, 5.5×8.5 or 6×9 inches. Mirrored margins with the wider one at the spine, justified and hyphenated text, chapters sunk a third of the way down a new page, folios at the foot, and running heads (book title on versos, chapter title on rectos). The title page and part pages are rectos with a blank verso behind them, and none of them, nor a chapter's opening page, carries a folio or head. The trim size is saved with the project.
 - **HTML**, one **Markdown** file, or a folder of per-chapter `.md` files. **Import** takes `.md`/`.txt` files. A single file is split into chapters at each `# Heading`.
@@ -85,6 +91,7 @@ Unfinished features stay hidden until you turn on **Settings → Alpha features*
 | Bold / italic | ⌘B / ⌘I |
 | Scene break | ⌘↵ |
 | Note on selected text | ⌥⌘M |
+| Find and replace | ⌘F |
 | Dictate | ⇧⌘D (↵ to finish, Esc to discard) |
 | Export | ⌘E |
 
@@ -97,7 +104,10 @@ Unfinished features stay hidden until you turn on **Settings → Alpha features*
 - `src/lib/project.js`: the `.quill` format, folders, word counts, import parsing
 - `src/lib/structure.js`: how the outline and the manuscript link up, and starting from a structure
 - `src/lib/templates.js`: the five story structures and their guidance text
-- `src/lib/export.js`: Markdown/HTML/manuscript/EPUB export
+- `src/lib/export.js`: Markdown/HTML/manuscript/EPUB export; `src/lib/book.js` is the book in reading order, `src/lib/docx.js` the Word manuscript, `src/lib/matter.js` front and back matter
+- `src/lib/find.js`, `src/lib/findHighlight.js`: find and replace across the book, and renaming a story bible entry in the text
+- `src/lib/timeline.js`: when scenes happen, point of view, and the timeline's checks
+- `src/lib/goal.js`: the book goal and its daily pace
 - `src/dictation.js`, `src/lib/dictation*.js`, `electron/dictation/`: dictation (microphone and pauses, text rules, the whisper.cpp worker)
 - `src/components/`: the UI (TipTap editor with Markdown in/out)
 - `site/`: the quillier.com landing page (plain HTML, deployed by Vercel on every push to main)

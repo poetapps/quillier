@@ -1,5 +1,7 @@
 import { marked } from 'marked';
-import { activeDraft, manuscriptWords, chaptersOf, isFolder, partNumbers, partLabel } from './project.js';
+import { activeDraft, manuscriptWords, chaptersOf } from './project.js';
+import { matterItems } from './matter.js';
+import { chapterTitle, bookItems, roundedWords } from './book.js';
 import courierRegular from '@fontsource/courier-prime/files/courier-prime-latin-400-normal.woff2?inline';
 import courierItalic from '@fontsource/courier-prime/files/courier-prime-latin-400-italic.woff2?inline';
 import courierBold from '@fontsource/courier-prime/files/courier-prime-latin-700-normal.woff2?inline';
@@ -13,57 +15,44 @@ function escapeHtml(s) {
 
 const cssString = (s) => `"${String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ' ')}"`;
 
-// Chapters still called "Untitled chapter" export as "Chapter 3" etc.
-export function chapterTitle(c, i) {
-  const t = (c.title || '').trim();
-  return !t || /^untitled chapter$/i.test(t) ? `Chapter ${i + 1}` : t;
-}
-
-// A part page shows "Part Two" and the folder's name, unless the name only says "Part Two" again.
-function partSubtitle(folder) {
-  const t = (folder.title || '').trim();
-  return !t || /^untitled folder$/i.test(t) || /^part\s+([a-z]+|\d+)$/i.test(t) ? '' : t;
-}
-
-// The book in reading order: chapters, plus a part page wherever a folder marked as a book part
-// starts. Other folders only organize the manuscript and leave no trace. `parent` is the part an
-// item sits in and `depth` how many parts deep it is.
-function bookItems(p) {
-  const draft = activeDraft(p);
-  const byId = new Map(draft.chapters.map((d) => [d.id, d]));
-  const parts = partNumbers(draft);
-  const partAbove = (d) => {
-    for (let f = byId.get(d.parent); f; f = byId.get(f.parent)) if (f.part) return f.id;
-    return null;
-  };
-  const items = [];
-  const depth = {};
-  let index = 0;
-  for (const d of draft.chapters) {
-    const parent = partAbove(d);
-    depth[d.id] = parent ? depth[parent] + 1 : 0;
-    if (!isFolder(d)) {
-      items.push({ type: 'chapter', id: d.id, chapter: d, index, title: chapterTitle(d, index), parent, depth: depth[d.id] });
-      index++;
-    } else if (d.part) {
-      const label = partLabel(parts[d.id]);
-      const subtitle = partSubtitle(d);
-      items.push({ type: 'part', id: d.id, n: parts[d.id], label, subtitle, title: subtitle ? `${label}: ${subtitle}` : label, parent, depth: depth[d.id] });
-    }
-  }
-  return items;
-}
-
 // Exported pages never run scripts (imported Markdown can contain raw HTML).
 const NO_SCRIPTS = `<meta http-equiv="Content-Security-Policy" content="script-src 'none'">`;
 
+// ---------- front and back matter (see lib/matter.js) ----------
+
+// opts.matter says whether to include them; opts.series is the rest of the series, for "Also by".
+const matterFor = (p, opts) => (opts?.matter ? matterItems(p, opts.series) : { front: [], back: [] });
+
+// The inside of a front or back matter page. `md` turns Markdown into markup; `esc` escapes text.
+function matterBody(it, { md, esc, br = '<br>' }) {
+  if (it.type === 'copyright') return it.lines.map((l) => `<p>${l.map(esc).join(br)}</p>`).join('');
+  if (it.type === 'epigraph') return `<blockquote>${md(it.md)}</blockquote>${it.source ? `<p class="source">— ${esc(it.source)}</p>` : ''}`;
+  if (it.type === 'alsoBy') {
+    return it.groups.map((g) => `${g.heading ? `<p class="also-group">${esc(g.heading)}</p>` : ''}${g.titles.map((t) => `<p class="also-title">${esc(t)}</p>`).join('')}`).join('');
+  }
+  return md(it.md);
+}
+
+const titled = (it) => it.type === 'section' || it.type === 'alsoBy';
+
+function matterMarkdown(it, heading) {
+  if (it.type === 'copyright') return it.lines.map((l) => l.join('  \n')).join('\n\n');
+  if (it.type === 'epigraph') return `${it.md.trim().split('\n').map((l) => `> ${l}`).join('\n')}${it.source ? `\n\n— ${it.source}` : ''}`;
+  if (it.type === 'alsoBy') return `${heading(it.title)}\n\n${it.groups.map((g) => [g.heading && `**${g.heading}**`, ...g.titles.map((t) => `*${t}*`)].filter(Boolean).join('  \n')).join('\n\n')}`;
+  if (it.type === 'section') return `${heading(it.title)}\n\n${it.md.trim()}`;
+  return it.md.trim();
+}
+
 // ---------- Markdown ----------
 
-export function exportMarkdown(p, { titles, titlePage }) {
+export function exportMarkdown(p, opts) {
+  const { titles, titlePage } = opts;
   const parts = [];
   const base = titlePage ? 2 : 1;
   const heading = (depth, text) => `${'#'.repeat(Math.min(6, base + depth))} ${text}`;
+  const { front, back } = matterFor(p, opts);
   if (titlePage) parts.push(`# ${p.title}`);
+  for (const it of front) parts.push(matterMarkdown(it, (t) => heading(0, t)));
   for (const it of bookItems(p)) {
     if (it.type === 'part') parts.push(heading(it.depth, it.title));
     else {
@@ -71,6 +60,7 @@ export function exportMarkdown(p, { titles, titlePage }) {
       parts.push(titles ? `${heading(it.depth, it.title)}\n\n${body}` : body);
     }
   }
+  for (const it of back) parts.push(matterMarkdown(it, (t) => heading(0, t)));
   return parts.filter(Boolean).join('\n\n') + '\n';
 }
 
@@ -83,7 +73,11 @@ export function exportChapterFiles(p, { titles }) {
 
 // ---------- book-style HTML ----------
 
-export function exportHtml(p, { titles, titlePage }) {
+export function exportHtml(p, opts) {
+  const { titles, titlePage } = opts;
+  const { front, back } = matterFor(p, opts);
+  const matter = (it) =>
+    `<section class="${titled(it) ? 'chapter' : 'matter'} ${it.id}">${titled(it) ? `<h1 class="chapter-title">${escapeHtml(it.title)}</h1>` : ''}${matterBody(it, { md: (m) => marked.parse(m), esc: escapeHtml })}</section>`;
   const chapters = bookItems(p)
     .map((it) => {
       if (it.type === 'part') {
@@ -114,11 +108,23 @@ export function exportHtml(p, { titles, titlePage }) {
   hr { border: 0; text-align: center; margin: 1.6em 0; }
   hr::after { content: '*   *   *'; white-space: pre; letter-spacing: 0.2em; color: #555; }
   blockquote { margin: 1em 2em; font-style: italic; }
+  .matter { break-before: page; page-break-before: always; margin: 4em 0; }
+  .matter p, .also-by p { text-indent: 0; }
+  .copyright { font-size: 0.85em; line-height: 1.5; }
+  .copyright p { margin-bottom: 1em; }
+  .dedication, .epigraph { text-align: center; font-style: italic; }
+  .epigraph blockquote { margin: 0 2em; }
+  .epigraph .source { font-style: normal; margin-top: 0.8em; }
+  .also-by { text-align: center; }
+  .also-group { margin-top: 1.4em; font-variant: small-caps; letter-spacing: 0.04em; }
+  .also-title { font-style: italic; }
   @media print { body { margin: 0; max-width: none; padding: 0; } }
 </style></head>
 <body>
 ${cover}
+${front.map(matter).join('\n')}
 ${chapters}
+${back.map(matter).join('\n')}
 </body></html>`;
 }
 
@@ -158,18 +164,24 @@ function pageCounts(widths, trim, n) {
   return counts.length === n && widths[0] < trim.w * 72 + 1 ? counts : null;
 }
 
+// Pages that stand alone and start on a recto: the title page, part pages, dedication and epigraph.
+const DISPLAY = new Set(['title', 'part', 'dedication', 'epigraph']);
+
 // What goes on each page of the book: blank versos where a recto has to come next, and for each
-// page whether it shows a folio and which running head.
+// page whether it shows a folio and which running head. The copyright page goes on the verso
+// behind the title page; whatever follows a display page or the copyright page starts on a recto.
 function pagePlan(items, counts, bookTitle) {
   const pages = [];
   const blanks = [];
-  const display = (it) => it?.type === 'title' || it?.type === 'part';
+  const display = (it) => DISPLAY.has(it?.type);
   items.forEach((it, i) => {
-    blanks[i] = (display(it) || display(items[i - 1])) && pages.length % 2 === 1;
+    const onVerso = pages.length % 2 === 1;
+    const prev = items[i - 1];
+    blanks[i] = it.type === 'copyright' ? pages.length > 0 && !onVerso : (display(it) || display(prev) || prev?.type === 'copyright') && onVerso;
     if (blanks[i]) pages.push({ folio: false, head: '' });
     for (let j = 0; j < counts[i]; j++) {
       const verso = pages.length % 2 === 1;
-      const plain = display(it) || j === 0;
+      const plain = display(it) || it.type === 'copyright' || j === 0;
       pages.push({ folio: !plain, head: plain ? '' : verso ? bookTitle : it.head });
     }
   });
@@ -178,13 +190,17 @@ function pagePlan(items, counts, bookTitle) {
 
 // Without `pageWidths` this is the measuring print; with the page widths (in points) that
 // print came back with, it's the book.
-export function exportBookHtml(p, { titles, titlePage }, pageWidths) {
+export function exportBookHtml(p, opts, pageWidths) {
+  const { titles, titlePage } = opts;
   const trim = TRIMS[p.meta?.trim] || TRIMS[DEFAULT_TRIM];
   const lang = (p.meta?.language || navigator.language || 'en').trim();
   const author = (p.meta?.author || '').trim();
+  const { front, back } = matterFor(p, opts);
   const items = [
     ...(titlePage ? [{ type: 'title' }] : []),
+    ...front,
     ...bookItems(p).map((it) => (it.type === 'chapter' ? { ...it, head: titles ? it.title : p.title } : it)),
+    ...back.map((it) => ({ ...it, head: it.title })),
   ];
   const measuring = pageWidths === undefined;
   const counts = measuring ? null : pageCounts(pageWidths, trim, items.length);
@@ -199,6 +215,11 @@ export function exportBookHtml(p, { titles, titlePage }, pageWidths) {
       }
       if (it.type === 'part') {
         return `${blank}<section class="part${cls}"><p class="part-label">${escapeHtml(it.label)}</p>${it.subtitle ? `<h1 class="part-title">${escapeHtml(it.subtitle)}</h1>` : ''}</section>`;
+      }
+      if (it.type !== 'chapter') {
+        const body = matterBody(it, { md: (m) => marked.parse(m), esc: escapeHtml });
+        if (titled(it)) return `${blank}<section class="chapter ${it.id}${cls}"><h1 class="chapter-title">${escapeHtml(it.title)}</h1>${body}</section>`;
+        return `${blank}<section class="${it.id}${cls}">${body}</section>`;
       }
       const heading = titles ? `<h1 class="chapter-title">${escapeHtml(it.title)}</h1>` : '';
       return `${blank}<section class="chapter${cls}">${heading}${marked.parse(it.chapter.content || '')}</section>`;
@@ -257,6 +278,16 @@ export function exportBookHtml(p, { titles, titlePage }, pageWidths) {
   .chapter { break-before: page; padding-top: ${sink}; }
   .chapter-title { font-size: 1.6em; line-height: 1.25; margin: 0 0 2em; }
   .blank { break-before: page; height: 1px; }
+  .copyright { break-before: page; height: ${(trim.lines - 2) * trim.lead}pt; display: flex; flex-direction: column; justify-content: flex-end; font-size: 0.8em; line-height: 1.4; }
+  .copyright p { text-indent: 0; text-align: left; hyphens: manual; margin: 0 0 0.9em; }
+  .dedication, .epigraph { break-before: page; padding-top: ${inch(trim.h * 0.3 - trim.top)}; text-align: center; }
+  .dedication p, .epigraph p { text-indent: 0; text-align: center; hyphens: manual; }
+  .dedication { font-style: italic; }
+  .epigraph blockquote { margin: 0 1em; }
+  .epigraph .source { margin-top: 0.9em; font-style: normal; }
+  .also-by p { text-indent: 0; text-align: center; }
+  .also-group { margin-top: ${trim.lead}pt; font-variant: small-caps; letter-spacing: 0.05em; }
+  .also-title { font-style: italic; }
 </style></head>
 <body>
 ${sections}
@@ -267,12 +298,6 @@ ${sections}
 // Letter paper, 1" margins, 12pt Courier, double-spaced, ½" paragraph indents, ragged right.
 // Title page: contact block top left, word count top right, title and byline centered.
 // Every later page: "Surname / TITLE / n" top right; chapters start a third of the way down.
-
-function roundedWords(n) {
-  if (n < 100) return n;
-  const step = n >= 10000 ? 1000 : 100;
-  return Math.round(n / step) * step;
-}
 
 export function exportManuscriptHtml(p, { underlineItalics }) {
   const author = (p.meta?.author || '').trim();
@@ -408,6 +433,16 @@ body.cover { margin: 0; padding: 0; text-align: center; }
 body.cover div { height: 100vh; }
 body.cover svg { height: 100%; width: 100%; }
 .part-page { text-align: center; margin-top: 30%; page-break-before: always; }
+.copyright { margin-top: 20%; font-size: 0.85em; }
+.copyright p, .dedication p, .epigraph p, .also-by p { text-indent: 0; }
+.copyright p { margin-bottom: 1em; }
+.dedication, .epigraph { text-align: center; margin-top: 30%; }
+.dedication { font-style: italic; }
+.epigraph blockquote { margin: 0 1em; font-style: italic; }
+.epigraph .source { margin-top: 0.8em; }
+.also-by { text-align: center; }
+.also-group { margin-top: 1.4em; font-variant: small-caps; letter-spacing: 0.05em; }
+.also-title { font-style: italic; }
 .part-page .part-label { text-indent: 0; text-transform: uppercase; letter-spacing: 0.15em; }
 .part-title { font-weight: normal; font-size: 1.6em; margin: 0.6em 0 0; }
 nav ol { list-style: none; padding: 0; }
@@ -478,7 +513,10 @@ async function imageSize(bytes) {
   return size;
 }
 
-export async function buildEpub(p, { titles, cover: chosenCover }) {
+const EPUB_TYPES = { copyright: 'copyright-page', dedication: 'dedication', epigraph: 'epigraph', acknowledgments: 'acknowledgments' };
+
+export async function buildEpub(p, opts) {
+  const { titles, cover: chosenCover } = opts;
   const author = (p.meta?.author || '').trim();
   const lang = (p.meta?.language || navigator.language || 'en').trim();
   const uid = `urn:uuid:${p.meta.uuid}`;
@@ -489,8 +527,14 @@ export async function buildEpub(p, { titles, cover: chosenCover }) {
       ? { ...it, ref: `part${pad(it.n)}`, file: `part-${pad(it.n)}.xhtml` }
       : { ...it, ref: `ch${pad(it.index + 1)}`, file: `chapter-${pad(it.index + 1)}.xhtml`, content: it.chapter.content }
   );
+  const { front, back } = matterFor(p, opts);
+  const asFile = (it) => ({ ...it, ref: `m-${it.id}`, file: `${it.id}.xhtml` });
+  const frontFiles = front.map(asFile);
+  const backFiles = back.map(asFile);
   const within = new Map();
   for (const c of chapters) within.set(c.parent, [...(within.get(c.parent) || []), c]);
+  // The contents end with the back matter pages that have a heading.
+  within.set(null, [...(within.get(null) || []), ...backFiles.filter(titled)]);
 
   const cover = chosenCover
     ? { ext: chosenCover.ext === 'jpeg' ? 'jpg' : chosenCover.ext, data: chosenCover.data, ...(await imageSize(chosenCover.data)) }
@@ -531,6 +575,12 @@ export async function buildEpub(p, { titles, cover: chosenCover }) {
       `<section class="title-page" epub:type="titlepage"><h1>${xml(p.title)}</h1>${author ? `<p class="author">${xml(author)}</p>` : ''}</section>`
     )
   );
+  for (const m of [...frontFiles, ...backFiles]) {
+    const body = matterBody(m, { md: toXhtml, esc: xml, br: '<br/>' });
+    const type = EPUB_TYPES[m.id] ? ` epub:type="${EPUB_TYPES[m.id]}"` : '';
+    const heading = titled(m) ? `<h1 class="chapter-title">${xml(m.title)}</h1>` : '';
+    add(m.file, xhtmlPage(lang, m.title, `<section${type} class="${m.id}">${heading}${body}</section>`));
+  }
   for (const c of chapters) {
     if (c.type === 'part') {
       const title = c.subtitle ? `<h1 class="part-title">${xml(c.subtitle)}</h1>` : '';
@@ -624,12 +674,12 @@ ${navPoints(null, '    ')}
     <item id="cover-image" href="${coverFile}" media-type="${coverType}" properties="cover-image"/>
     <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml" properties="svg"/>
     <item id="titlepage" href="title.xhtml" media-type="application/xhtml+xml"/>
-    ${chapters.map((c) => `<item id="${c.ref}" href="${c.file}" media-type="application/xhtml+xml"/>`).join('\n    ')}
+    ${[...frontFiles, ...chapters, ...backFiles].map((c) => `<item id="${c.ref}" href="${c.file}" media-type="application/xhtml+xml"/>`).join('\n    ')}
   </manifest>
   <spine toc="ncx">
     <itemref idref="cover"/>
     <itemref idref="titlepage"/>
-    ${chapters.map((c) => `<itemref idref="${c.ref}"/>`).join('\n    ')}
+    ${[...frontFiles, ...chapters, ...backFiles].map((c) => `<itemref idref="${c.ref}"/>`).join('\n    ')}
   </spine>
 </package>
 `

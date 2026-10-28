@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, Plus, X, MoreHorizontal, Trash2, Repeat, ExternalLink, Pencil, ChevronDown } from 'lucide-react';
-import { useStore, setBible, openMenu, openProjectAt, smartActive } from '../store.js';
+import { useStore, getState, setBible, openMenu, openProjectAt, smartActive } from '../store.js';
 import {
   addEntry,
   updateEntry,
@@ -11,7 +11,10 @@ import {
   addRelationship,
   setDecision,
   setAliases,
+  renameInText,
 } from '../bibleActions.js';
+import { renamePairs, namesIn, countNames } from '../lib/find.js';
+import { timelineMode } from '../lib/timeline.js';
 import { relLabel, sceneCast, needsCheck } from '../lib/bible.js';
 import { presetFace } from '../lib/face.js';
 import { GENDERS, AGES } from '../lib/project.js';
@@ -30,7 +33,10 @@ const matchesQuery = (e, q) => {
 export default function BibleEntries({ ctx, analysis, view, scope, type }) {
   const selectedId = useStore((s) => s.bible.selected);
   const [query, setQuery] = useState('');
-  const all = view.entries.filter((e) => e.type === type);
+  // The entry you're on stays listed even if this book no longer mentions it (say, mid-rename).
+  const picked = ctx.byId[selectedId];
+  const shown = view.entries.filter((e) => e.type === type);
+  const all = picked?.type === type && !shown.includes(picked) ? [...shown, picked] : shown;
   const list = all.filter((e) => matchesQuery(e, query));
   const sel = list.find((e) => e.id === selectedId) || all.find((e) => e.id === selectedId) || list[0] || null;
   const total = (e) => view.uuids.reduce((n, b) => n + (analysis.totals[e.id]?.[b] || 0), 0);
@@ -194,7 +200,28 @@ function PortraitButton({ e, readOnly }) {
   );
 }
 
+// A character's birth year (or full date), for the calendar timeline's age checks.
+function Born({ e, readOnly }) {
+  const [value, setValue] = useState(e.born || '');
+  return (
+    <label className="be-trait be-born" title="A year, like 1866, or a date, like 1866-04-02. Checked against the timeline.">
+      <span className="be-trait-key">Born</span>
+      <input
+        value={value}
+        placeholder="Year"
+        readOnly={readOnly}
+        spellCheck={false}
+        onChange={(ev) => {
+          setValue(ev.target.value);
+          updateEntry(e.id, { born: ev.target.value.trim() });
+        }}
+      />
+    </label>
+  );
+}
+
 function Traits({ e, readOnly }) {
+  const dates = useStore((s) => timelineMode(s.project.bible) === 'date');
   const chip = (key, list, label) => {
     const value = list.find((o) => o.id === e[key]);
     const pick = (ev) =>
@@ -219,6 +246,47 @@ function Traits({ e, readOnly }) {
     <div className="be-traits">
       {chip('gender', GENDERS, 'Gender')}
       {chip('age', AGES, 'Age')}
+      {dates && <Born e={e} readOnly={readOnly} />}
+    </div>
+  );
+}
+
+const quoted = (names) => {
+  const q = names.map((n) => `“${n}”`);
+  return q.length < 2 ? q.join('') : `${q.slice(0, -1).join(', ')} and ${q[q.length - 1]}`;
+};
+
+// After a rename, the old name is probably still all through the text. Offer to change it there too:
+// in this book, and for a series entry in the other books that use it.
+function RenameOffer({ offer, onDone }) {
+  const { pairs, here, books } = offer;
+  const total = here + books.reduce((n, b) => n + b.n, 0);
+  const where = here ? (books.length ? `in this book and ${books.length === 1 ? books[0].title : `${books.length} other books`}` : 'in this book') : books.length === 1 ? `in ${books[0].title}` : `in ${books.length} other books`;
+  const run = async (all) => {
+    onDone();
+    await renameInText(pairs, { label: `“${pairs[0].from}”`, books: all ? books : [] });
+  };
+  return (
+    <div className="be-rename">
+      <p>
+        {quoted(pairs.map((x) => x.from))} {pairs.length === 1 ? 'is' : 'are'} still written {total.toLocaleString('en-US')} {total === 1 ? 'time' : 'times'} {where}. Change{' '}
+        {pairs.length === 1 ? 'it' : 'them'} to {quoted(pairs.map((x) => x.to))}?
+      </p>
+      <div className="be-rename-actions">
+        {here > 0 && (
+          <button className={`btn small ${books.length ? '' : 'primary'}`} onClick={() => run(false)}>
+            Change in this book
+          </button>
+        )}
+        {books.length > 0 && (
+          <button className="btn small primary" onClick={() => run(true)}>
+            {here ? `Change in all ${books.length + 1} books` : `Change in ${books.length === 1 ? books[0].title : `${books.length} books`}`}
+          </button>
+        )}
+        <button className="btn small" onClick={onDone}>
+          Leave the text
+        </button>
+      </div>
     </div>
   );
 }
@@ -229,8 +297,33 @@ function EntryDetail({ e, ctx, analysis, view, scope }) {
   const prefs = useStore((s) => s.prefs);
   const nameRef = useRef(null);
   const [reviewAll, setReviewAll] = useState(false);
+  const [offer, setOffer] = useState(null);
+  const startName = useRef(null);
   const readOnly = e.store === 'sibling';
   const uuid = ctx.uuid;
+
+  // The name as it was before this rename started (or before the last one, if that offer is still up).
+  const nameFocus = () => {
+    startName.current = offer?.before || { name: e.name, aliases: e.aliases };
+    // Pin the selection, so the entry stays on screen if its new name stops matching this book.
+    if (getState().bible.selected !== e.id) setBible({ selected: e.id });
+  };
+  const nameBlur = () => {
+    const before = startName.current;
+    startName.current = null;
+    if (!before || readOnly) return;
+    const pairs = renamePairs(before, e);
+    if (!pairs.length) return setOffer(null);
+    const here = namesIn(getState().project, pairs);
+    const books =
+      e.owner === 'series'
+        ? ctx.books
+            .filter((b) => !b.current && !b.missing && b.path)
+            .map((b) => ({ path: b.path, title: b.title, n: b.chapters.reduce((n, c) => n + countNames(c.content || '', pairs), 0) }))
+            .filter((b) => b.n > 0)
+        : [];
+    setOffer(here || books.length ? { before, pairs, here, books } : null);
+  };
 
   useEffect(() => {
     if (focusName === e.id && nameRef.current) {
@@ -297,6 +390,9 @@ function EntryDetail({ e, ctx, analysis, view, scope }) {
             placeholder={e.type === 'place' ? 'Name of the place' : 'Name'}
             spellCheck={false}
             onChange={(ev) => renameEntry(e.id, ev.target.value)}
+            onFocus={nameFocus}
+            onBlur={nameBlur}
+            onKeyDown={(ev) => ev.key === 'Enter' && ev.currentTarget.blur()}
           />
           <input
             className="be-role"
@@ -308,6 +404,7 @@ function EntryDetail({ e, ctx, analysis, view, scope }) {
           {e.type === 'character' && <Traits e={e} readOnly={readOnly} />}
         </div>
       </div>
+      {offer && <RenameOffer offer={offer} onDone={() => setOffer(null)} />}
       {ctx.inSeries && (
         <div className="be-share">
           <OwnerBadge e={e} ctx={ctx} />
