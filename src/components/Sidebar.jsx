@@ -9,8 +9,6 @@ import {
   MoreHorizontal,
   Download,
   Upload,
-  Moon,
-  Sun,
   SlidersHorizontal,
   PanelLeft,
   Trash2,
@@ -60,7 +58,6 @@ import {
   newDraft,
   renameDraft,
   deleteDraft,
-  toggleTheme,
   openModal,
   toggleSidebar,
   importManuscript,
@@ -80,6 +77,7 @@ import { bookLabels } from '../lib/series.js';
 import { activeDraft, chaptersOf, findDoc, isFolder, depthMap, subtreeRange, kindOf, isBook, wordsFor, entryLabel, monthLabel, dayOf } from '../lib/project.js';
 import { linkedOutline, mirrorOf, outlinePath } from '../lib/structure.js';
 import { IconButton, Wordmark } from './ui.jsx';
+import { ThemeButton } from './ThemePicker.jsx';
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -537,7 +535,6 @@ function outlineAddMenu(e) {
 export default function Sidebar() {
   const project = useStore((s) => s.project);
   const series = useStore((s) => s.series);
-  const isDark = useStore((s) => s.isDark);
   const renamingId = useStore((s) => s.renamingId);
   const view = useStore((s) => s.view);
   const seriesLabel = series ? bookLabels(series.data.books)[project.meta.uuid]?.long : null;
@@ -670,7 +667,7 @@ export default function Sidebar() {
         </button>
         <div className="sb-icons">
           <IconButton icon={Plus} size={19} title={`New ${words.page}  ⌘N`} onClick={() => addChapter()} />
-          <IconButton icon={isDark ? Sun : Moon} size={18} title="Toggle dark mode  ⇧⌘L" onClick={toggleTheme} />
+          <ThemeButton size={18} title="Theme  ⇧⌘L" />
           <IconButton icon={SlidersHorizontal} size={18} title="Settings  ⌘," onClick={() => openModal('settings')} />
         </div>
       </div>

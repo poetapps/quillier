@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { FileText, Folder, Globe, FileDown, FileType2, BookOpen, Layers, Check, ArrowRight, FilePlus, LayoutTemplate, NotebookPen, NotebookText } from 'lucide-react';
-import { useStore, closeModal, setPrefs, exportManuscript, setProjectMeta, checkForUpdates } from '../store.js';
+import { useStore, closeModal, setPrefs, setTheme, exportManuscript, setProjectMeta, checkForUpdates } from '../store.js';
 import { activeDraft, chaptersOf, isBook, wordsFor, countOf, todayKey, dayOf, monthLabel } from '../lib/project.js';
 import { STRUCTURES } from '../lib/templates.js';
 import { TRIMS, DEFAULT_TRIM } from '../lib/export.js';
@@ -110,7 +110,7 @@ function SettingsModal({ modal }) {
       <Row label="Theme">
         <Segmented
           value={prefs.theme}
-          onChange={(theme) => setPrefs({ theme })}
+          onChange={(theme) => setTheme({ theme })}
           options={[
             { value: 'system', label: 'System' },
             { value: 'light', label: 'Light' },
@@ -118,8 +118,27 @@ function SettingsModal({ modal }) {
           ]}
         />
       </Row>
-      <Row label="Pure black" hint="For OLED screens. In dark mode, everything but the text is true black.">
-        <Toggle checked={!!prefs.pureBlack} onChange={(pureBlack) => setPrefs({ pureBlack })} />
+      <Row label="Dark style" hint="Black is for OLED screens: everything but the text is true black.">
+        <Segmented
+          value={prefs.darkStyle}
+          onChange={(darkStyle) => setTheme({ darkStyle })}
+          options={[
+            { value: 'black', label: 'Black' },
+            { value: 'dark', label: 'Dark' },
+            { value: 'midnight', label: 'Midnight' },
+          ]}
+        />
+      </Row>
+      <Row label="Light style">
+        <Segmented
+          value={prefs.lightStyle}
+          onChange={(lightStyle) => setTheme({ lightStyle })}
+          options={[
+            { value: 'sepia', label: 'Sepia' },
+            { value: 'cream', label: 'Cream' },
+            { value: 'white', label: 'White' },
+          ]}
+        />
       </Row>
       <Row label="Writing font">
         <Segmented

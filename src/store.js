@@ -265,13 +265,16 @@ export function closeModal(result) {
 export const openModal = (type, extra) => setState({ modal: { type, ...extra }, menu: null });
 
 // anchor: a DOMRect (menu opens below it) or {x, y} (opens at point)
-export function openMenu(anchor, items, { align = 'left', width } = {}) {
+export function openMenu(anchor, items, { align = 'left', width, content, className } = {}) {
   const pos =
     'width' in anchor
       ? { x: align === 'right' ? anchor.right : anchor.left, y: anchor.bottom + 4, align, avoidY: anchor.top }
       : { x: anchor.x, y: anchor.y, align: 'left' };
-  setState({ menu: { ...pos, items, width } });
+  setState({ menu: { ...pos, items, width, content, className } });
 }
+
+// Placed and dismissed like a menu, but holds any content instead of a list of items.
+export const openPopover = (anchor, content, opts) => openMenu(anchor, [], { ...opts, content });
 export const closeMenu = () => setState({ menu: null });
 
 // ---------- prefs & layout ----------
@@ -284,8 +287,56 @@ export function setPrefs(patch) {
 // Smart features are an alpha feature: they only count when alpha features are on too.
 export const smartActive = (prefs) => !!prefs?.alphaFeatures && !!prefs?.smartEnabled;
 
+// The theme the prefs ask for, which can run a moment ahead of the screen while a fade plays.
+export const wantsDark = (s) => (s.prefs?.theme === 'system' ? s.isDark : s.prefs?.theme === 'dark');
+
+function paintTheme(prefs) {
+  const root = document.documentElement;
+  root.dataset.dark = prefs.darkStyle || 'dark';
+  root.dataset.light = prefs.lightStyle || 'white';
+}
+
+const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+// Puts the latest theme prefs on screen. Light vs dark is the window's color scheme, which the main
+// process sets, so this waits for the page to see it flip before calling the new look done.
+async function applyTheme() {
+  const { theme, darkStyle, lightStyle } = state.prefs;
+  paintTheme(state.prefs);
+  await api.setPrefs({ theme, darkStyle, lightStyle });
+  const dark = await api.isDark();
+  if (darkScheme.matches === dark) return;
+  await new Promise((resolve) => {
+    const t = setTimeout(resolve, 500);
+    darkScheme.addEventListener('change', () => (clearTimeout(t), resolve()), { once: true });
+  });
+}
+
+// Theme changes crossfade from a snapshot of the old look. A change asked for mid-fade waits for
+// that fade to end, then fades to whatever is newest, so dragging the slider never stutters.
+let fading = false;
+let fadeAgain = false;
+
+export function setTheme(patch) {
+  setState((s) => ({ prefs: { ...s.prefs, ...patch } }));
+  if (fading) return void (fadeAgain = true);
+  if (!document.startViewTransition || reduceMotion.matches) return void applyTheme();
+  fading = true;
+  document
+    .startViewTransition(applyTheme)
+    .finished.catch(() => {})
+    .finally(() => {
+      fading = false;
+      if (fadeAgain) {
+        fadeAgain = false;
+        setTheme({});
+      }
+    });
+}
+
 export function toggleTheme() {
-  setPrefs({ theme: state.isDark ? 'light' : 'dark' });
+  setTheme({ theme: wantsDark(state) ? 'light' : 'dark' });
 }
 
 export function toggleSidebar() {
@@ -1232,6 +1283,7 @@ export function runCommand(name) {
 
 export async function init() {
   const [prefs, isDark, update] = await Promise.all([api.getPrefs(), api.isDark(), api.updateStatus()]);
+  paintTheme(prefs);
   setState({ prefs, isDark, update, sidebar: prefs.sidebar ?? true, panel: prefs.panel ?? true });
   api.onMenu(runCommand);
   api.onOpenPath((p) => openProjectAt(p));

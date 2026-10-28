@@ -65,10 +65,11 @@ export function MenuLayer() {
     <div className="menu-backdrop" onMouseDown={closeMenu} onContextMenu={(e) => (e.preventDefault(), closeMenu())}>
       <div
         ref={ref}
-        className="menu"
+        className={`menu ${menu.className || ''}`}
         style={{ left: pos?.x ?? -9999, top: pos?.y ?? -9999, minWidth: menu.width }}
         onMouseDown={(e) => e.stopPropagation()}
       >
+        {menu.content}
         {menu.items.filter(Boolean).map((item, i) =>
           item.separator ? (
             <div key={i} className="menu-sep" />

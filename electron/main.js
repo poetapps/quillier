@@ -66,7 +66,8 @@ const DEFAULT_PREFS = {
   dictationModel: null,
   dictationButton: true,
   dictationDialogue: true,
-  pureBlack: false,
+  darkStyle: 'dark',
+  lightStyle: 'white',
   spellcheck: true,
   dailyGoal: 0,
   autoUpdate: true,
@@ -78,7 +79,10 @@ const DEFAULT_PREFS = {
 
 function loadPrefs() {
   try {
-    return { ...DEFAULT_PREFS, ...JSON.parse(fs.readFileSync(prefsPath, 'utf8')) };
+    const { pureBlack, ...saved } = JSON.parse(fs.readFileSync(prefsPath, 'utf8'));
+    // The old "Pure black" switch became the Black dark style.
+    if (pureBlack && !saved.darkStyle) saved.darkStyle = 'black';
+    return { ...DEFAULT_PREFS, ...saved };
   } catch {
     return { ...DEFAULT_PREFS };
   }
@@ -208,9 +212,13 @@ function queueSave(file, json) {
 
 // ---------- window ----------
 
+// Matches --bg for each theme in styles.css, so a new window doesn't flash the wrong color.
+const DARK_BACKGROUNDS = { black: '#000000', dark: '#171717', midnight: '#1a1728' };
+const LIGHT_BACKGROUNDS = { sepia: '#f5eddc', cream: '#fcf9f1', white: '#ffffff' };
+
 function windowBackground() {
-  if (!nativeTheme.shouldUseDarkColors) return '#ffffff';
-  return prefs.pureBlack ? '#000000' : '#171717';
+  if (!nativeTheme.shouldUseDarkColors) return LIGHT_BACKGROUNDS[prefs.lightStyle] || '#ffffff';
+  return DARK_BACKGROUNDS[prefs.darkStyle] || '#171717';
 }
 
 function sendToRenderer(channel, ...args) {
@@ -464,7 +472,7 @@ ipcMain.handle('prefs:set', (_e, patch) => {
   const { recent, lastProject, bounds, ...allowed } = patch || {};
   prefs = { ...prefs, ...allowed };
   if (allowed.theme) nativeTheme.themeSource = allowed.theme;
-  if (win && ('theme' in allowed || 'pureBlack' in allowed)) win.setBackgroundColor(windowBackground());
+  if (win && ['theme', 'darkStyle', 'lightStyle'].some((k) => k in allowed)) win.setBackgroundColor(windowBackground());
   savePrefs();
   return publicPrefs();
 });

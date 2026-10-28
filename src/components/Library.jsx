@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { Layers, Plus, FolderOpen, Book, Users, MoreHorizontal, Moon, Sun, SlidersHorizontal, ArrowUp, ArrowDown, Pencil, X, LogOut, NotebookPen, NotebookText } from 'lucide-react';
-import { useStore, openProjectAt, openProjectDialog, toggleTheme, openModal, openMenu } from '../store.js';
+import { Layers, Plus, FolderOpen, Book, Users, MoreHorizontal, SlidersHorizontal, ArrowUp, ArrowDown, Pencil, X, LogOut, NotebookPen, NotebookText } from 'lucide-react';
+import { useStore, openProjectAt, openProjectDialog, openModal, openMenu } from '../store.js';
 import {
   refreshLibrary,
   newBook,
@@ -17,6 +17,7 @@ import {
 import { statusLabel, shortDate } from '../lib/project.js';
 import { bookLabels } from '../lib/series.js';
 import { IconButton, Wordmark } from './ui.jsx';
+import { ThemeButton } from './ThemePicker.jsx';
 
 const fmt = (n) => (n || 0).toLocaleString('en-US');
 const plural = (n, one, many = `${one}s`) => `${fmt(n)} ${n === 1 ? one : many}`;
@@ -149,7 +150,6 @@ function NotebookRow({ b }) {
 }
 
 export default function Library() {
-  const isDark = useStore((s) => s.isDark);
   const library = useStore((s) => s.library);
   const nonce = useStore((s) => s.libraryNonce);
   const highlight = useStore((s) => s.libraryHighlight);
@@ -253,7 +253,7 @@ export default function Library() {
         )}
       </main>
       <div className="welcome-foot">
-        <IconButton icon={isDark ? Sun : Moon} title="Toggle dark mode" onClick={toggleTheme} />
+        <ThemeButton />
         <IconButton icon={SlidersHorizontal} title="Settings" onClick={() => openModal('settings')} />
       </div>
     </div>

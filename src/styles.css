@@ -21,6 +21,7 @@
   --sel: rgba(30, 30, 30, 0.1);
   --shadow: 0 10px 34px rgba(0, 0, 0, 0.09), 0 1px 3px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(0, 0, 0, 0.04);
   --logo-gap: var(--sidebar);
+  --slider-fill: #dcdcda;
 
   --s-idea: #b9b9b6;
   --s-progress: #d9a441;
@@ -86,7 +87,85 @@
     --ins-text: #8fb6e3;
     --ins-bg: rgba(108, 155, 210, 0.22);
     --ins-hl: rgba(108, 155, 210, 0.45);
+    --slider-fill: #454543;
     color-scheme: dark;
+  }
+}
+
+/* Theme styles. Light and dark still come from the system color scheme (the app sets it from the
+   Theme pref), so everything written against prefers-color-scheme keeps working. On top of that,
+   data-dark and data-light on <html> pick which dark and which light palette to use:
+   Black, Dark, Midnight | Sepia, Cream, White. */
+@media (prefers-color-scheme: dark) {
+  :root[data-dark='midnight'] {
+    --bg: #1a1728;
+    --sidebar: #1e1a2f;
+    --surface: #241f37;
+    --hover: #27223b;
+    --active: #2d2742;
+    --text: #ebe8f5;
+    --text-2: #cbc6dc;
+    --muted: #8e88a8;
+    --faint: #5c5675;
+    --line: #29243c;
+    --line-2: #352f4b;
+    --accent: #ebe8f5;
+    --accent-text: #1a1728;
+    --sel: rgba(170, 150, 255, 0.22);
+    --shadow: 0 12px 36px rgba(6, 4, 18, 0.55), 0 0 0 1px #332d48;
+    --heat-0: #29243c;
+    --heat-1: #4a4366;
+    --heat-2: #8a83a8;
+    --heat-3: #d6d2e6;
+    --slider-fill: #6c5fd4;
+  }
+}
+@media (prefers-color-scheme: light) {
+  :root[data-light='sepia'] {
+    --bg: #f5eddc;
+    --sidebar: #efe5d0;
+    --surface: #ebe0c9;
+    --hover: #e8dcc3;
+    --active: #e3d6bb;
+    --text: #3b2f22;
+    --text-2: #4f4132;
+    --muted: #95836b;
+    --faint: #c2b296;
+    --line: #e4d8be;
+    --line-2: #dacdb0;
+    --accent: #3b2f22;
+    --accent-text: #f5eddc;
+    --sel: rgba(120, 85, 30, 0.16);
+    --shadow: 0 10px 34px rgba(70, 50, 20, 0.12), 0 1px 3px rgba(70, 50, 20, 0.1), 0 0 0 1px rgba(70, 50, 20, 0.06);
+    --s-idea: #c2b296;
+    --heat-0: #e4d8be;
+    --heat-1: #cdbd9c;
+    --heat-2: #998668;
+    --heat-3: #4f4132;
+    --slider-fill: #c9a874;
+  }
+  :root[data-light='cream'] {
+    --bg: #fcf9f1;
+    --sidebar: #f6f2e7;
+    --surface: #f2ede1;
+    --hover: #eee9dc;
+    --active: #e9e3d5;
+    --text: #26231e;
+    --text-2: #3f3a32;
+    --muted: #8e887b;
+    --faint: #bdb6a7;
+    --line: #ece6d8;
+    --line-2: #e2dbcb;
+    --accent: #26231e;
+    --accent-text: #fcf9f1;
+    --sel: rgba(80, 60, 20, 0.11);
+    --shadow: 0 10px 34px rgba(60, 45, 20, 0.09), 0 1px 3px rgba(60, 45, 20, 0.07), 0 0 0 1px rgba(60, 45, 20, 0.04);
+    --s-idea: #bdb6a7;
+    --heat-0: #ece6d8;
+    --heat-1: #d2cab8;
+    --heat-2: #928b7d;
+    --heat-3: #3f3a32;
+    --slider-fill: #dacfb6;
   }
 }
 
@@ -94,7 +173,7 @@
    fills or borders; hover and selection show through text color instead. Menus and dialogs keep a
    hairline edge so they stay readable while open. */
 @media (prefers-color-scheme: dark) {
-  :root[data-black] {
+  :root[data-dark='black'] {
     --bg: #000;
     --sidebar: #000;
     --surface: #000;
@@ -109,50 +188,51 @@
     --accent: #f2f2f0;
     --accent-text: #000;
     --sel: rgba(255, 255, 255, 0.24);
+    --slider-fill: #262625;
     --shadow: 0 0 0 1px #2c2c2b;
     --heat-0: #161616;
   }
-  :root[data-black] :is(.note-peek-item, .sb-item, .sb-project, .sb-draft, .sb-more, .icon-btn, .crumb, .meta-btn, .link-btn, .menu-item,
+  :root[data-dark='black'] :is(.note-peek-item, .sb-item, .sb-project, .sb-draft, .sb-more, .icon-btn, .crumb, .meta-btn, .link-btn, .menu-item,
       .scene-row, .recent-row, .recent-x, .format-bar button, .segmented button, .inote-del, .save-status.error):hover {
     color: var(--text);
   }
-  :root[data-black] .sb-item.active,
-  :root[data-black] .inote.active .inote-quote {
+  :root[data-dark='black'] .sb-item.active,
+  :root[data-dark='black'] .inote.active .inote-quote {
     color: var(--text);
   }
-  :root[data-black] .format-bar button.on,
-  :root[data-black] .segmented button.on {
+  :root[data-dark='black'] .format-bar button.on,
+  :root[data-dark='black'] .segmented button.on {
     color: var(--text);
     box-shadow: none;
   }
-  :root[data-black] .btn {
+  :root[data-dark='black'] .btn {
     box-shadow: inset 0 0 0 1px #2c2c2b;
   }
-  :root[data-black] .btn:hover {
+  :root[data-dark='black'] .btn:hover {
     box-shadow: inset 0 0 0 1px var(--muted);
   }
-  :root[data-black] .btn.primary {
+  :root[data-dark='black'] .btn.primary {
     background: #000;
     color: var(--text);
     box-shadow: inset 0 0 0 1px var(--text-2);
   }
-  :root[data-black] .text-input {
+  :root[data-dark='black'] .text-input {
     border-color: #2c2c2b;
   }
-  :root[data-black] .toast {
+  :root[data-dark='black'] .toast {
     background: #000;
     color: var(--text);
   }
-  :root[data-black] .toggle:not(.on) span {
+  :root[data-dark='black'] .toggle:not(.on) span {
     background: var(--muted);
   }
-  :root[data-black] .format-card.on {
+  :root[data-dark='black'] .format-card.on {
     border-color: var(--text-2);
   }
-  :root[data-black] .modal-backdrop {
+  :root[data-dark='black'] .modal-backdrop {
     background: rgba(0, 0, 0, 0.7);
   }
-  :root[data-black] :hover::-webkit-scrollbar-thumb {
+  :root[data-dark='black'] :hover::-webkit-scrollbar-thumb {
     background-color: #1a1a19;
   }
 }
@@ -1758,6 +1838,114 @@ h1.page-title.static {
   text-transform: uppercase;
   color: var(--muted);
   padding: 8px 10px 4px 32px;
+}
+
+/* ---------- theme slider ---------- */
+
+/* Theme changes crossfade the whole window (setTheme in the store). The slider's popover sits out of
+   that snapshot so it stays live under the pointer, and fades its own colors instead. */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.32s;
+}
+::view-transition-group(theme-picker),
+::view-transition-new(theme-picker) {
+  animation: none;
+}
+::view-transition-old(theme-picker) {
+  display: none;
+}
+.menu.theme-menu {
+  view-transition-name: theme-picker;
+  width: 292px;
+  padding: 12px;
+  transition: background-color 0.32s, box-shadow 0.32s;
+}
+.tp-track {
+  position: relative;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--active);
+  cursor: pointer;
+  touch-action: none;
+  transition: background-color 0.32s;
+}
+.tp-track:focus-visible {
+  outline: 2px solid var(--faint);
+  outline-offset: 2px;
+}
+.tp-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 12px;
+  background: var(--slider-fill);
+  transition: width 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.32s;
+}
+.tp-dot {
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.55;
+  transform: translate(-50%, -50%);
+  transition: background-color 0.32s;
+}
+.tp-thumb {
+  position: absolute;
+  top: 4px;
+  width: 46px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  transform: translateX(-50%);
+  cursor: grab;
+  transition: left 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.15s, background-color 0.32s, color 0.32s;
+}
+.tp-track:active .tp-thumb {
+  transform: translateX(-50%) scale(1.07);
+  cursor: grabbing;
+}
+/* While dragging, the thumb tracks the pointer directly; the spring is only for settling. */
+.tp-track.moving .tp-thumb {
+  transition-property: transform, background-color, color;
+}
+.tp-track.moving .tp-fill {
+  transition-property: background-color;
+}
+.tp-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 4px;
+  font-size: 13px;
+}
+.tp-name {
+  font-weight: 500;
+  color: var(--text);
+  transition: color 0.32s;
+}
+.tp-note,
+.tp-foot .link-btn {
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-dark='black'] .tp-track {
+    box-shadow: inset 0 0 0 1px #2c2c2b;
+  }
 }
 
 /* ---------- toast ---------- */

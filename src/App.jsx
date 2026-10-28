@@ -29,7 +29,6 @@ function useEditorVars(prefs) {
     s.setProperty('--editor-size', `${mono ? prefs.fontSize - 2 : prefs.fontSize}px`);
     s.setProperty('--editor-lh', String(prefs.lineHeight));
     s.setProperty('--editor-width', WIDTHS[prefs.width] || WIDTHS.medium);
-    document.documentElement.toggleAttribute('data-black', !!prefs.pureBlack);
   }, [prefs]);
 }
 

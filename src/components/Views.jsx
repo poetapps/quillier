@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Plus, FolderOpen, Folder, X, FileText, Moon, Sun, SlidersHorizontal, RotateCcw, Trash2, ListTree, Files, Layers } from 'lucide-react';
+import { Plus, FolderOpen, Folder, X, FileText, SlidersHorizontal, RotateCcw, Trash2, ListTree, Files, Layers } from 'lucide-react';
 import {
   useStore,
   newProject,
   openProjectDialog,
   openProjectAt,
-  toggleTheme,
   openModal,
   restoreTrash,
   deleteForever,
@@ -14,6 +13,7 @@ import {
 import { countWords, todayKey, chaptersOf, isFolder, isBook, wordsFor, docName } from '../lib/project.js';
 import { openText } from '../lib/versions.js';
 import { IconButton, Wordmark } from './ui.jsx';
+import { ThemeButton } from './ThemePicker.jsx';
 
 const prettyPath = (p) => p.replace(/^\/Users\/[^/]+/, '~').replace(/\/[^/]+$/, '');
 
@@ -27,7 +27,6 @@ function ago(ts) {
 }
 
 export function Welcome() {
-  const isDark = useStore((s) => s.isDark);
   const [recent, setRecent] = useState([]);
   useEffect(() => {
     window.api.recent().then(setRecent);
@@ -72,7 +71,7 @@ export function Welcome() {
         )}
       </div>
       <div className="welcome-foot">
-        <IconButton icon={isDark ? Sun : Moon} title="Toggle dark mode" onClick={toggleTheme} />
+        <ThemeButton />
         <IconButton icon={SlidersHorizontal} title="Settings" onClick={() => openModal('settings')} />
       </div>
     </div>
