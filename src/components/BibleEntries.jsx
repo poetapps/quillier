@@ -289,7 +289,7 @@ function RenameOffer({ offer, onDone }) {
         )}
         {books.length > 0 && (
           <button className="btn small primary" onClick={() => run(true)}>
-            {here ? `Change in all ${books.length + 1} books` : `Change in ${books.length === 1 ? books[0].title : `${books.length} books`}`}
+            {here ? (books.length === 1 ? 'Change in both books' : `Change in all ${books.length + 1} books`) : `Change in ${books.length === 1 ? books[0].title : `${books.length} books`}`}
           </button>
         )}
         <button className="btn small" onClick={onDone}>
