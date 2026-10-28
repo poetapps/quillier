@@ -23,7 +23,7 @@
 }
 
 /* The page is monochrome paper. Color only shows up where it means what it means in the app:
-   blue for characters, amber for places, and the five chapter statuses. */
+   blue for characters, amber for places, the five chapter statuses, and red for a listening microphone. */
 :root {
   --paper: #ffffff;
   --ink: #1b1b1b;
@@ -41,6 +41,7 @@
   --s-drafted: #6c9bd2;
   --s-revised: #9c7fd0;
   --s-done: #5aa874;
+  --rec: #c2453b;
   --serif: 'Literata', Georgia, serif;
   --sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -60,6 +61,7 @@
     --lift: 0 32px 80px -36px rgba(0, 0, 0, 0.85);
     --character: #6c9bd2;
     --place: #d9a441;
+    --rec: #e0685e;
     color-scheme: dark;
   }
 }
@@ -1302,6 +1304,93 @@ figcaption {
   color: var(--ink-2);
 }
 
+/* dictation: what was said, and the bar in the app that writes it down */
+.dictate {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  width: 100%;
+  max-width: 900px;
+}
+.said {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.said p:last-child {
+  margin: 0;
+  font: italic 400 17px/1.7 var(--serif);
+  color: var(--quiet);
+}
+.said .cmd {
+  font: 500 12px/1 var(--sans);
+  font-style: normal;
+  letter-spacing: 0.02em;
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.dictate-arrow {
+  flex: none;
+  font: 400 22px var(--sans);
+  color: var(--faint);
+}
+.dbar {
+  flex: 1.25 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 14px 12px 16px;
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--edge);
+}
+.dbar-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.dbar-mic {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--rec);
+  background: color-mix(in srgb, var(--rec) 12%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--rec) 10%, transparent);
+}
+.dbar-mic svg {
+  width: 15px;
+  height: 15px;
+}
+.dbar-text {
+  padding-top: 4px;
+  font: 400 15.5px/1.55 var(--serif);
+  color: var(--ink);
+}
+.dbar-text p {
+  margin: 0;
+}
+.dbar-text p + p {
+  margin-top: 0.45em;
+}
+.dbar-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.btnish.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
 /* journals and notebooks */
 .spec.full {
   grid-column: 1 / -1;
@@ -1633,6 +1722,15 @@ footer nav a:hover {
   }
   .spec.wide {
     grid-column: auto;
+  }
+  .dictate {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .dictate-arrow {
+    align-self: center;
+    transform: rotate(90deg);
   }
   .spec-fig {
     height: auto;
