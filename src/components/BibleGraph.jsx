@@ -6,6 +6,7 @@ import { relLabel, pairs, suggestionsFrom, pairKey } from '../lib/bible.js';
 import { RELATION_LABELS } from '../lib/smartTasks.js';
 import { Segmented } from './ui.jsx';
 import { plural, shortName } from './bibleUi.jsx';
+import Avatar from './Avatar.jsx';
 
 const HEIGHT = 560;
 const clamp = (v) => Math.min(0.95, Math.max(0.05, v));
@@ -52,11 +53,6 @@ function spreadLabels(labels, nodes) {
     if (!moved) break;
   }
   return labels;
-}
-
-function initials(e) {
-  const words = (e.name || '?').split(/\s+/).filter((w) => !/^(Old|Young|Brother|Sister|Captain|Widow|Mr\.?|Mrs\.?|Miss|Dr\.?|Lord|Lady|Sir|The)$/i.test(w));
-  return (words.length ? words : [e.name || '?']).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
 function RelPanel({ r, ctx, scope, analysis }) {
@@ -309,7 +305,7 @@ function Graph({ chars, rels, suggestions, mentions, sel, scope, ctx }) {
             onPointerUp={onUp}
             title={ch.role || ch.name}
           >
-            <span className={`bg-avatar ${ctx.inSeries && ch.owner !== 'series' ? 'book' : ''}`}>{initials(ch)}</span>
+            <Avatar entry={ch} size={26} className={`bg-avatar ${ctx.inSeries && ch.owner !== 'series' ? 'book' : ''}`} />
             {ch.name || 'Untitled'}
           </button>
         );

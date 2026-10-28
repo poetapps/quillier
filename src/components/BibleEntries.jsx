@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Search, Plus, X, MoreHorizontal, Trash2, Repeat, ExternalLink } from 'lucide-react';
+import { Search, Plus, X, MoreHorizontal, Trash2, Repeat, ExternalLink, Pencil, ChevronDown } from 'lucide-react';
 import { useStore, setBible, openMenu, openProjectAt, smartActive } from '../store.js';
 import {
   addEntry,
@@ -13,7 +13,11 @@ import {
   setAliases,
 } from '../bibleActions.js';
 import { relLabel, sceneCast, needsCheck } from '../lib/bible.js';
+import { presetFace } from '../lib/face.js';
+import { GENDERS, AGES } from '../lib/project.js';
 import MarkdownEditor from './MarkdownEditor.jsx';
+import Avatar from './Avatar.jsx';
+import FaceEditor from './FaceEditor.jsx';
 import { IconButton } from './ui.jsx';
 import { OwnerBadge, Strip, fmt, plural, shortName } from './bibleUi.jsx';
 
@@ -50,13 +54,16 @@ export default function BibleEntries({ ctx, analysis, view, scope, type }) {
         </div>
         <div className="be-items">
           {list.map((e) => (
-            <button key={e.id} className={`be-item ${sel?.id === e.id ? 'on' : ''}`} onClick={() => setBible({ selected: e.id, noteTab: 'all' })}>
-              <span className="be-item-top">
-                <span className="be-item-name">{e.name || 'Untitled'}</span>
-                <span className="be-item-count">{fmt(total(e))}</span>
+            <button key={e.id} className={`be-item ${type === 'character' ? 'with-avatar' : ''} ${sel?.id === e.id ? 'on' : ''}`} onClick={() => setBible({ selected: e.id, noteTab: 'all' })}>
+              {type === 'character' && <Avatar entry={e} size={30} />}
+              <span className="be-item-body">
+                <span className="be-item-top">
+                  <span className="be-item-name">{e.name || 'Untitled'}</span>
+                  <span className="be-item-count">{fmt(total(e))}</span>
+                </span>
+                {e.role && <span className="be-item-role">{e.role}</span>}
+                {ctx.inSeries && <OwnerBadge e={e} ctx={ctx} />}
               </span>
-              {e.role && <span className="be-item-role">{e.role}</span>}
-              {ctx.inSeries && <OwnerBadge e={e} ctx={ctx} />}
             </button>
           ))}
           {!all.length && (
@@ -163,6 +170,59 @@ function Highlight({ sentence, word, nth }) {
   );
 }
 
+// The portrait beside a character's name. The first click starts them off with a ready-made face
+// that fits their gender and age, when those are set.
+function PortraitButton({ e, readOnly }) {
+  const [anchor, setAnchor] = useState(null);
+  if (readOnly) return <Avatar entry={e} size={64} className="be-portrait-art" />;
+  const open = (ev) => {
+    const r = ev.currentTarget.getBoundingClientRect();
+    const header = ev.currentTarget.closest('.be-ident').getBoundingClientRect();
+    if (!e.face) updateEntry(e.id, { face: presetFace(e) });
+    setAnchor({ left: r.left, bottom: header.bottom });
+  };
+  return (
+    <>
+      <button className="be-portrait" onClick={open} title={e.face ? 'Edit portrait' : 'Make a portrait'} aria-label={e.face ? 'Edit portrait' : 'Make a portrait'}>
+        <Avatar entry={e} size={64} className="be-portrait-art" />
+        <span className="be-portrait-badge">
+          <Pencil size={11} strokeWidth={2} />
+        </span>
+      </button>
+      {anchor && <FaceEditor entry={e} anchor={anchor} onClose={() => setAnchor(null)} />}
+    </>
+  );
+}
+
+function Traits({ e, readOnly }) {
+  const chip = (key, list, label) => {
+    const value = list.find((o) => o.id === e[key]);
+    const pick = (ev) =>
+      openMenu(
+        ev.currentTarget.getBoundingClientRect(),
+        [
+          ...list.map((o) => ({ label: o.label, sub: o.sub, checked: e[key] === o.id, onClick: () => updateEntry(e.id, { [key]: o.id }) })),
+          { separator: true },
+          { label: 'Not set', checked: !value, onClick: () => updateEntry(e.id, { [key]: '' }) },
+        ],
+        { width: 190 }
+      );
+    return (
+      <button className={`be-trait ${value ? '' : 'empty'}`} disabled={readOnly} onClick={pick}>
+        <span className="be-trait-key">{label}</span>
+        {value ? value.label : 'Not set'}
+        {!readOnly && <ChevronDown size={13} strokeWidth={1.8} />}
+      </button>
+    );
+  };
+  return (
+    <div className="be-traits">
+      {chip('gender', GENDERS, 'Gender')}
+      {chip('age', AGES, 'Age')}
+    </div>
+  );
+}
+
 function EntryDetail({ e, ctx, analysis, view, scope }) {
   const focusName = useStore((s) => s.bible.focusName);
   const noteTab = useStore((s) => s.bible.noteTab);
@@ -226,22 +286,28 @@ function EntryDetail({ e, ctx, analysis, view, scope }) {
         <span className="be-eyebrow">{e.type === 'place' ? 'Place' : 'Character'}</span>
         <IconButton icon={MoreHorizontal} title="More" onClick={(ev) => entryMenu(ev, e, ctx)} />
       </div>
-      <input
-        ref={nameRef}
-        className="be-name"
-        value={e.name}
-        readOnly={readOnly}
-        placeholder={e.type === 'place' ? 'Name of the place' : 'Name'}
-        spellCheck={false}
-        onChange={(ev) => renameEntry(e.id, ev.target.value)}
-      />
-      <input
-        className="be-role"
-        value={e.role}
-        readOnly={readOnly}
-        placeholder={e.type === 'place' ? 'What kind of place, in a few words' : 'Who they are, in a few words'}
-        onChange={(ev) => updateEntry(e.id, { role: ev.target.value })}
-      />
+      <div className="be-ident">
+        {e.type === 'character' && <PortraitButton e={e} readOnly={readOnly} />}
+        <div className="be-ident-text">
+          <input
+            ref={nameRef}
+            className="be-name"
+            value={e.name}
+            readOnly={readOnly}
+            placeholder={e.type === 'place' ? 'Name of the place' : 'Name'}
+            spellCheck={false}
+            onChange={(ev) => renameEntry(e.id, ev.target.value)}
+          />
+          <input
+            className="be-role"
+            value={e.role}
+            readOnly={readOnly}
+            placeholder={e.type === 'place' ? 'What kind of place, in a few words' : 'Who they are, in a few words'}
+            onChange={(ev) => updateEntry(e.id, { role: ev.target.value })}
+          />
+          {e.type === 'character' && <Traits e={e} readOnly={readOnly} />}
+        </div>
+      </div>
       {ctx.inSeries && (
         <div className="be-share">
           <OwnerBadge e={e} ctx={ctx} />

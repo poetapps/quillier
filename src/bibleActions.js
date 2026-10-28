@@ -41,11 +41,69 @@ function relStoreOf(id) {
   return null;
 }
 
-// Apply fn to the bible ({ entries, relationships, … }) in the given store.
-function editBible(store, fn) {
-  if (store === 'book') commit((p) => ({ ...p, bible: fn(p.bible) }));
-  else if (store === 'series') commitSeries((d) => ({ ...d, bible: fn(d.bible) }));
+const bibleOf = (s, store) => (store === 'book' ? s.project?.bible : store === 'series' ? s.series?.data.bible : null);
+
+function putBible(store, bible) {
+  if (store === 'book') commit((p) => ({ ...p, bible }));
+  else commitSeries((d) => ({ ...d, bible }));
 }
+
+// Apply fn to the bible ({ entries, relationships, … }) in the given store. Every change goes
+// through here so it can be undone. `tag` names a field being edited: repeated edits to the same
+// one (typing a name, dragging a node) within a moment undo as one step.
+function editBible(store, fn, tag) {
+  const before = bibleOf(getState(), store);
+  if (!before) return;
+  const next = fn(before);
+  if (!next || next === before) return;
+  record(store, before, tag);
+  putBible(store, next);
+}
+
+// ---------- undo ----------
+
+// Each step keeps the bibles as they were before it. Everything changed in one go (deleting an
+// entry and its relationships, moving one to the series) is a single step. Text in the notes
+// editor and in input fields keeps its own undo while it has focus.
+const history = { key: null, past: [], future: [] };
+let recording = null;
+const historyKey = (s) => `${s.project?.meta?.uuid || ''}|${s.series?.data?.uuid || ''}`;
+
+function record(store, before, tag) {
+  const key = historyKey(getState());
+  if (history.key !== key) Object.assign(history, { key, past: [], future: [] });
+  const now = Date.now();
+  if (!recording) {
+    const last = history.past[history.past.length - 1];
+    if (tag && last?.tag === tag && now - last.at < 1500 && !history.future.length) recording = last;
+    else {
+      recording = { before: {}, tag, at: now };
+      history.past.push(recording);
+      if (history.past.length > 200) history.past.shift();
+    }
+    history.future = [];
+    queueMicrotask(() => (recording = null));
+  }
+  if (!(store in recording.before)) recording.before[store] = before;
+  recording.at = now;
+}
+
+function swap(from, to) {
+  const s = getState();
+  if (history.key !== historyKey(s) || !from.length) return false;
+  const step = from.pop();
+  const current = {};
+  for (const store of Object.keys(step.before)) {
+    current[store] = bibleOf(s, store);
+    if (current[store]) putBible(store, step.before[store]);
+  }
+  to.push({ before: current, tag: null, at: 0 });
+  recording = null;
+  return true;
+}
+
+export const undoBible = () => swap(history.past, history.future);
+export const redoBible = () => swap(history.future, history.past);
 
 const mapEntry = (id, fn) => (b) => ({ ...b, entries: b.entries.map((e) => (e.id === id ? fn(e) : e)) });
 const mapRel = (id, fn) => (b) => ({ ...b, relationships: b.relationships.map((r) => (r.id === id ? fn(r) : r)) });
@@ -62,8 +120,8 @@ export function addEntry(type, { name = '', scope } = {}) {
   return e;
 }
 
-export function updateEntry(id, patch) {
-  editBible(storeOf(id), mapEntry(id, (e) => ({ ...e, ...patch, updatedAt: nowIso() })));
+export function updateEntry(id, patch, tag = `entry:${id}:${Object.keys(patch).sort()}`) {
+  editBible(storeOf(id), mapEntry(id, (e) => ({ ...e, ...patch, updatedAt: nowIso() })), tag);
 }
 
 // Rename, and keep the automatic first-name alias ("Maren" for "Maren Holt") in step until the
@@ -73,7 +131,7 @@ export function renameEntry(id, name) {
   const e = [...(s.project?.bible.entries || []), ...(s.series?.data.bible.entries || [])].find((x) => x.id === id);
   if (!e) return;
   const auto = e.autoAlias !== false && (!e.aliases.length || (e.aliases.length === 1 && e.aliases[0] === defaultAliases(e.name, e.type)[0]));
-  updateEntry(id, auto ? { name, aliases: defaultAliases(name, e.type) } : { name });
+  updateEntry(id, auto ? { name, aliases: defaultAliases(name, e.type) } : { name }, `name:${id}`);
 }
 
 export const setAliases = (id, aliases) => updateEntry(id, { aliases, autoAlias: false });
@@ -82,7 +140,8 @@ export const setAliases = (id, aliases) => updateEntry(id, { aliases, autoAlias:
 export function setEntryNotes(id, book, text) {
   editBible(
     storeOf(id),
-    mapEntry(id, (e) => (book === 'all' ? { ...e, notes: text, updatedAt: nowIso() } : { ...e, perBook: { ...e.perBook, [book]: text }, updatedAt: nowIso() }))
+    mapEntry(id, (e) => (book === 'all' ? { ...e, notes: text, updatedAt: nowIso() } : { ...e, perBook: { ...e.perBook, [book]: text }, updatedAt: nowIso() })),
+    `notes:${id}:${book}`
   );
 }
 
@@ -102,6 +161,7 @@ export function deleteEntry(id) {
   toast(`Deleted “${entry.name || 'Untitled'}”`, {
     label: 'Undo',
     run: () => {
+      if (bibleOf(getState(), store)?.entries.some((e) => e.id === id)) return; // already undone
       editBible(store, (b) => ({ ...b, entries: [...b.entries.slice(0, index), entry, ...b.entries.slice(index)], relationships: [...b.relationships, ...relsHere] }));
       if (relsInBook.length) editBible('book', (b) => ({ ...b, relationships: [...b.relationships, ...relsInBook] }));
       setBible({ selected: id });
@@ -118,16 +178,13 @@ export function promoteEntry(id) {
   const seriesIds = new Set([...s.series.data.bible.entries.map((e) => e.id), id]);
   const moving = s.project.bible.relationships.filter((r) => seriesIds.has(r.a) && seriesIds.has(r.b));
   const uuid = s.project.meta.uuid;
-  commitSeries((d) => ({
-    ...d,
-    bible: { ...d.bible, entries: [...d.bible.entries, entry], relationships: [...d.bible.relationships, ...moving.map((r) => ({ ...r, books: [uuid] }))] },
-  }));
+  editBible('series', (b) => ({ ...b, entries: [...b.entries, entry], relationships: [...b.relationships, ...moving.map((r) => ({ ...r, books: [uuid] }))] }));
   const movingIds = new Set(moving.map((r) => r.id));
-  commit((p) => ({ ...p, bible: { ...p.bible, entries: p.bible.entries.filter((e) => e.id !== id), relationships: p.bible.relationships.filter((r) => !movingIds.has(r.id)) } }));
+  editBible('book', (b) => ({ ...b, entries: b.entries.filter((e) => e.id !== id), relationships: b.relationships.filter((r) => !movingIds.has(r.id)) }));
   toast(`${entry.name || 'This entry'} is now in the series bible`);
 }
 
-export const setEntryPos = (id, pos) => editBible(storeOf(id), mapEntry(id, (e) => ({ ...e, pos })));
+export const setEntryPos = (id, pos) => editBible(storeOf(id), mapEntry(id, (e) => ({ ...e, pos })), `pos:${id}`);
 
 // ---------- relationships ----------
 
@@ -150,10 +207,10 @@ export function addRelationship(a, b, label = '') {
   return r;
 }
 
-export const updateRelationship = (id, patch) => editBible(relStoreOf(id), mapRel(id, (r) => ({ ...r, ...patch })));
+export const updateRelationship = (id, patch) => editBible(relStoreOf(id), mapRel(id, (r) => ({ ...r, ...patch })), `rel:${id}:${Object.keys(patch).sort()}`);
 
 export const updateRelBook = (id, book, patch) =>
-  editBible(relStoreOf(id), mapRel(id, (r) => ({ ...r, byBook: { ...r.byBook, [book]: { ...(r.byBook[book] || {}), ...patch } } })));
+  editBible(relStoreOf(id), mapRel(id, (r) => ({ ...r, byBook: { ...r.byBook, [book]: { ...(r.byBook[book] || {}), ...patch } } })), `rel:${id}:${book}:${Object.keys(patch).sort()}`);
 
 // Which books of the series a relationship applies to. `current` is what applies now (the explicit
 // list, or the books where both characters appear when none is listed).
@@ -178,6 +235,7 @@ export function deleteRelationship(id) {
   toast('Relationship deleted', {
     label: 'Undo',
     run: () => {
+      if (bibleOf(getState(), store)?.relationships.some((r) => r.id === id)) return; // already undone
       editBible(store, (b) => ({ ...b, relationships: [...b.relationships, rel] }));
       setBible({ graphSel: { kind: 'rel', id } });
     },
@@ -187,26 +245,26 @@ export function deleteRelationship(id) {
 // ---------- scenes, decisions, dismissed notes (always the open book) ----------
 
 export function setSceneMeta(chapterId, index, opens, patch) {
-  commit((p) => {
-    const list = [...(p.bible.scenes[chapterId] || [])];
+  editBible('book', (b) => {
+    const list = [...(b.scenes[chapterId] || [])];
     const at = list[index] && list[index].opens === opens ? index : list.findIndex((x) => x && x.opens === opens);
     const i = at >= 0 ? at : index;
     list[i] = { ...(at >= 0 ? list[at] : {}), opens, ...patch };
-    return { ...p, bible: { ...p.bible, scenes: { ...p.bible.scenes, [chapterId]: list } } };
+    return { ...b, scenes: { ...b.scenes, [chapterId]: list } };
   });
 }
 
 export function setDecision(key, value) {
-  commit((p) => {
-    const decisions = { ...p.bible.decisions };
+  editBible('book', (b) => {
+    const decisions = { ...b.decisions };
     if (value) decisions[key] = value;
     else delete decisions[key];
-    return { ...p, bible: { ...p.bible, decisions } };
+    return { ...b, decisions };
   });
 }
 
 export function dismissNote(key) {
-  commit((p) => ({ ...p, bible: { ...p.bible, dismissed: [...new Set([...p.bible.dismissed, key])] } }));
+  editBible('book', (b) => ({ ...b, dismissed: [...new Set([...b.dismissed, key])] }));
 }
 
 // ---------- library ----------

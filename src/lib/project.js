@@ -2,6 +2,8 @@
 // (Files from before the rename use .ldraft and format 'libredraft'; both still open.)
 // Every page's text is stored as Markdown.
 
+import { normalizeFace } from './face.js';
+
 export const FORMAT = 'quillier';
 const KNOWN_FORMATS = [FORMAT, 'libredraft'];
 export const FORMAT_VERSION = 1;
@@ -136,6 +138,23 @@ export function defaultAliases(name, type) {
   return [words[0]];
 }
 
+// Optional character traits, picked from a short list so they stay machine-readable.
+export const GENDERS = [
+  { id: 'female', label: 'Female' },
+  { id: 'male', label: 'Male' },
+  { id: 'nonbinary', label: 'Nonbinary' },
+  { id: 'other', label: 'Other' },
+];
+export const AGES = [
+  { id: 'child', label: 'Child', sub: 'Under 13' },
+  { id: 'teen', label: 'Teen', sub: '13–17' },
+  { id: 'young', label: 'Young adult', sub: '18–29' },
+  { id: 'adult', label: 'Adult', sub: '30–49' },
+  { id: 'middle', label: 'Middle-aged', sub: '50–64' },
+  { id: 'older', label: 'Older', sub: '65 and up' },
+];
+const pickId = (list, v) => (list.some((x) => x.id === v) ? v : '');
+
 export function newEntry(type, name = '') {
   return {
     id: uid(),
@@ -146,6 +165,9 @@ export function newEntry(type, name = '') {
     notes: '',
     perBook: {},
     pos: null,
+    gender: '',
+    age: '',
+    face: null,
     createdAt: nowIso(),
     updatedAt: nowIso(),
   };
@@ -165,6 +187,9 @@ function normalizeEntry(e) {
     aliases: Array.isArray(e.aliases) ? e.aliases.filter((a) => typeof a === 'string' && a.trim()) : [],
     notes: typeof e.notes === 'string' ? e.notes : '',
     perBook: e.perBook && typeof e.perBook === 'object' ? e.perBook : {},
+    gender: pickId(GENDERS, e.gender),
+    age: pickId(AGES, e.age),
+    face: normalizeFace(e.face),
   };
 }
 

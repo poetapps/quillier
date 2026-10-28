@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { useStore, setBible, openMenu } from '../store.js';
-import { addEntry, startAddToSeries } from '../bibleActions.js';
+import { addEntry, startAddToSeries, undoBible, redoBible } from '../bibleActions.js';
 import { useBible } from '../lib/useBible.js';
 import { Segmented } from './ui.jsx';
 import BibleEntries from './BibleEntries.jsx';
@@ -20,6 +21,18 @@ export default function Bible() {
   const bible = useBible();
   const { ctx, analysis, view, scope } = bible;
   const tab = useStore((s) => s.bible.tab);
+
+  // ⌘Z / ⇧⌘Z undo bible changes, except while typing, where the field keeps its own undo.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!(e.metaKey || e.ctrlKey) || e.altKey || e.key.toLowerCase() !== 'z') return;
+      const el = document.activeElement;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      if (e.shiftKey ? redoBible() : undoBible()) e.preventDefault();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const counts = {
     characters: view.entries.filter((e) => e.type === 'character').length,
