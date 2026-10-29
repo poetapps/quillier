@@ -42,7 +42,8 @@ import {
   sessionName,
 } from './lib/versions.js';
 import { createBook, mirrorFolders, unmirrorFolders, renameLinked, applyStructure, mirrorOf } from './lib/structure.js';
-import { exportMarkdown, exportChapterFiles, exportHtml, exportBookHtml, exportManuscriptHtml, buildEpub } from './lib/export.js';
+import { exportMarkdown, exportChapterFiles, exportHtml, exportBookHtml, bookTypesetting, bookPageTotal, exportManuscriptHtml, buildEpub } from './lib/export.js';
+import { typesetBook, typesetSummary } from './lib/typeset.js';
 import { buildDocx } from './lib/docx.js';
 import { normalizeSeries, candidatePaths, relativePath, dirOf, SERIES_FILE } from './lib/series.js';
 import { noteRange, removeNoteMarks, applyAnchors } from './lib/inlineNotes.js';
@@ -1332,15 +1333,33 @@ export async function exportManuscript(format, options) {
   if (format === 'md') where = await api.exportFile({ suggested: p.title, ext: 'md', content: exportMarkdown(p, opts) });
   if (format === 'folder') where = await api.exportFolder({ suggested: p.title, files: exportChapterFiles(p, opts) });
   if (format === 'html') where = await api.exportFile({ suggested: p.title, ext: 'html', content: exportHtml(p, opts) });
-  if (format === 'pdf') {
-    const widths = await api.pdfPageWidths({ html: exportBookHtml(p, opts) });
-    where = await api.exportPdf({ suggested: p.title, html: exportBookHtml(p, opts, widths) });
-  }
+  let report = null;
+  if (format === 'pdf') ({ where, report } = await exportBookPdf(p, opts));
   if (format === 'manuscript') where = await api.exportPdf({ suggested: `${p.title} (manuscript)`, html: exportManuscriptHtml(p, opts) });
   if (format === 'docx') where = await api.exportDocx({ suggested: `${p.title} (manuscript)`, files: buildDocx(p, opts) });
   if (format === 'epub') where = await api.exportEpub({ suggested: p.title, files: await buildEpub(p, opts) });
-  if (where) toast(`Exported ${wordsFor(p).whole.toLowerCase()}`);
+  if (where) toast(report ? typesetSummary(report) : `Exported ${wordsFor(p).whole.toLowerCase()}`);
   return where;
+}
+
+// The print-ready PDF. lib/typeset.js sets it when it can, and a print checks it came out the
+// length it should; otherwise Chromium pages it, after a measuring print (see exportBookHtml).
+async function exportBookPdf(p, opts) {
+  let book = null;
+  try {
+    const set = await typesetBook(exportBookHtml(p, opts, { flow: true }), bookTypesetting(p, opts));
+    if (set) {
+      const html = exportBookHtml(p, opts, set);
+      const printed = (await api.pdfPageWidths({ html })).length;
+      const planned = bookPageTotal(p, opts, set.counts);
+      if (printed === planned) book = { html, report: { ...set.report, total: planned } };
+      else console.warn(`Typeset book printed to ${printed} pages, not ${planned}; letting Chromium page it`);
+    }
+  } catch (e) {
+    console.warn('Typesetting failed; letting Chromium page the book', e);
+  }
+  if (!book) book = { html: exportBookHtml(p, opts, { widths: await api.pdfPageWidths({ html: exportBookHtml(p, opts) }) }), report: null };
+  return { where: await api.exportPdf({ suggested: p.title, html: book.html }), report: book.report };
 }
 
 // ---------- updates ----------

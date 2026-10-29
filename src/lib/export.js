@@ -139,6 +139,9 @@ ${back.map(matter).join('\n')}
 // The measuring print gives every other item (title page, part, chapter) pages 8px wider, and
 // the page widths it comes back with say how many pages each item takes. The real print then
 // knows what is on every page and takes its folios and heads from page-keyed counter styles.
+//
+// That's the fallback. Normally lib/typeset.js sets the pages itself, from the book laid out as
+// one long column (flow mode), and its page counts stand in for the measuring print's.
 
 // Sizes in inches, type in points. The text block is a whole number of lines deep.
 export const TRIMS = {
@@ -188,23 +191,54 @@ function pagePlan(items, counts, bookTitle) {
   return { pages, blanks };
 }
 
-// Without `pageWidths` this is the measuring print; with the page widths (in points) that
-// print came back with, it's the book.
-export function exportBookHtml(p, opts, pageWidths) {
+// Everything that goes in the book, in order: the title page, front matter, parts and
+// chapters, back matter.
+function printItems(p, opts) {
   const { titles, titlePage } = opts;
-  const trim = TRIMS[p.meta?.trim] || TRIMS[DEFAULT_TRIM];
-  const lang = (p.meta?.language || navigator.language || 'en').trim();
-  const author = (p.meta?.author || '').trim();
   const { front, back } = matterFor(p, opts);
-  const items = [
+  return [
     ...(titlePage ? [{ type: 'title' }] : []),
     ...front,
     ...bookItems(p).map((it) => (it.type === 'chapter' ? { ...it, head: titles ? it.title : p.title } : it)),
     ...back.map((it) => ({ ...it, head: it.title })),
   ];
-  const measuring = pageWidths === undefined;
-  const counts = measuring ? null : pageCounts(pageWidths, trim, items.length);
+}
+
+// What lib/typeset.js needs to set the book: its language, what each section is ('flow' runs
+// over pages; 'page' is a page on its own), where each section starts given the page counts
+// before it, and the depth of a page and of a line, in CSS pixels.
+export function bookTypesetting(p, opts) {
+  const trim = TRIMS[p.meta?.trim] || TRIMS[DEFAULT_TRIM];
+  const items = printItems(p, opts);
+  return {
+    lang: (p.meta?.language || navigator.language || 'en').trim(),
+    kinds: items.map((it) => (it.type === 'chapter' || titled(it) ? 'flow' : 'page')),
+    startPage: (i, counts) => pagePlan(items.slice(0, i + 1), [...counts.slice(0, i), 1], p.title).pages.length - 1,
+    capacity: (trim.lines * trim.lead * 4) / 3,
+    lead: (trim.lead * 4) / 3,
+  };
+}
+
+// The total number of pages the book prints to, blanks included, given each section's count.
+export const bookPageTotal = (p, opts, counts) => pagePlan(printItems(p, opts), counts, p.title).pages.length;
+
+// `layout` says which print this is:
+//   undefined          the measuring print (see above)
+//   { widths }         the book paged by Chromium, from the page widths (in points) the measuring print came back with
+//   { flow: true }     one long column for lib/typeset.js to lay out and measure
+//   { counts, pages }  the book as lib/typeset.js set it: each section's page count and pages
+export function exportBookHtml(p, opts, layout) {
+  const trim = TRIMS[p.meta?.trim] || TRIMS[DEFAULT_TRIM];
+  const lang = (p.meta?.language || navigator.language || 'en').trim();
+  const author = (p.meta?.author || '').trim();
+  const items = printItems(p, opts);
+  const measuring = layout === undefined;
+  const flow = !!layout?.flow;
+  const typeset = !!layout?.pages;
+  const counts = typeset ? layout.counts : layout?.widths ? pageCounts(layout.widths, trim, items.length) : null;
   const plan = counts && pagePlan(items, counts, p.title);
+  // A typeset chapter's pages, each ending in a forced break.
+  const body = (i, html) => (typeset && layout.pages[i] ? layout.pages[i].map((pg) => `<div class="pg">${pg}</div>`).join('') : html);
 
   const sections = items
     .map((it, i) => {
@@ -217,31 +251,36 @@ export function exportBookHtml(p, opts, pageWidths) {
         return `${blank}<section class="part${cls}"><p class="part-label">${escapeHtml(it.label)}</p>${it.subtitle ? `<h1 class="part-title">${escapeHtml(it.subtitle)}</h1>` : ''}</section>`;
       }
       if (it.type !== 'chapter') {
-        const body = matterBody(it, { md: (m) => marked.parse(m), esc: escapeHtml });
-        if (titled(it)) return `${blank}<section class="chapter ${it.id}${cls}"><h1 class="chapter-title">${escapeHtml(it.title)}</h1>${body}</section>`;
-        return `${blank}<section class="${it.id}${cls}">${body}</section>`;
+        const inner = matterBody(it, { md: (m) => marked.parse(m), esc: escapeHtml });
+        if (titled(it)) return `${blank}<section class="chapter ${it.id}${cls}">${body(i, `<h1 class="chapter-title">${escapeHtml(it.title)}</h1>${inner}`)}</section>`;
+        return `${blank}<section class="${it.id}${cls}">${inner}</section>`;
       }
-      const heading = titles ? `<h1 class="chapter-title">${escapeHtml(it.title)}</h1>` : '';
-      return `${blank}<section class="chapter${cls}">${heading}${marked.parse(it.chapter.content || '')}</section>`;
+      const heading = opts.titles ? `<h1 class="chapter-title">${escapeHtml(it.title)}</h1>` : '';
+      return `${blank}<section class="chapter${cls}">${body(i, `${heading}${marked.parse(it.chapter.content || '')}`)}</section>`;
     })
     .join('\n');
 
   const inch = (n) => `${+n.toFixed(4)}in`;
-  const bottom = trim.h - trim.top - (trim.lines * trim.lead) / 72;
+  // Typeset pages are filled to the line, so they get a couple of points to spare at the foot
+  // against Chromium rounding the lines' heights up; the folios stay put.
+  const slack = typeset ? 2 / 72 : 0;
+  const bottom = trim.h - trim.top - (trim.lines * trim.lead) / 72 - slack;
   const margin = (left, right) => `margin: ${inch(trim.top)} ${right} ${inch(bottom)} ${left};`;
   const sink = inch(trim.h / 3 - trim.top);
   const furniture = `font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; color: #000;`;
   const pageKeyed = (name, f) => `@counter-style ${name} { system: fixed; symbols: ${plan.pages.map((pg, i) => cssString(f(pg, i + 1))).join(' ')}; }`;
 
   let pageCss;
-  if (measuring) {
+  if (flow) {
+    pageCss = `body { width: ${inch(trim.w - trim.inside - trim.outside)}; }`;
+  } else if (measuring) {
     pageCss = `@page { size: ${inch(trim.w)} ${inch(trim.h)}; ${margin(inch(trim.inside), inch(trim.outside))} }
   @page wide { size: calc(${inch(trim.w)} + ${MEASURE_STEP}px) ${inch(trim.h)}; margin-right: calc(${inch(trim.outside)} + ${MEASURE_STEP}px); }
   .wide { page: wide; }`;
   } else {
     // Without a page plan (the measuring print didn't add up) every page but the first gets a folio.
     const head = `@top-center { content: counter(page, head); ${furniture} font-size: ${trim.pt * 0.75}pt; letter-spacing: 0.16em; text-transform: uppercase; vertical-align: bottom; padding-bottom: 0.24in; }`;
-    const folio = `@bottom-center { content: ${plan ? 'counter(page, folio)' : 'counter(page)'}; ${furniture} font-size: ${trim.pt * 0.85}pt; vertical-align: top; padding-top: 0.26in; }`;
+    const folio = `@bottom-center { content: ${plan ? 'counter(page, folio)' : 'counter(page)'}; ${furniture} font-size: ${trim.pt * 0.85}pt; vertical-align: top; padding-top: ${inch(0.26 + slack)}; }`;
     pageCss = `${plan ? pageKeyed('folio', (pg, n) => (pg.folio ? String(n) : '')) : ''}
   ${plan ? pageKeyed('head', (pg) => pg.head) : ''}
   @page { size: ${inch(trim.w)} ${inch(trim.h)}; ${folio} ${plan ? head : ''} }
@@ -256,8 +295,17 @@ export function exportBookHtml(p, opts, pageWidths) {
   ${pageCss}
   html { font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; font-size: ${trim.pt}pt; line-height: ${trim.lead}pt; color: #000; }
   body { margin: 0; }
-  p { margin: 0; text-indent: 1.5em; text-align: justify; hyphens: auto; hyphenate-limit-chars: 6 3 3; orphans: 2; widows: 2; }
+  p { margin: 0; text-indent: 1.5em; text-align: justify; hyphens: auto; hyphenate-limit-chars: 6 3 3; orphans: 2; widows: 2; text-wrap: pretty; }
   h1 + p, h2 + p, h3 + p, hr + p, blockquote + p, ul + p, ol + p, .chapter > p:first-child { text-indent: 0; }
+  sup, sub { line-height: 0; }
+  .pg { display: flow-root; }
+  .pg + .pg { break-before: page; }
+  .pg > :first-child, .pg > :first-child > :first-child, .pg > :first-child > :first-child > :first-child { margin-top: 0 !important; }
+  .pg > :last-child, .pg > :last-child > :last-child, .pg > :last-child > :last-child > :last-child { margin-bottom: 0 !important; }
+  p.ts { text-indent: 0; }
+  .ln { display: block; white-space: nowrap; text-indent: 0; text-align: justify; text-align-last: justify; hyphens: manual; }
+  .ln.end { text-align-last: auto; }
+  li.cont { list-style: none; }
   h1, h2, h3, h4 { font-weight: 600; text-align: center; hyphens: manual; break-after: avoid; }
   h2, h3, h4 { font-size: 1em; margin: 1.4em 0 0.7em; }
   em, i { font-style: italic; }

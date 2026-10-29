@@ -141,6 +141,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "electron": "^44.5.1",
     "electron-builder": "^26.15.3",
+    "hyphen": "^1.14.1",
     "lucide-react": "^1.51.0",
     "marked": "^18.0.14",
     "react": "^19.3.0",
